@@ -1,0 +1,10 @@
+application/cache
+
+
+## User Settings
+xcuserdata/
+
+# CocoaPods
+Pods/
+Coachify/Pods/
+.DS_Store
