@@ -37,21 +37,28 @@ struct SignUpView: View {
                     VStack(spacing: 10) {
                         CustomTextField(title: Constants.TextField.Title.firstName,
                                         placeholder: Constants.TextField.Placeholder.firstName,
-                                        text: $firstName, onSubmit: {
+                                        text: $firstName,
+                                        buttonType: .next,
+                                        onSubmit: {
                             focusedField = .lastName
                                         })
                         .focused($focusedField, equals: .firstName)
                         
                         CustomTextField(title: Constants.TextField.Title.lastName,
                                         placeholder: Constants.TextField.Placeholder.lastName,
-                                        text: $lastName, onSubmit: {
+                                        text: $lastName,
+                                        buttonType: .next,
+                                        onSubmit: {
                             focusedField = .email
                                         })
                         .focused($focusedField, equals: .lastName)
                         
                         CustomTextField(title: Constants.TextField.Title.email,
                                         placeholder: Constants.TextField.Placeholder.email,
-                                        text: $email, onSubmit: {
+                                        text: $email,
+                                        buttonType: .next,
+                                        keyboardType: .emailAddress,
+                                        onSubmit: {
                             focusedField = .password
                                         })
                         .focused($focusedField, equals: .email)
@@ -97,7 +104,7 @@ struct SignUpView: View {
                         CustomButton(
                             title: Constants.SignUpViewTitle.signUpButtonText,
                             action: {
-                                HapticFeedbackHelper.lightImpact()
+                                HapticFeedbackHelper.mediumImpact()
                                 print("On Tap SignUp")
                                 router.navigate(to: .enrollmentType)
                             }

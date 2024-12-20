@@ -70,6 +70,7 @@ struct Constants {
         static let createNewClub = "Create new club or school"
         static let headCoachOfClub = "You will be the head coach of your club/School. You will be able to invite others."
         static let next = "Next"
+       
     }
     
     struct BusinessNameViewTitle {
@@ -89,13 +90,22 @@ struct Constants {
     }
     
     struct BringContactsViewTitle {
-        static let letsBringInContacts = "Awesome! \n Let’s bring in your contacts"
+        static let letsBringInContacts = "Awesome! \nLet’s bring in your contacts"
         static let addMemberCoaches = "Add new contacts"
         static let addMemberCoachesSubheading = "Add your members and coaches"
         static let importContactList = "Import contact list"
         static let importContactListSubheading = "Bring in your contact list from CSV file."
         static let shareLink = "Share link"
         static let shareLinkSubheading = "Invite your members and coaches via link"
+        static let skipForNow = "Skip for now, I’ll do this later"
+        static let skip = "Skip"
+        static let done = "Done"
+    }
+    
+    struct LetsCompleteProfile {
+        static let letsCompleteProfile = "Let’s complete your profile!"
+        static let skip = "Skip"
+        static let done = "Done"
     }
     
     
@@ -136,6 +146,12 @@ struct Constants {
             static let password = "Password"
             static let confirmPassword = "Confirm Password"
             static let yourBusinesName = "Your business name"
+            static let mobileNumber = "Mobile No."
+            static let emergencyContact = "Emergency Contact Name"
+            static let emergencyMobileNumber = "Emergency Mobile No."
+            static let allergies = "Allergies"
+            static let anyInjury = "Any Injuries"
+            
         }
         
         struct Placeholder {
@@ -145,6 +161,11 @@ struct Constants {
             static let password = "Enter password"
             static let confirmPassword = "Confirm Password"
             static let yourBusinesName = "Enter business name"
+            static let mobileNumber = "Enter mobile no."
+            static let emergencyContact = "Enter emergency contact name"
+            static let emergencyMobileNumber = "Enter emergency contact no."
+            static let allergies = "Enter your allergies"
+            static let anyInjuries = "Enter your injuries"
         }
     }
 }

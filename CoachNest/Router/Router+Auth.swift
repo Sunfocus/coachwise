@@ -38,6 +38,10 @@ extension Router{
                 .presentationDetents([.height(200)])
                 .presentationDragIndicator(.visible)
                 .presentationContentInteraction(.scrolls)
+        case .addContacts:
+            AddContactsView()
+        case .letsCompleteProfile:
+            LetsCompleteProfileView()
         }
     }
 }

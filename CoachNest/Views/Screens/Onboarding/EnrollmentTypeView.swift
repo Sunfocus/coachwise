@@ -12,6 +12,7 @@ struct EnrollmentData: Identifiable {
     let id: Int
     let title: String?
     let subTitle: String
+    let setImage: UIImage?
 }
 
 struct EnrollmentTypeView: View {
@@ -20,9 +21,9 @@ struct EnrollmentTypeView: View {
     @EnvironmentObject var router: Router
     @State private var selectedEnrollmentId: Int? = 1
     private var enrollmentData: [EnrollmentData] = [
-        EnrollmentData(id: 1, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type1),
-        EnrollmentData(id: 2, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type2),
-        EnrollmentData(id: 3, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type3)
+        EnrollmentData(id: 1, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type1, setImage: UIImage()),
+        EnrollmentData(id: 2, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type2, setImage: UIImage()),
+        EnrollmentData(id: 3, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type3, setImage: UIImage())
     ]
 
     var body: some View {
@@ -71,6 +72,7 @@ struct EnrollmentTypeView: View {
                         title: Constants.EnrollmentTypeViewTitle.next,
                         action: {
                             router.navigate(to: .joiningEntry)
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
                 }.padding(.horizontal, 20)

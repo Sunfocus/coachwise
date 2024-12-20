@@ -42,11 +42,10 @@ struct ProfessionCell: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(selectedEnrollmentId == enrollment.id ? .primaryTheme : .black.opacity(0.4), lineWidth: 0.6)
         )
-      
     }
 }
 
 #Preview {
-    let enrollment =  EnrollmentData(id: 1, title: Constants.JoiningEntryViewTitle.joinExistingClub, subTitle: Constants.JoiningEntryViewTitle.inviteCode)
-    ProfessionCell(enrollment: enrollment)
+    let enrollment =  EnrollmentData(id: 1, title: Constants.JoiningEntryViewTitle.joinExistingClub, subTitle: Constants.JoiningEntryViewTitle.inviteCode, setImage: UIImage())
+    ProfessionCell(imageName: UIImage(), enrollment: enrollment)
 }

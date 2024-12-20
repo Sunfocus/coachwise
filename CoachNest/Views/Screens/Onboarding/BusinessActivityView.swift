@@ -83,6 +83,7 @@ struct BusinessActivityView: View {
                         title: Constants.EnrollmentTypeViewTitle.next,
                         action: {
                             router.navigate(to: .ageGroupView)
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
                 }.padding(.horizontal, 20)

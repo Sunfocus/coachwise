@@ -22,6 +22,8 @@ public enum AuthFlow: Codable, Hashable {
     case businessActivityView
     case ageGroupView
     case addNewActivity
+    case addContacts
+    case letsCompleteProfile
 }
 
 //MARK: - DashboardFlow -

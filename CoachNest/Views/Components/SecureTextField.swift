@@ -32,22 +32,22 @@ struct SecureTextField: View {
                     // SecureField to obscure the text
                     SecureField(placeholder, text: $text)
                         .customFont(.regular, 14)
+                        .keyboardType(keyboardType)
                         .tint(.cursorTint)
                         .focused($isFocused)
                         .disabled(!isEditable)
                         .submitLabel(buttonType)
                         .textContentType(.password)
-                        .keyboardType(keyboardType)
                         .onSubmit { if isEditable { onSubmit?() } }
                 } else {
                     // TextField to show the text
                     TextField(placeholder, text: $text)
                         .customFont(.regular, 14)
+                        .keyboardType(keyboardType)
                         .tint(.cursorTint)
                         .focused($isFocused)
                         .disabled(!isEditable)
                         .submitLabel(buttonType)
-                        .keyboardType(keyboardType)
                         .onSubmit { if isEditable { onSubmit?() } }
                 }
 
@@ -68,7 +68,7 @@ struct SecureTextField: View {
             .padding(.horizontal, 2)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(isFocused ? .pink.opacity(0.2) : Color.gray, lineWidth: 1)
+                    .stroke(isFocused ? .pink.opacity(0.5) : Color.gray, lineWidth: 1)
             )
         }
     }

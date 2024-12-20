@@ -171,6 +171,7 @@ struct EmailVerificationView: View {
                         title: Constants.EmailVerificationTitle.verify,
                         action: {
                             router.navigate(to: .createNewPassword)
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
                 }

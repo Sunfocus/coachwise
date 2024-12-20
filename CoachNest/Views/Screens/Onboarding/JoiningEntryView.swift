@@ -11,8 +11,8 @@ struct JoiningEntryView: View {
     
     @EnvironmentObject var router: Router
     @State private var joiningEntryData: [EnrollmentData] = [
-        EnrollmentData(id: 1, title: Constants.JoiningEntryViewTitle.joinExistingClub, subTitle: Constants.JoiningEntryViewTitle.inviteCode),
-        EnrollmentData(id: 2, title: Constants.JoiningEntryViewTitle.createNewClub, subTitle: Constants.JoiningEntryViewTitle.headCoachOfClub)]
+        EnrollmentData(id: 1, title: Constants.JoiningEntryViewTitle.joinExistingClub, subTitle: Constants.JoiningEntryViewTitle.inviteCode, setImage: UIImage()),
+        EnrollmentData(id: 2, title: Constants.JoiningEntryViewTitle.createNewClub, subTitle: Constants.JoiningEntryViewTitle.headCoachOfClub, setImage: UIImage())]
     
     @State private var selectedEnrollmentId: Int? = 1
     var body: some View {
@@ -61,6 +61,7 @@ struct JoiningEntryView: View {
                         title: Constants.JoiningEntryViewTitle.next,
                         action: {
                             router.navigate(to: .businessNameView)
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
                 }.padding(.horizontal, 20)

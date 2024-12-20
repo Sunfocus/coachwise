@@ -11,13 +11,11 @@ struct CustomTextField: View {
     var title: String
     var placeholder: String
     @Binding var text: String
-    var isEditable: Bool = true // New property to control editability
+    var isEditable: Bool = true
     var buttonType: SubmitLabel = .done
-    var keyboardType: UIKeyboardType = .default // New property to set keyboard type
+    var keyboardType: UIKeyboardType = .default
     var autocapitalization: TextInputAutocapitalization = .never
-   
     var onSubmit: (() -> Void)?
-    @State private var onTapShowPassword: Bool = false
     
     
     @FocusState private var isFocused: Bool // Private Focus State
@@ -31,6 +29,7 @@ struct CustomTextField: View {
             // MARK: - Input TextField
             TextField(placeholder, text: $text)
                 .customFont(.regular, 14)
+                .keyboardType(keyboardType) // Set keyboard type
                 .disabled(!isEditable) // Disable editing when isEditable is false
                 .frame(height: 27)
                 .tint(.cursorTint)
@@ -38,12 +37,10 @@ struct CustomTextField: View {
                 .padding(.horizontal, 2)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(isFocused ? .pink.opacity(0.2) : Color.gray, lineWidth: 1)
+                        .stroke(isFocused ? .pink.opacity(0.5) : Color.gray, lineWidth: 1)
                 )
                 .focused($isFocused) // Attach focus state
                 .submitLabel(buttonType)
-                .textContentType(.password) // Hint for auto-suggestions
-                .keyboardType(keyboardType) // Set keyboard type
                 .onSubmit { if isEditable { onSubmit?() } }
         }
     }

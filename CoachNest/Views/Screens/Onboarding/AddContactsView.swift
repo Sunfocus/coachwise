@@ -7,20 +7,15 @@
 
 import SwiftUI
 
-struct AddContactData{
-    var heading: String
-    var subheading: String
-    var imageName: String
-}
-
 struct AddContactsView: View {
     
     @EnvironmentObject var router: Router
+    @State private var selectedEnrollmentId: Int? = 1
     
-    var contactData: [AddContactData] = [
-        AddContactData(heading: "", subheading: "", imageName: ""),
-        AddContactData(heading: "", subheading: "", imageName: ""),
-        AddContactData(heading: "", subheading: "", imageName: "")
+    var contactData: [EnrollmentData] = [
+        EnrollmentData(id: 1, title: Constants.BringContactsViewTitle.addMemberCoaches, subTitle: Constants.BringContactsViewTitle.addMemberCoachesSubheading, setImage: .peopleGroup),
+        EnrollmentData(id: 2, title: Constants.BringContactsViewTitle.importContactList, subTitle: Constants.BringContactsViewTitle.importContactListSubheading, setImage:.shareFile),
+        EnrollmentData(id: 3, title: Constants.BringContactsViewTitle.shareLink, subTitle: Constants.BringContactsViewTitle.shareLinkSubheading, setImage: .shareNode)
     ]
     
     
@@ -37,6 +32,13 @@ struct AddContactsView: View {
                                 router.authNavigateBack()
                             }
                         Spacer()
+                        
+                        Text(Constants.BringContactsViewTitle.skip)
+                            .customFont(.semiBold, 16)
+                            .foregroundStyle(.pinkAccent)
+                            .onTapGesture {
+                                print("skip tapped")
+                            }
                     }
                     HStack {
                         Text(Constants.BringContactsViewTitle.letsBringInContacts)
@@ -46,20 +48,46 @@ struct AddContactsView: View {
                 }.padding(.horizontal, 20)
                 
                 // MARK: - List
+                ScrollView {
+                    ForEach(contactData) { contact in
+                        ProfessionCell(imageName: contact.setImage ?? .selectedRadio,
+                                       enrollment: contact,
+                                       selectedEnrollmentId: selectedEnrollmentId ?? 1)
+                            .padding(.horizontal)
+                            .padding(.bottom, 10)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                selectedEnrollmentId = (selectedEnrollmentId == contact.id) ? selectedEnrollmentId : contact.id
+                                HapticFeedbackHelper.lightImpact()
+                            }
+                    }
+                }
+                .scrollIndicators(.never)
+                .safeAreaPadding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
+                .background(.backgroundTheme)
                 
                 Spacer()
                 // MARK: - Next Button
-                VStack{
+                VStack(spacing: 10){
                     CustomButton(
-                        title: Constants.JoiningEntryViewTitle.next,
+                        title: Constants.BringContactsViewTitle.done,
                         action: {
-                            router.navigate(to: .businessNameView)
+                            router.navigate(to: .letsCompleteProfile)
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
+                    
+                    Text(Constants.BringContactsViewTitle.skipForNow)
+                        .customFont(.bold, 14)
+                        .frame(height: 32)
+                        .onTapGesture {
+                            print("skip tapped")
+                        }
                 }.padding(.horizontal, 20)
                 Spacer()
             }
-        }
+        }.background(.backgroundTheme)
+            .navigationBarBackButtonHidden(true)
     }
 }
 

@@ -11,6 +11,7 @@ struct AddActivityView: View {
     
     @State private var newActivity: String = ""
     @EnvironmentObject var viewModel: BusinessActivityViewModel
+    @StateObject private var keyboardManager = KeyboardManager.shared
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -30,12 +31,15 @@ struct AddActivityView: View {
                             viewModel.addActivity(title: newActivity)
                             if viewModel.showAlert == false{
                                 dismiss()
+                                HapticFeedbackHelper.mediumImpact()
                             }
                             
                         }
                     )
-                }.padding(.horizontal, 20)
-                    .padding(.top)
+                }
+                .padding(.horizontal, 20)
+                .padding(.top)
+                .padding(.bottom, keyboardManager.keyboardHeight == 0 ? 0 : 10)
             }
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(
@@ -44,6 +48,9 @@ struct AddActivityView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
+            .animation(.easeInOut, value: keyboardManager.keyboardHeight)
+            
+            
         }
     }
 }

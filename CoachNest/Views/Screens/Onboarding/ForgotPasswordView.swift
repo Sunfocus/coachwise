@@ -51,6 +51,7 @@ struct ForgotPasswordView: View {
                         title: Constants.ForgotPasswordViewTitle.sendOtp,
                         action: {
                             router.navigate(to: .emailVerification)
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
                 }

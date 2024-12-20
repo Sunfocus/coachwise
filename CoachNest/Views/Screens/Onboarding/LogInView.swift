@@ -46,10 +46,11 @@ struct LoginView: View {
                                     placeholder: Constants.TextField.Placeholder.email,
                                     text: $email,
                                     buttonType: .next,
+                                    keyboardType: .emailAddress,
                                     onSubmit: {
                         focusField = .pass
                     } )
-                    .focused($focusField, equals: .email)
+                    .focused($focusField, equals: .email) 
                     
                     SecureTextField(title: Constants.TextField.Title.password,
                                     placeholder: Constants.TextField.Placeholder.password,
@@ -79,7 +80,7 @@ struct LoginView: View {
                     CustomButton(
                         title: Constants.SignUpViewTitle.logIn,
                         action: {
-                            HapticFeedbackHelper.lightImpact()
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
                 }
@@ -147,7 +148,7 @@ struct LoginView: View {
                             .foregroundColor(.pinkAccent)
                             .onTapGesture {
                                 HapticFeedbackHelper.lightImpact()
-                                router.authNavigateBack()
+                                router.navigate(to: .signup)
                             }
                     })
                 }
