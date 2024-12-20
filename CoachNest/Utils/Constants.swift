@@ -128,6 +128,22 @@ struct Constants {
         }
     }
     
+    struct JoinGroupViewTitle {
+        static let joinGroup = "Join your group!"
+        static let joinGroupInstructionMessage = "Click the link in your email invite or paste the team code below that was shared in that email."
+        static let exampleId = "Eg: “1pdsh2134”"
+        static let join = "Join"
+        static let almostThere = "Almost there!"
+        static let registerUsingTheSameLink = "Please register using the same email address to get started!"
+    }
+    
+    struct DateOfBirthView {
+        static let enterDob = "Enter you date of birth"
+        static let dobMessage = "This will allow us to provide better privacy controls and ensure safety of your data."
+        static let dob = "Date of Birth"
+        static let next = "Next"
+    }
+    
     struct TextField {
         struct Title {
             static let firstName = "First Name"
@@ -136,6 +152,7 @@ struct Constants {
             static let password = "Password"
             static let confirmPassword = "Confirm Password"
             static let yourBusinesName = "Your business name"
+            static let enterTeamIdFromLink = "Enter Team ID in your invite link"
         }
         
         struct Placeholder {
@@ -145,6 +162,7 @@ struct Constants {
             static let password = "Enter password"
             static let confirmPassword = "Confirm Password"
             static let yourBusinesName = "Enter business name"
+            static let enterTeamId = "Enter Team ID"
         }
     }
 }

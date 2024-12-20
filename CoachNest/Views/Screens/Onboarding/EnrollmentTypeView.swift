@@ -31,15 +31,6 @@ struct EnrollmentTypeView: View {
                 // MARK: - Back Button Section
                 VStack {
                     HStack {
-                        Image(.arrowBack)
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .onTapGesture {
-                                router.authNavigateBack()
-                            }
-                        Spacer()
-                    }
-                    HStack {
                         Text(Constants.EnrollmentTypeViewTitle.getStarted)
                             .customFont(.semiBold, 24)
                         Spacer()
@@ -74,9 +65,16 @@ struct EnrollmentTypeView: View {
                         }
                     )
                 }.padding(.horizontal, 20)
-            }
+            }.padding(.top, 20)
         }
         .background(.backgroundTheme)
         .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                BackButton(action: {
+                    router.authNavigateBack()
+                })
+            }
+        }
     }
 }

@@ -22,17 +22,6 @@ struct CreateNewPassword: View {
     var body: some View {
         ZStack{
             VStack{
-                // MARK: - Back Button Section
-                HStack {
-                    Image(.arrowBack)
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .onTapGesture {
-                            router.authNavigateBack()
-                        }
-                    Spacer()
-                }
-                
                 // MARK: - Heading and Sub-heading Section
                 VStack(spacing: 5){
                     Text(Constants.CreateNewPasswordViewTitle.createNewPassword)
@@ -77,10 +66,19 @@ struct CreateNewPassword: View {
                 }
             }
             .padding(.horizontal, 20)
+            .padding(.top, 20)
         }.background(.backgroundTheme)
+            .ignoresSafeArea(.keyboard)
             .navigationBarBackButtonHidden(true)
             .onTapGesture {
                 UIApplication.shared.dismissKeyboard()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    BackButton(action: {
+                        router.authNavigateBack()
+                    })
+                }
             }
     }
 }

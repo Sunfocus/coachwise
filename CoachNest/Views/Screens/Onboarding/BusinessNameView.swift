@@ -13,17 +13,7 @@ struct BusinessNameView: View {
     var body: some View {
         ZStack {
             VStack {
-                // MARK: - Back Button Section
                 VStack {
-                    HStack {
-                        Image(.arrowBack)
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .onTapGesture {
-                                router.authNavigateBack()
-                            }
-                        Spacer()
-                    }
                     // MARK: - Text Stack
                     VStack(alignment: .leading, spacing: 8) {
                         Text(Constants.BusinessNameViewTitle.whatIsBusinessName)
@@ -54,8 +44,9 @@ struct BusinessNameView: View {
                         }
                     )
                 }.padding(.horizontal, 20)
-            }
+            }.padding(.top, 20)
         }.background(.backgroundTheme)
+            .ignoresSafeArea(.keyboard)
             .navigationBarBackButtonHidden(true)
             .onTapGesture {
                 UIApplication.shared.dismissKeyboard()

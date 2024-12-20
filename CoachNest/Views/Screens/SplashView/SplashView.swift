@@ -19,9 +19,9 @@ struct SplashView: View {
             VStack {
                 if isActive {
                     if router.isUserLoggedIn {
-                        SignUpView()
+                       
                     } else {
-                        SignUpView()
+                       
                     }
                 } else {
                     // Splash screen content
@@ -36,6 +36,7 @@ struct SplashView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     withAnimation {
                         isActive = true
+                        router.navigate(to: .login)
                     }
                 }
             }

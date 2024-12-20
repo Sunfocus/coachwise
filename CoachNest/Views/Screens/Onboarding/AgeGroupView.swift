@@ -20,17 +20,7 @@ struct AgeGroupView: View {
     var body: some View {
         ZStack {
             VStack {
-                // MARK: - Back Button Section
                 VStack {
-                    HStack {
-                        Image(.arrowBack)
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .onTapGesture {
-                                router.authNavigateBack()
-                            }
-                        Spacer()
-                    }
                     HStack {
                         Text(Constants.AgeGroupViewTitle.whatAgeGroup)
                             .customFont(.semiBold, 24)
@@ -67,7 +57,7 @@ struct AgeGroupView: View {
                         }
                     )
                 }.padding(.horizontal, 20)
-            }
+            }.padding(.top, 20)
         }.background(.backgroundTheme)
             .navigationBarBackButtonHidden(true)
     }

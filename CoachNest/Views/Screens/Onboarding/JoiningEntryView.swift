@@ -21,16 +21,7 @@ struct JoiningEntryView: View {
                 // MARK: - Back Button Section
                 VStack {
                     HStack {
-                        Image(.arrowBack)
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .onTapGesture {
-                                router.authNavigateBack()
-                            }
-                        Spacer()
-                    }
-                    HStack {
-                        Text(Constants.EnrollmentTypeViewTitle.getStarted)
+                        Text(Constants.JoiningEntryViewTitle.joiningAsClubOrSchool)
                             .customFont(.semiBold, 24)
                         Spacer()
                     }.padding(.top, 12)
@@ -60,13 +51,20 @@ struct JoiningEntryView: View {
                     CustomButton(
                         title: Constants.JoiningEntryViewTitle.next,
                         action: {
-                            router.navigate(to: .businessNameView)
+                            router.navigate(to: .joiningGroupView)
                         }
                     )
                 }.padding(.horizontal, 20)
-            }
+            }.padding(.top, 20)
         }.background(.backgroundTheme)
             .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    BackButton(action: {
+                        router.authNavigateBack()
+                    })
+                }
+            }
     }
 }
 

@@ -147,7 +147,7 @@ struct LoginView: View {
                             .foregroundColor(.pinkAccent)
                             .onTapGesture {
                                 HapticFeedbackHelper.lightImpact()
-                                router.authNavigateBack()
+                                router.navigate(to: .signup)
                             }
                     })
                 }
