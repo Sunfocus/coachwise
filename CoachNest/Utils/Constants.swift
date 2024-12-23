@@ -63,6 +63,7 @@ struct Constants {
         static let next = "Next"
     }
     
+    // MARK: - Join or Create Club View
     struct JoiningEntryViewTitle {
         static let joiningAsClubOrSchool = "Your club/school"
         static let joinExistingClub = "Join existing club or school"
@@ -73,12 +74,22 @@ struct Constants {
        
     }
     
+    // MARK: - Date of Birth View
+    struct DateOfBirthView {
+        static let enterDob = "Enter you date of birth"
+        static let dobMessage = "This will allow us to provide better privacy controls and ensure safety of your data."
+        static let dob = "Date of Birth"
+        static let next = "Next"
+    }
+    
+    // MARK: - BusinessName View
     struct BusinessNameViewTitle {
         static let whatIsBusinessName = "What is the name of your business ?"
         static let recognizeBusinessMessage = "This could be your club name, school name, or anything else that will help your members recognize your business."
         static let exampleBusinessName = "Eg: “Melbourne Tennis Club” "
     }
     
+    // MARK: - AgeGroupView
     struct AgeGroupViewTitle {
         static let whatAgeGroup = "What age groups do you work with?"
         static let mixed = "Mixed"
@@ -89,6 +100,7 @@ struct Constants {
         static let adultsAgeMembers = "Members are all aged 18 and over"
     }
     
+    // MARK: - BringContactsView
     struct BringContactsViewTitle {
         static let letsBringInContacts = "Awesome! \nLet’s bring in your contacts"
         static let addMemberCoaches = "Add new contacts"
@@ -102,14 +114,24 @@ struct Constants {
         static let done = "Done"
     }
     
+    // MARK: - LetsCompleteProfile
     struct LetsCompleteProfile {
         static let letsCompleteProfile = "Let’s complete your profile!"
         static let skip = "Skip"
         static let done = "Done"
     }
     
+    // MARK: - JoinGroupViewTitle
+    struct JoinGroupViewTitle {
+        static let joinGroup = "Join your group!"
+        static let joinGroupInstructionMessage = "Click the link in your email invite or paste the team code below that was shared in that email."
+        static let exampleId = "Eg: “1pdsh2134”"
+        static let join = "Join"
+        static let almostThere = "Almost there!"
+        static let registerUsingTheSameLink = "Please register using the same email address to get started!"
+    }
     
-    
+    // MARK: - BusinessActivity View
     struct BusinessActivityViewTitle {
         static let businessActivity = "What activity does your business engage in?"
         
@@ -151,6 +173,7 @@ struct Constants {
             static let emergencyMobileNumber = "Emergency Mobile No."
             static let allergies = "Allergies"
             static let anyInjury = "Any Injuries"
+            static let enterTeamIdFromLink = "Enter Team ID in your invite link"
             
         }
         
@@ -166,6 +189,7 @@ struct Constants {
             static let emergencyMobileNumber = "Enter emergency contact no."
             static let allergies = "Enter your allergies"
             static let anyInjuries = "Enter your injuries"
+            static let enterTeamId = "Enter Team ID"
         }
     }
 }

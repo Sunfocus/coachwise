@@ -9,8 +9,11 @@ import SwiftUI
 
 struct BusinessNameView: View {
     @EnvironmentObject var router: Router
-    @State private var businessName: String = ""
     @StateObject private var keyboardManager = KeyboardManager.shared
+    @State private var businessName = Field(
+        title: Constants.TextField.Title.yourBusinesName,
+        placeholder: Constants.TextField.Placeholder.yourBusinesName
+    )
     var body: some View {
         ZStack {
             
@@ -37,7 +40,7 @@ struct BusinessNameView: View {
                         // MARK: - TextField
                         
                         VStack(spacing: 8) {
-                            CustomTextField(title: Constants.TextField.Title.yourBusinesName, placeholder: Constants.TextField.Placeholder.yourBusinesName, text: $businessName)
+                            CustomTextField(field: $businessName)
                             HStack {
                                 Text(Constants.BusinessNameViewTitle.exampleBusinessName)
                                     .customFont(.regular, 14)

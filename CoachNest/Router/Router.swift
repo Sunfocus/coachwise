@@ -15,11 +15,11 @@ final class Router: ObservableObject {
     }
     enum RootFlow {
         case onboarding
-        case tab
+        case dashboard
     }
     @Published var authNavPath = NavigationPath()
     @Published var dashboardNavPath = NavigationPath()
-    @Published var isUserLoggedIn: Bool = true
+    @Published var isUserLoggedIn: Bool = false
     @Published var isModalPresented = false
     
     var root: RootFlow = .onboarding
@@ -32,7 +32,8 @@ final class Router: ObservableObject {
         switch newRoot {
         case .onboarding:
             authNavigateToRoot()
-        case .tab:
+        case .dashboard:
+            self.isUserLoggedIn = true
             dashboardNavigateToRoot()
         }
     }

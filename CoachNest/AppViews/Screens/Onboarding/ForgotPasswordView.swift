@@ -9,7 +9,10 @@ import SwiftUI
 
 struct ForgotPasswordView: View {
     //MARK: - @State variables -
-    @State private var email = ""
+    @State private var email = Field(
+        title: Constants.TextField.Title.email,
+        placeholder: Constants.TextField.Placeholder.email
+    )
     @EnvironmentObject var router: Router
     
     var body: some View {
@@ -39,7 +42,7 @@ struct ForgotPasswordView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 
                 VStack(spacing: 10){
-                    CustomTextField(title: Constants.TextField.Title.email, placeholder: Constants.TextField.Placeholder.email, text: $email)
+                    CustomTextField(field: $email)
                     Text(Constants.ForgotPasswordViewTitle.otpToVerify)
                         .customFont(.regular, 14)
                         .multilineTextAlignment(.center)

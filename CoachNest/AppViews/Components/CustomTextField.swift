@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct CustomTextField: View {
-    var title: String
-    var placeholder: String
-    @Binding var text: String
+    @Binding var field: Field
     var isEditable: Bool = true
     var buttonType: SubmitLabel = .done
     var keyboardType: UIKeyboardType = .default
@@ -23,11 +21,11 @@ struct CustomTextField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             // MARK: - Title Text
-            Text(title)
+            Text(field.title)
                 .customFont(.regular, 16)
             
             // MARK: - Input TextField
-            TextField(placeholder, text: $text)
+            TextField(field.placeholder, text: $field.value)
                 .customFont(.regular, 14)
                 .keyboardType(keyboardType) // Set keyboard type
                 .disabled(!isEditable) // Disable editing when isEditable is false
@@ -42,19 +40,25 @@ struct CustomTextField: View {
                 .focused($isFocused) // Attach focus state
                 .submitLabel(buttonType)
                 .onSubmit { if isEditable { onSubmit?() } }
+            
+            // Error Message
+            if let error = field.error {
+                Text(error.rawValue)
+                    .customFont(.regular, 10)
+                    .foregroundColor(.red)
+            }
         }
     }
 }
 
 
 struct CustomTextField_Previews: PreviewProvider {
+    @State static var field = Field(title: "Name", placeholder: "Enter your name") // Create a @State variable
+       
     static var previews: some View {
         Group {
-            // Editable text field with default settings
             CustomTextField(
-                title: "Username",
-                placeholder: "Enter your username",
-                text: .constant("")
+                field: $field
             )
             .previewLayout(.sizeThatFits)
             .padding()

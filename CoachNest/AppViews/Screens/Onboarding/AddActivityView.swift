@@ -20,7 +20,7 @@ struct AddActivityView: View {
                 Spacer()
                 Text("Add a new activity")
                     .customFont(.medium, 18)
-                CustomTextField(title: "", placeholder: "Add Activity", text: $newActivity)
+                CustomTextField(field: $viewModel.addActivity)
                     .padding()
                 
                 // MARK: - Next Button

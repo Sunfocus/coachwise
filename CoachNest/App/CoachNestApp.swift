@@ -13,7 +13,7 @@ struct CoachNestApp: App {
     //MARK: - App-Router and state objects
     @StateObject var router = Router()
     @StateObject private var businessActivityViewModel = BusinessActivityViewModel()
-    
+    @StateObject var selectionType = SelectionTypeViewModel()
     
     var body: some Scene {
         WindowGroup {
@@ -29,12 +29,23 @@ struct CoachNestApp: App {
                             }
                         }
                 }
-            }else if router.root == .tab {
-                
+            }else if router.root == .dashboard {
+                NavigationStack(path: $router.dashboardNavPath) {
+                    TabBarView()
+                        .navigationDestination(for: DashboardFlow.self) { destination in
+                            router.dashboardDestination(for: destination)
+                        }
+                        .sheet(isPresented: $router.isModalPresented) {
+                            if let modalDestination = router.currentModalDestination as? DashboardFlow {
+                                router.dashboardDestination(for: modalDestination)
+                            }
+                        }
+                }
             }
         }
         .environmentObject(router)
         .environmentObject(businessActivityViewModel)
+        .environmentObject(selectionType)
     }
 }
 

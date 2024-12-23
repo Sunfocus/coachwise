@@ -9,16 +9,17 @@ import SwiftUI
 
 struct LetsCompleteProfileView: View {
     //MARK: - @State variables
-    @State private var firstName = ""
-    @State private var lastName = ""
-    @State private var mobileNumber = ""
-    @State private var emergencyContact = ""
-    @State private var emergencyContactNumber = ""
-    @State private var allergies = ""
-    @State private var anyInjury = ""
+//    @State private var firstName = ""
+//    @State private var lastName = ""
+//    @State private var mobileNumber = ""
+//    @State private var emergencyContact = ""
+//    @State private var emergencyContactNumber = ""
+//    @State private var allergies = ""
+//    @State private var anyInjury = ""
     
     //MARK: - View Modifiers -
     @FocusState private var focusedField: Field?
+    @StateObject private var letsCompleteProfileViewModel = LetsCompleteProfileViewModel()
     @EnvironmentObject var router: Router
     //MARK: - Variables -
     enum Field: Hashable {
@@ -57,47 +58,49 @@ struct LetsCompleteProfileView: View {
                 
                 ScrollView {
                     VStack(spacing: 10) {
-                        CustomTextField(title: Constants.TextField.Title.firstName,
-                                        placeholder: Constants.TextField.Placeholder.firstName,
-                                        text: $firstName,
+                        CustomTextField(field: $letsCompleteProfileViewModel.firstName,
                                         buttonType: .next,
                                         onSubmit: {
                             focusedField = .lastName
                                         })
                         .focused($focusedField, equals: .firstName)
+                        .onChange(of: letsCompleteProfileViewModel.firstName.value) { oldValue, newValue in
+                            letsCompleteProfileViewModel.validateFirstName()
+                        }
                         
-                        CustomTextField(title: Constants.TextField.Title.lastName,
-                                        placeholder: Constants.TextField.Placeholder.lastName,
-                                        text: $lastName,
+                        CustomTextField(field: $letsCompleteProfileViewModel.lastName,
                                         buttonType: .next,
                                         onSubmit: {
                             focusedField = .emergencyContact
                                         })
                         .focused($focusedField, equals: .lastName)
+                        .onChange(of: letsCompleteProfileViewModel.lastName.value) { oldValue, newValue in
+                            letsCompleteProfileViewModel.validateLastName()
+                        }
                         
-                        CustomTextField(title: Constants.TextField.Title.mobileNumber,
-                                        placeholder: Constants.TextField.Placeholder.mobileNumber,
-                                        text: $mobileNumber,
+                        CustomTextField(field: $letsCompleteProfileViewModel.mobileNumber,
                                         buttonType: .next,
                                         keyboardType: .numberPad,
                                         onSubmit: {
                             focusedField = .emergencyContact
                                         })
                         .focused($focusedField, equals: .mobileNumber)
+                        .onChange(of: letsCompleteProfileViewModel.mobileNumber.value) { oldValue, newValue in
+                            letsCompleteProfileViewModel.validateMobileNumber()
+                        }
                         
-                        CustomTextField(title: Constants.TextField.Title.emergencyContact,
-                                        placeholder: Constants.TextField.Placeholder.emergencyContact,
-                                        text: $emergencyContact,
+                        CustomTextField(field: $letsCompleteProfileViewModel.emergencyContactName,
                                         buttonType: .next,
                                         onSubmit: {
                             focusedField = .emergencyContactNumber
                             print("Final field submitted")
                         })
                         .focused($focusedField, equals: .emergencyContact)
+                        .onChange(of: letsCompleteProfileViewModel.emergencyContactName.value) { oldValue, newValue in
+                            letsCompleteProfileViewModel.validateFirstName()
+                        }
                         
-                        CustomTextField(title: Constants.TextField.Title.emergencyMobileNumber,
-                                        placeholder: Constants.TextField.Placeholder.emergencyMobileNumber,
-                                        text: $emergencyContact,
+                        CustomTextField(field: $letsCompleteProfileViewModel.emergencyContactNumber,
                                         buttonType: .next,
                                         keyboardType: .numberPad,
                                         onSubmit: {
@@ -105,10 +108,11 @@ struct LetsCompleteProfileView: View {
                             print("Final field submitted")
                         })
                         .focused($focusedField, equals: .emergencyContact)
+                        .onChange(of: letsCompleteProfileViewModel.emergencyContactNumber.value) { oldValue, newValue in
+                            letsCompleteProfileViewModel.validateFirstName()
+                        }
                         
-                        CustomTextField(title: Constants.TextField.Title.allergies,
-                                        placeholder: Constants.TextField.Placeholder.allergies,
-                                        text: $emergencyContactNumber,
+                        CustomTextField(field: $letsCompleteProfileViewModel.anyInjury,
                                         buttonType: .next,
                                         onSubmit: {
                             focusedField = .anyInjury
@@ -117,9 +121,7 @@ struct LetsCompleteProfileView: View {
                         .focused($focusedField, equals: .allergies)
                         
                         
-                        CustomTextField(title: Constants.TextField.Title.anyInjury,
-                                        placeholder: Constants.TextField.Placeholder.anyInjuries,
-                                        text: $emergencyContact,
+                        CustomTextField(field: $letsCompleteProfileViewModel.allergies,
                                         buttonType: .done,
                                         onSubmit: {
                             print("Final field submitted")
@@ -134,7 +136,8 @@ struct LetsCompleteProfileView: View {
                             action: {
                                 HapticFeedbackHelper.mediumImpact()
                                 print("On Tap SignUp")
-                                router.navigate(to: .enrollmentType)
+                                router.setRoot(to: .dashboard)
+                                router.isUserLoggedIn = true
                             }
                         )
                     }.padding(.top, 25)

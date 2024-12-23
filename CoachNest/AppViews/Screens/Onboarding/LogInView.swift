@@ -15,6 +15,8 @@ struct LoginView: View {
     
     //MARK: - View Modifiers -
     @EnvironmentObject var router: Router
+    @StateObject private var loginViewModel = SignupViewModel()
+    
     @FocusState private var focusField: Field?
     
     //MARK: - Variables -
@@ -42,25 +44,27 @@ struct LoginView: View {
                 
                 // MARK: - Email and Password Section
                 VStack(spacing: 10){
-                    CustomTextField(title: Constants.TextField.Title.email,
-                                    placeholder: Constants.TextField.Placeholder.email,
-                                    text: $email,
+                    CustomTextField(field: $loginViewModel.email,
                                     buttonType: .next,
                                     keyboardType: .emailAddress,
                                     onSubmit: {
                         focusField = .pass
                     } )
-                    .focused($focusField, equals: .email) 
+                    .focused($focusField, equals: .email)
+                    .onChange(of: loginViewModel.email.value) { oldValue, newValue in
+                        loginViewModel.validateEmail()
+                    }
                     
-                    SecureTextField(title: Constants.TextField.Title.password,
-                                    placeholder: Constants.TextField.Placeholder.password,
-                                    text: $password,
+                    SecureTextField(field: $loginViewModel.password,
                                     isSecureText: true,
                                     buttonType: .done,
                                     onSubmit: {
                         print("Final field submitted")
                     })
                     .focused($focusField, equals: .pass)
+                    .onChange(of: loginViewModel.password.value) { oldValue, newValue in
+                        loginViewModel.validatePassword()
+                    }
                     
                     HStack{
                         Text(Constants.LogInViewTitle.forgotPassword)
@@ -80,7 +84,15 @@ struct LoginView: View {
                     CustomButton(
                         title: Constants.SignUpViewTitle.logIn,
                         action: {
-                            HapticFeedbackHelper.mediumImpact()
+                            let isValidate = loginViewModel.isValidateForm()
+                            if isValidate{
+                                HapticFeedbackHelper.mediumImpact()
+                                router.setRoot(to: .dashboard)
+                                router.isUserLoggedIn = true
+                            }else{
+                                
+                            }
+                            
                         }
                     )
                 }

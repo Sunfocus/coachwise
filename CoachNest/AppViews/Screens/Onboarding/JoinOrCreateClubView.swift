@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct JoiningEntryView: View {
+struct JoinOrCreateClubView: View {
     
     @EnvironmentObject var router: Router
     @State private var joiningEntryData: [EnrollmentData] = [
@@ -44,7 +44,6 @@ struct JoiningEntryView: View {
                                        selectedEnrollmentId: selectedEnrollmentId ?? 1)
                         .padding(.horizontal)
                         .padding(.bottom, 10)
-                        
                             .onTapGesture {
                                 selectedEnrollmentId = (selectedEnrollmentId == joinEntry.id) ? selectedEnrollmentId : joinEntry.id
                                 HapticFeedbackHelper.lightImpact()
@@ -60,7 +59,11 @@ struct JoiningEntryView: View {
                     CustomButton(
                         title: Constants.JoiningEntryViewTitle.next,
                         action: {
-                            router.navigate(to: .businessNameView)
+                            if selectedEnrollmentId == 1{
+                                router.navigate(to: .joinGroupView)
+                            }else{
+                                router.navigate(to: .businessNameView)
+                            }
                             HapticFeedbackHelper.mediumImpact()
                         }
                     )
@@ -72,5 +75,5 @@ struct JoiningEntryView: View {
 }
 
 #Preview {
-    JoiningEntryView()
+    JoinOrCreateClubView()
 }

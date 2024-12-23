@@ -19,6 +19,7 @@ struct SignUpView: View {
     //MARK: - View Modifiers -
     @FocusState private var focusedField: Field?
     @EnvironmentObject var router: Router
+    @StateObject private var signupViewModel = SignupViewModel()
     //MARK: - Variables -
     enum Field: Hashable {
         case email, firstName, lastName, phoneNumber, password
@@ -35,44 +36,49 @@ struct SignUpView: View {
                 
                 ScrollView {
                     VStack(spacing: 10) {
-                        CustomTextField(title: Constants.TextField.Title.firstName,
-                                        placeholder: Constants.TextField.Placeholder.firstName,
-                                        text: $firstName,
+                        CustomTextField(field: $signupViewModel.firstName,
                                         buttonType: .next,
                                         onSubmit: {
                             focusedField = .lastName
                                         })
                         .focused($focusedField, equals: .firstName)
+                        .onChange(of: signupViewModel.firstName.value) { oldValue, newValue in
+                            signupViewModel.validateFirstName()
+                        }
                         
-                        CustomTextField(title: Constants.TextField.Title.lastName,
-                                        placeholder: Constants.TextField.Placeholder.lastName,
-                                        text: $lastName,
+                        CustomTextField(field: $signupViewModel.lastName,
                                         buttonType: .next,
                                         onSubmit: {
                             focusedField = .email
                                         })
                         .focused($focusedField, equals: .lastName)
+                        .onChange(of: signupViewModel.lastName.value) { oldValue, newValue in
+                            signupViewModel.validateLastName()
+                        }
                         
-                        CustomTextField(title: Constants.TextField.Title.email,
-                                        placeholder: Constants.TextField.Placeholder.email,
-                                        text: $email,
+                        CustomTextField(field: $signupViewModel.email,
                                         buttonType: .next,
                                         keyboardType: .emailAddress,
                                         onSubmit: {
                             focusedField = .password
                                         })
                         .focused($focusedField, equals: .email)
+                        .onChange(of: signupViewModel.email.value) { oldValue, newValue in
+                            signupViewModel.validateEmail()
+                        }
                         
-                        SecureTextField(title: Constants.TextField.Title.password,
-                                        placeholder: Constants.TextField.Placeholder.password,
-                                        text: $password,
+                        SecureTextField(field: $signupViewModel.password,
                                         isSecureText: true,
                                         buttonType: .done,
                                         onSubmit: {
                             print("Final field submitted")
                         })
                         .focused($focusedField, equals: .password)
+                        .onChange(of: signupViewModel.password.value) { oldValue, newValue in
+                            signupViewModel.validatePassword()
+                        }
                     }.padding(.horizontal, 1)
+                    
                     // MARK: - Agree to the Terms Of Service
                     VStack {
                         HStack{
@@ -94,7 +100,6 @@ struct SignUpView: View {
                                     .underline()
                                     .customFont(.semiBold, 12)
                             }
-                            
                             Spacer()
                         }
                     }.padding(.top, 12)
@@ -162,7 +167,7 @@ struct SignUpView: View {
                             .customFont(.regular, 14)
                         Button(action: {
                             print("SignIn Click")
-                            router.navigate(to: .login)
+                            router.authNavigateBack()
                             HapticFeedbackHelper.lightImpact()
                         }, label: {
                             Text(Constants.SignUpViewTitle.logIn)

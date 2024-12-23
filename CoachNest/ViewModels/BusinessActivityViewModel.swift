@@ -11,6 +11,11 @@ import Foundation
 public class BusinessActivityViewModel: ObservableObject{
     // Published array to observe changes
     
+    @Published var addActivity = Field(
+        title: "First Name",
+        placeholder: "Enter first name"
+    )
+    
     @Published private(set) var businessActivities: [BusinessActivityData] = [
         BusinessActivityData(id: 1, title: Constants.BusinessActivityViewTitle.ActivityType.athletics),
         BusinessActivityData(id: 2, title: Constants.BusinessActivityViewTitle.ActivityType.afl),

@@ -25,8 +25,6 @@ extension Router{
             CreateNewPassword()
         case .enrollmentType:
             EnrollmentTypeView()
-        case .joiningEntry:
-            JoiningEntryView()
         case .businessNameView:
             BusinessNameView()
         case .businessActivityView:
@@ -42,6 +40,12 @@ extension Router{
             AddContactsView()
         case .letsCompleteProfile:
             LetsCompleteProfileView()
+        case .dateOfBirthView:
+            DateOfBirthView()
+        case .joinOrCreateClub:
+            JoinOrCreateClubView()
+        case .joinGroupView:
+            JoinGroupView()
         }
     }
 }

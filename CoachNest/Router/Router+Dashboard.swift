@@ -13,7 +13,7 @@ extension Router {
     func dashboardDestination(for flow: DashboardFlow) -> some View {
         switch flow {
         case .tab:
-            EmptyView()
+            TabBarView()
         }
     }
 }
