@@ -9,7 +9,12 @@ import SwiftUI
 
 struct JoinGroupView: View {
     @EnvironmentObject var router: Router
-    @State private var teamId: String = ""
+    @EnvironmentObject var selectionTypeViewModel: SelectionTypeViewModel
+    
+    @State private var teamId = Field(
+        title: Constants.TextField.Title.enterTeamIdFromLink,
+        placeholder: Constants.TextField.Placeholder.enterTeamId
+    )
     
     var body: some View {
         ZStack {
@@ -38,7 +43,15 @@ struct JoinGroupView: View {
                     
                     // MARK: - Join Group TextField & Example Id
                     VStack {
-                        CustomTextField(title: Constants.TextField.Title.enterTeamIdFromLink, placeholder: Constants.TextField.Placeholder.enterTeamId, text: $teamId)
+                        CustomTextField(field: $teamId)
+                        CustomTextField(field: $teamId)
+                            .onChange(of: teamId.value) { oldValue, newValue in
+                                if teamId.value == ""{
+                                    teamId.error = .emptyTeamId
+                                }else{
+                                    teamId.error = nil
+                                }
+                            }
                         HStack {
                             Text(Constants.JoinGroupViewTitle.exampleId)
                                 .customFont(.regular, 14)
@@ -69,6 +82,16 @@ struct JoinGroupView: View {
                         title: Constants.JoinGroupViewTitle.join,
                         action: {
                             router.navigate(to: .dateOfBirthView)
+                            switch selectionTypeViewModel.selectedType {
+                            case .coach:
+                                router.setRoot(to: .dashboard)
+                                router.isUserLoggedIn = true
+                            case .parent:
+                                router.setRoot(to: .dashboard)
+                                router.isUserLoggedIn = true
+                            case .member:
+                                router.navigate(to: .letsCompleteProfile)
+                            }
                         }
                     )
                 }.padding(.horizontal, 20)

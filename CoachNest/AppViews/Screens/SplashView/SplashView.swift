@@ -21,7 +21,6 @@ struct SplashView: View {
                     if router.isUserLoggedIn {
                        
                     } else {
-                       
                     }
                 } else {
                     // Splash screen content
@@ -33,7 +32,7 @@ struct SplashView: View {
                 }
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                     withAnimation {
                         isActive = true
                         router.navigate(to: .login)

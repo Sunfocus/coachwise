@@ -17,13 +17,15 @@ public enum AuthFlow: Codable, Hashable {
     case emailVerification
     case createNewPassword
     case enrollmentType
-    case joiningEntry
     case businessNameView
     case businessActivityView
     case ageGroupView
     case addNewActivity
-    case joiningGroupView
     case dateOfBirthView
+    case addContacts
+    case letsCompleteProfile
+    case joinOrCreateClub
+    case joinGroupView
 }
 
 //MARK: - DashboardFlow -

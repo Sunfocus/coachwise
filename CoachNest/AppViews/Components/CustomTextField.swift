@@ -8,16 +8,12 @@
 import SwiftUI
 
 struct CustomTextField: View {
-    var title: String
-    var placeholder: String
-    @Binding var text: String
-    var isEditable: Bool = true // New property to control editability
+    @Binding var field: Field
+    var isEditable: Bool = true
     var buttonType: SubmitLabel = .done
-    var keyboardType: UIKeyboardType = .default // New property to set keyboard type
+    var keyboardType: UIKeyboardType = .default
     var autocapitalization: TextInputAutocapitalization = .never
-   
     var onSubmit: (() -> Void)?
-    @State private var onTapShowPassword: Bool = false
     
     
     @FocusState private var isFocused: Bool // Private Focus State
@@ -25,12 +21,13 @@ struct CustomTextField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             // MARK: - Title Text
-            Text(title)
+            Text(field.title)
                 .customFont(.regular, 16)
             
             // MARK: - Input TextField
-            TextField(placeholder, text: $text)
+            TextField(field.placeholder, text: $field.value)
                 .customFont(.regular, 14)
+                .keyboardType(keyboardType) // Set keyboard type
                 .disabled(!isEditable) // Disable editing when isEditable is false
                 .frame(height: 27)
                 .tint(.cursorTint)
@@ -38,26 +35,30 @@ struct CustomTextField: View {
                 .padding(.horizontal, 2)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(isFocused ? .pink.opacity(0.2) : Color.gray, lineWidth: 1)
+                        .stroke(isFocused ? .pink.opacity(0.5) : Color.gray, lineWidth: 1)
                 )
                 .focused($isFocused) // Attach focus state
                 .submitLabel(buttonType)
-                .textContentType(.password) // Hint for auto-suggestions
-                .keyboardType(keyboardType) // Set keyboard type
                 .onSubmit { if isEditable { onSubmit?() } }
+            
+            // Error Message
+            if let error = field.error {
+                Text(error.rawValue)
+                    .customFont(.regular, 10)
+                    .foregroundColor(.red)
+            }
         }
     }
 }
 
 
 struct CustomTextField_Previews: PreviewProvider {
+    @State static var field = Field(title: "Name", placeholder: "Enter your name") // Create a @State variable
+       
     static var previews: some View {
         Group {
-            // Editable text field with default settings
             CustomTextField(
-                title: "Username",
-                placeholder: "Enter your username",
-                text: .constant("")
+                field: $field
             )
             .previewLayout(.sizeThatFits)
             .padding()

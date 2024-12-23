@@ -11,9 +11,9 @@ struct AgeGroupView: View {
     
     @EnvironmentObject var router: Router
     @State private var joiningEntryData: [EnrollmentData] = [
-        EnrollmentData(id: 1, title: Constants.AgeGroupViewTitle.mixed, subTitle: Constants.AgeGroupViewTitle.mixedAgeMembers),
-        EnrollmentData(id: 2, title: Constants.AgeGroupViewTitle.childrenOrYouth, subTitle: Constants.AgeGroupViewTitle.childrenAgeMembers),
-        EnrollmentData(id: 3, title: Constants.AgeGroupViewTitle.adults, subTitle: Constants.AgeGroupViewTitle.adultsAgeMembers)]
+        EnrollmentData(id: 1, title: Constants.AgeGroupViewTitle.mixed, subTitle: Constants.AgeGroupViewTitle.mixedAgeMembers, setImage: UIImage()),
+        EnrollmentData(id: 2, title: Constants.AgeGroupViewTitle.childrenOrYouth, subTitle: Constants.AgeGroupViewTitle.childrenAgeMembers, setImage: UIImage()),
+        EnrollmentData(id: 3, title: Constants.AgeGroupViewTitle.adults, subTitle: Constants.AgeGroupViewTitle.adultsAgeMembers, setImage: UIImage())]
     
     @State private var selectedEnrollmentId: Int? = 1
     
@@ -53,7 +53,8 @@ struct AgeGroupView: View {
                     CustomButton(
                         title: Constants.JoiningEntryViewTitle.next,
                         action: {
-                            router.navigate(to: .businessNameView)
+                            router.navigate(to: .addContacts)
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
                 }.padding(.horizontal, 20)

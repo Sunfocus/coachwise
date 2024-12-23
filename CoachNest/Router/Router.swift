@@ -9,20 +9,17 @@ import Foundation
 import SwiftUI
 
 final class Router: ObservableObject {
-    
     enum NavigationStyle {
         case push
         case present
     }
-    
     enum RootFlow {
         case onboarding
-        case tab
+        case dashboard
     }
-    
     @Published var authNavPath = NavigationPath()
     @Published var dashboardNavPath = NavigationPath()
-    @Published var isUserLoggedIn: Bool = true
+    @Published var isUserLoggedIn: Bool = false
     @Published var isModalPresented = false
     
     var root: RootFlow = .onboarding
@@ -35,7 +32,8 @@ final class Router: ObservableObject {
         switch newRoot {
         case .onboarding:
             authNavigateToRoot()
-        case .tab:
+        case .dashboard:
+            self.isUserLoggedIn = true
             dashboardNavigateToRoot()
         }
     }
@@ -58,7 +56,7 @@ extension Router {
             handlePresentNavigation(to: destination)
         }
     }
-    
+       
     // Handle push navigation, adding/removing destination from path and destinations.
     private func handlePushNavigation<T: Hashable>(
         to destination: T,
@@ -96,7 +94,7 @@ extension Router {
 
 //MARK: - Auth Flow -
 extension Router {
-    func navigate(to destination: AuthFlow, style: NavigationStyle = .push) {
+    func navigate(to destination: AuthFlow, style: NavigationStyle = .push, animated: Bool = true) {
         navigate(to: destination, path: &authNavPath, destinations: &authDestinations, style: style)
     }
     func authNavigateBack() {

@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct CreateNewPassword: View {
-    //MARK: - @State variables -
-    @State private var password = ""
-    @State private var confirmPassword = ""
+    @State private var resetPasswordViewModel = ResetPasswordViewModel()
+    
     @FocusState private var focusField: Field?
     @EnvironmentObject var router: Router
     
@@ -33,26 +32,28 @@ struct CreateNewPassword: View {
                 }
                 .padding(.bottom, 24)
                 .frame(maxWidth: .infinity, alignment: .center)
+                
              // MARK: - Password & Create Password TextFields
                 VStack(spacing: 10){
-                    SecureTextField(title: Constants.TextField.Title.password,
-                                    placeholder: Constants.TextField.Placeholder.password,
-                                    text: $password,
-                                    isSecureText: true,
+                    SecureTextField(field: $resetPasswordViewModel.password,
                                     buttonType: .next,
                                     onSubmit: {
                         print("Final field submitted")
                     })
                     .focused($focusField, equals: .password)
-                    SecureTextField(title: Constants.TextField.Title.confirmPassword,
-                                    placeholder: Constants.TextField.Placeholder.confirmPassword,
-                                    text: $confirmPassword,
+                    .onChange(of: resetPasswordViewModel.password.value) { oldValue, newValue in
+                        resetPasswordViewModel.validatePassword()
+                    }
+                    SecureTextField(field: $resetPasswordViewModel.confirmPassword,
                                     isSecureText: true,
                                     buttonType: .done,
                                     onSubmit: {
                         print("Final field submitted")
                     })
                     .focused($focusField, equals: .confirmPassword)
+                    .onChange(of: resetPasswordViewModel.confirmPassword.value) { oldValue, newValue in
+                        resetPasswordViewModel.validateConfirmPassword()
+                    }
                 }
                 Spacer()
                 // MARK: - Login Button

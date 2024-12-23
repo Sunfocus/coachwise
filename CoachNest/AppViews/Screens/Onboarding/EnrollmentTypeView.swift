@@ -12,6 +12,7 @@ struct EnrollmentData: Identifiable {
     let id: Int
     let title: String?
     let subTitle: String
+    let setImage: UIImage?
 }
 
 struct EnrollmentTypeView: View {
@@ -19,10 +20,12 @@ struct EnrollmentTypeView: View {
     // MARK: - Variables -
     @EnvironmentObject var router: Router
     @State private var selectedEnrollmentId: Int? = 1
+    @EnvironmentObject var selectionTypeViewModel: SelectionTypeViewModel
+    
     private var enrollmentData: [EnrollmentData] = [
-        EnrollmentData(id: 1, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type1),
-        EnrollmentData(id: 2, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type2),
-        EnrollmentData(id: 3, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type3)
+        EnrollmentData(id: 1, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type1, setImage: UIImage()),
+        EnrollmentData(id: 2, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type2, setImage: UIImage()),
+        EnrollmentData(id: 3, title: "", subTitle: Constants.EnrollmentTypeViewTitle.type3, setImage: UIImage())
     ]
 
     var body: some View {
@@ -49,6 +52,16 @@ struct EnrollmentTypeView: View {
                         .onTapGesture {
                             selectedEnrollmentId = (selectedEnrollmentId == enrollment.id) ? selectedEnrollmentId : enrollment.id
                             HapticFeedbackHelper.lightImpact()
+                            switch selectedEnrollmentId{
+                            case 1:
+                                selectionTypeViewModel.selectedType = .coach
+                            case 2:
+                                selectionTypeViewModel.selectedType = .parent
+                            case 3:
+                                selectionTypeViewModel.selectedType = .member
+                            default:
+                                selectionTypeViewModel.selectedType = .coach
+                            }
                         }
                     }
                 }
@@ -61,7 +74,15 @@ struct EnrollmentTypeView: View {
                     CustomButton(
                         title: Constants.EnrollmentTypeViewTitle.next,
                         action: {
-                            router.navigate(to: .joiningEntry)
+                            switch selectionTypeViewModel.selectedType {
+                            case .coach:
+                                router.navigate(to: .joinOrCreateClub)
+                            case .parent:
+                                router.navigate(to: .joinGroupView)
+                            case .member:
+                                router.navigate(to: .dateOfBirthView)
+                            }
+                            HapticFeedbackHelper.mediumImpact()
                         }
                     )
                 }.padding(.horizontal, 20)

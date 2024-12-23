@@ -43,7 +43,7 @@ struct DateOfBirthView: View {
                     CustomButton(
                         title: Constants.DateOfBirthView.next,
                         action: {
-                    //                            router.navigate(to: .joiningGroupView)
+                            router.navigate(to: .joinGroupView)
                         }
                     )
                 }.padding(.horizontal, 20)

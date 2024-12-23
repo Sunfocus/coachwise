@@ -7,9 +7,8 @@
 import SwiftUI
 
 struct SecureTextField: View {
-    var title: String
-    var placeholder: String
-    @Binding var text: String
+    
+    @Binding var field: Field
     var isSecureText: Bool = false
     var isEditable: Bool = true // Property to control editability
     var buttonType: SubmitLabel = .done
@@ -23,31 +22,31 @@ struct SecureTextField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             // MARK: - Title Text
-            Text(title)
+            Text(field.title)
                 .customFont(.regular, 16)
             
             // MARK: - Input TextField
             HStack {
                 if isSecureText && !onTapShowPassword {
                     // SecureField to obscure the text
-                    SecureField(placeholder, text: $text)
+                    SecureField(field.placeholder, text: $field.value)
                         .customFont(.regular, 14)
+                        .keyboardType(keyboardType)
                         .tint(.cursorTint)
                         .focused($isFocused)
                         .disabled(!isEditable)
                         .submitLabel(buttonType)
                         .textContentType(.password)
-                        .keyboardType(keyboardType)
                         .onSubmit { if isEditable { onSubmit?() } }
                 } else {
                     // TextField to show the text
-                    TextField(placeholder, text: $text)
+                    TextField(field.title, text: $field.value)
                         .customFont(.regular, 14)
+                        .keyboardType(keyboardType)
                         .tint(.cursorTint)
                         .focused($isFocused)
                         .disabled(!isEditable)
                         .submitLabel(buttonType)
-                        .keyboardType(keyboardType)
                         .onSubmit { if isEditable { onSubmit?() } }
                 }
 
@@ -68,27 +67,29 @@ struct SecureTextField: View {
             .padding(.horizontal, 2)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(isFocused ? .pink.opacity(0.2) : Color.gray, lineWidth: 1)
+                    .stroke(isFocused ? .pink.opacity(0.5) : Color.gray, lineWidth: 1)
             )
+            // Error Message
+            if let error = field.error {
+                Text(error.rawValue)
+                    .customFont(.regular, 10)
+                    .foregroundColor(.red)
+            }
         }
     }
 }
 
 
 struct SecureTextField_Previews: PreviewProvider {
+    @State static var field = Field(title: "Name", placeholder: "Enter your name") // Create a @State
     static var previews: some View {
         Group {
             // Editable text field with default settings
             SecureTextField(
-                title: "Username",
-                placeholder: "Enter your username",
-                text: .constant(""),
-                isSecureText: true
+                field: $field
             )
             .previewLayout(.sizeThatFits)
             .padding()
-
-          
         }
     }
 }
