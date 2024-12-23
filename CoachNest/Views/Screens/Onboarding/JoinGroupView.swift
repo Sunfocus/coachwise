@@ -68,7 +68,7 @@ struct JoinGroupView: View {
                     CustomButton(
                         title: Constants.JoinGroupViewTitle.join,
                         action: {
-                            router.navigate(to: .dobView)
+                            router.navigate(to: .dateOfBirthView)
                         }
                     )
                 }.padding(.horizontal, 20)

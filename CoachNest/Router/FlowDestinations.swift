@@ -23,7 +23,7 @@ public enum AuthFlow: Codable, Hashable {
     case ageGroupView
     case addNewActivity
     case joiningGroupView
-    case dobView
+    case dateOfBirthView
 }
 
 //MARK: - DashboardFlow -

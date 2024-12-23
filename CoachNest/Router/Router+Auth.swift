@@ -40,7 +40,7 @@ extension Router{
                 .presentationContentInteraction(.scrolls)
         case .joiningGroupView:
             JoinGroupView()
-        case .dobView:
+        case .dateOfBirthView:
             DateOfBirthView()
         }
     }
