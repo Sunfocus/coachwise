@@ -44,7 +44,6 @@ struct JoinGroupView: View {
                     // MARK: - Join Group TextField & Example Id
                     VStack {
                         CustomTextField(field: $teamId)
-                        CustomTextField(field: $teamId)
                             .onChange(of: teamId.value) { oldValue, newValue in
                                 if teamId.value == ""{
                                     teamId.error = .emptyTeamId

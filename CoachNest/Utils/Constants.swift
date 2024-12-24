@@ -131,6 +131,22 @@ struct Constants {
         static let registerUsingTheSameLink = "Please register using the same email address to get started!"
     }
     
+    // MARK: - JoinGroupViewTitle
+    struct AddYourGoalsViewTitle {
+        static let noGoals = "No Goals"
+        static let addGoal = "Add Goal"
+        static let tapAdd = "Tap \"+\" to add your first goal."
+        static let exampleId = "Eg: “1pdsh2134”"
+    }
+    
+    // MARK: - AddMembersViewTitle
+    struct AddMemberViewTitle {
+        static let addMember = "Add Member"
+        static let next = "Next"
+        static let search = "Search"
+        
+    }
+    
     // MARK: - BusinessActivity View
     struct BusinessActivityViewTitle {
         static let businessActivity = "What activity does your business engage in?"
@@ -174,6 +190,11 @@ struct Constants {
             static let emergencyMobileNumber = "Emergency Mobile No."
             static let allergies = "Allergies"
             static let anyInjury = "Any Injuries"
+            static let goal = "Goal"
+            static let whoIsThisGoalFor = "Who is this goal for?"
+            static let description = "Description"
+            static let dueOn = "Due on"
+            static let reminder = "Reminder"
         }
         
         struct Placeholder {
@@ -189,6 +210,8 @@ struct Constants {
             static let allergies = "Enter your allergies"
             static let anyInjuries = "Enter your injuries"
             static let enterTeamId = "Enter Team ID"
+            static let goalName = "Enter goal name"
+            static let addNotesHere = "Add your notes here!"
         }
     }
 }

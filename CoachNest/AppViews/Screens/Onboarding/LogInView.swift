@@ -71,7 +71,7 @@ struct LoginView: View {
                             .customFont(.medium, 14)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .underline()
-                            .foregroundStyle(.pinkAccent.opacity(0.7))
+                            .foregroundStyle(.pinkAccent)
                             .onTapGesture {
                                 HapticFeedbackHelper.lightImpact()
                                 router.navigate(to: .forgotPassword)

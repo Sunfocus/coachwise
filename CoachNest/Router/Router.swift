@@ -26,6 +26,7 @@ final class Router: ObservableObject {
     var currentModalDestination: AnyHashable?
     private var authDestinations: [AuthFlow] = []
     private var dashboardDestinations: [DashboardFlow] = []
+    @Environment(\.dismiss) var dismiss
     
     func setRoot(to newRoot: RootFlow) {
         root = newRoot
@@ -42,6 +43,16 @@ final class Router: ObservableObject {
 
 extension Router {
     
+    
+    func dismissPresentedView() {
+        if isModalPresented {
+            isModalPresented = false
+            currentModalDestination = nil
+        } else {
+            assertionFailure("No modal is currently presented to dismiss.")
+        }
+    }
+    
     // Generic navigation to push or present a destination.
     func navigate<T: Hashable>(
         to destination: T,
@@ -56,6 +67,8 @@ extension Router {
             handlePresentNavigation(to: destination)
         }
     }
+    
+    
        
     // Handle push navigation, adding/removing destination from path and destinations.
     private func handlePushNavigation<T: Hashable>(
@@ -73,7 +86,7 @@ extension Router {
     }
     
     private func handlePresentNavigation<T: Hashable>(to destination: T) {
-        if let modalDestination = destination as? AuthFlow {
+        if let modalDestination = destination as? DashboardFlow {
             currentModalDestination = modalDestination
             isModalPresented = true
         } else {

@@ -14,7 +14,8 @@ struct ValidationUtils {
     }
 
     static func isPasswordStrong(_ password: String) -> Bool {
-        let regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
+        let regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[a-zA-Z\\d])[a-zA-Z\\d!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?`~]{8,}$"
         return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: password)
     }
+
 }

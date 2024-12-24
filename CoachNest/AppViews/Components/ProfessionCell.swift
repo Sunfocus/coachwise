@@ -36,7 +36,7 @@ struct ProfessionCell: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(selectedEnrollmentId == enrollment.id ? .primaryTheme.opacity(0.2) : .white)
+        .background(selectedEnrollmentId == enrollment.id ? .primaryTheme.opacity(0.2) : .backgroundCell)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay(
             RoundedRectangle(cornerRadius: 8)

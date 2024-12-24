@@ -14,6 +14,16 @@ extension Router {
         switch flow {
         case .tab:
             TabBarView()
+        case .addGoalView(let userType):
+            AddGoalView(userType: userType)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationContentInteraction(.scrolls)
+        case .addMember:
+            AddMemberView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationContentInteraction(.scrolls)
         }
     }
 }
