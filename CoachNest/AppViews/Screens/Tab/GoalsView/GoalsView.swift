@@ -38,7 +38,7 @@ struct GoalsView: View {
             .overlay(
                 Button(action: {
                     print("Add new tapped")
-                    router.navigate(to: .addGoalView(userType: .coach), style: .present)
+                    router.navigate(to: .addGoalView(userType: .coach), style: .fullScreenCover)
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 50))

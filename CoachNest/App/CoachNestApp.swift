@@ -28,6 +28,7 @@ struct CoachNestApp: App {
                                 router.onboardDestination(for: modalDestination)
                             }
                         }
+                        
                 }
             }else if router.root == .dashboard {
                 NavigationStack(path: $router.dashboardNavPath) {
@@ -38,6 +39,11 @@ struct CoachNestApp: App {
                         .sheet(isPresented: $router.isModalPresented) {
                             if let modalDestination = router.currentModalDestination as? DashboardFlow {
                                 router.dashboardDestination(for: modalDestination)
+                            }
+                        }
+                        .fullScreenCover(isPresented: $router.isFullScreenPresented) {
+                            if let fullScreenDestination = router.currentFullScreenDestination as? DashboardFlow {
+                                router.dashboardDestination(for: fullScreenDestination)
                             }
                         }
                 }

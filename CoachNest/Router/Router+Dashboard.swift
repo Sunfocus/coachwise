@@ -17,13 +17,9 @@ extension Router {
         case .addGoalView(let userType):
             AddGoalView(userType: userType)
                 .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
-                .presentationContentInteraction(.scrolls)
         case .addMember:
-            AddMemberView()
+            AddMemberView( viewModel: ContactsViewModel())
                 .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
-                .presentationContentInteraction(.scrolls)
         }
     }
 }

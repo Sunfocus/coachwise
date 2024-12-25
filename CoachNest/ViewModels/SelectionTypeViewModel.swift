@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-public enum SelectionType: String, Codable {
+public enum AccountType: String, Codable {
     case coach = "Coach"
     case parent = "Individual"
     case member = "Company"
 }
 
 class SelectionTypeViewModel: ObservableObject {
-    @Published var selectedType: SelectionType = .coach
+    @Published var selectedType: AccountType = .coach
 }
 

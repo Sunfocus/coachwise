@@ -12,18 +12,24 @@ final class Router: ObservableObject {
     enum NavigationStyle {
         case push
         case present
+        case fullScreenCover
     }
+    
     enum RootFlow {
         case onboarding
         case dashboard
     }
+    
     @Published var authNavPath = NavigationPath()
     @Published var dashboardNavPath = NavigationPath()
     @Published var isUserLoggedIn: Bool = false
     @Published var isModalPresented = false
+    @Published var isFullScreenPresented = false
     
     var root: RootFlow = .onboarding
     var currentModalDestination: AnyHashable?
+    var currentFullScreenDestination: AnyHashable?
+    
     private var authDestinations: [AuthFlow] = []
     private var dashboardDestinations: [DashboardFlow] = []
     @Environment(\.dismiss) var dismiss
@@ -40,10 +46,7 @@ final class Router: ObservableObject {
     }
 }
 
-
 extension Router {
-    
-    
     func dismissPresentedView() {
         if isModalPresented {
             isModalPresented = false
@@ -52,7 +55,7 @@ extension Router {
             assertionFailure("No modal is currently presented to dismiss.")
         }
     }
-    
+
     // Generic navigation to push or present a destination.
     func navigate<T: Hashable>(
         to destination: T,
@@ -65,11 +68,11 @@ extension Router {
             handlePushNavigation(to: destination, path: &path, destinations: &destinations)
         case .present:
             handlePresentNavigation(to: destination)
+        case .fullScreenCover:
+            handleFullScreenCoverNavigation(to: destination)
         }
     }
     
-    
-       
     // Handle push navigation, adding/removing destination from path and destinations.
     private func handlePushNavigation<T: Hashable>(
         to destination: T,
@@ -94,11 +97,21 @@ extension Router {
         }
     }
     
+    private func handleFullScreenCoverNavigation<T: Hashable>(to destination: T) {
+        if let fullScreenDestination = destination as? DashboardFlow {
+            currentFullScreenDestination = fullScreenDestination
+            isFullScreenPresented = true
+        } else {
+            assertionFailure("Full-screen cover style is not supported for this destination type.")
+        }
+    }
+
     func navigateBack<T>(path: inout NavigationPath, destinations: inout [T]) {
         guard !destinations.isEmpty else { return }
         path.removeLast()
         destinations.removeLast()
     }
+    
     func navigateToRoot<T>(path: inout NavigationPath, destinations: inout [T]) {
         path = NavigationPath()
         destinations.removeAll()
@@ -110,21 +123,26 @@ extension Router {
     func navigate(to destination: AuthFlow, style: NavigationStyle = .push, animated: Bool = true) {
         navigate(to: destination, path: &authNavPath, destinations: &authDestinations, style: style)
     }
+    
     func authNavigateBack() {
         navigateBack(path: &authNavPath, destinations: &authDestinations)
     }
+    
     func authNavigateToRoot() {
         navigateToRoot(path: &authNavPath, destinations: &authDestinations)
     }
 }
+
 //MARK: - Dashboard Flow -
-extension Router{
+extension Router {
     func navigate(to destination: DashboardFlow, style: NavigationStyle = .push) {
         navigate(to: destination, path: &dashboardNavPath, destinations: &dashboardDestinations, style: style)
     }
+    
     func dashboardNavigateBack() {
         navigateBack(path: &dashboardNavPath, destinations: &dashboardDestinations)
     }
+    
     func dashboardNavigateToRoot() {
         navigateToRoot(path: &dashboardNavPath, destinations: &dashboardDestinations)
     }

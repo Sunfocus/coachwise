@@ -31,7 +31,7 @@ public enum AuthFlow: Codable, Hashable {
 //MARK: - DashboardFlow -
 public enum DashboardFlow: Codable, Hashable {
     case tab
-    case addGoalView(userType: SelectionType)
+    case addGoalView(userType: AccountType)
     case addMember
 }
 

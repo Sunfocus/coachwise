@@ -17,7 +17,7 @@ struct AddGoalView: View {
     @EnvironmentObject var router: Router
     @Environment(\.dismiss) var dismiss
     
-    var userType: SelectionType = .coach
+    var userType: AccountType = .coach
     
     var body: some View {
         ZStack{
@@ -78,7 +78,8 @@ struct AddGoalView: View {
                                     .frame(width: 28, height: 28)
                                     .padding(.horizontal)
                                     .onTapGesture {
-                                        router.navigate(to: .addMember, style: .present)
+                                        router.navigate(to: .addMember, style: .fullScreenCover)
+                                        HapticFeedbackHelper.mediumImpact()
                                     }
                             }.frame(height: 48)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -181,6 +182,7 @@ struct ReminderView: View {
             ForEach(options, id: \.self) { option in
                 Button(action: {
                     selectedOption = option
+                    HapticFeedbackHelper.mediumImpact()
                 }) {
                     Text(option.rawValue)
                         .customFont(.regular, 15)
