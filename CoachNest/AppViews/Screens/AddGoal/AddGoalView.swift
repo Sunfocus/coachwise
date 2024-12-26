@@ -12,18 +12,26 @@ struct AddGoalView: View {
     //MARK: - Variables -
     @State private var goalName: String = ""
     @State private var description: String = ""
-    @State private var date = Date.now
+    @State private var dueDate = Date.now
     @State private var showDatePicker = false
+    @State private var errorCatch: String = ""
+    @State private var selectedOption: DurationVal = .daily
     @EnvironmentObject var router: Router
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var whoIsThisGoalForViewModel: ContactsViewModel
+    @EnvironmentObject var addGoalViewModel: AddGoalViewModel
+    
     
     var userType: AccountType = .coach
     
     var body: some View {
         ZStack{
 
-            Color.lightGrey
-                .ignoresSafeArea()
+            if colorScheme != .dark{
+                Color.lightGrey
+                    .ignoresSafeArea()
+            }
             
                 VStack{
                     // Heading and dismiss button section
@@ -45,7 +53,7 @@ struct AddGoalView: View {
                             }
                         Divider()
                     }
-                    .background(.white)
+                    .background(.darkGreyBackground)
                     .padding( .bottom)
                     
                     ScrollView{
@@ -62,7 +70,7 @@ struct AddGoalView: View {
                                 .frame(height: 48)
                             
                                 .padding(.horizontal)
-                                .background(.white)
+                                .background(.darkGreyBackground)
                                 .clipShape(.rect(cornerRadius: 8))
                                 .tint(.black)
                         }
@@ -73,18 +81,29 @@ struct AddGoalView: View {
                                 .customFont(.regular, 16)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             HStack{
-                                Image(.addGoalMemberButton)
-                                    .resizable()
-                                    .frame(width: 28, height: 28)
-                                    .padding(.horizontal)
-                                    .onTapGesture {
-                                        router.navigate(to: .addMember, style: .fullScreenCover)
-                                        HapticFeedbackHelper.mediumImpact()
+                                if !whoIsThisGoalForViewModel.savedMembers.isEmpty{
+                                    SelectedMemberView(selectedMembers: whoIsThisGoalForViewModel.savedMembers)
+                                        .padding(.leading)
                                     }
+                                Spacer()
+                                Text("Add Members")
+                                    .customFont(.medium, 15)
+                                    .padding(8)
+                                    .foregroundStyle(.primaryTheme)
+                                    .background(.primaryTheme.opacity(0.3))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .padding(.trailing, 12)
+                                    .onTapGesture {
+                                        whoIsThisGoalForViewModel.getSelectedSaves()
+                                        router.navigate(to: .addMember, style: .fullScreenCover)
+                                        HapticFeedbackHelper.softImpact()
+                                    }
+                                    
                             }.frame(height: 48)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(.white)
+                                .background(.darkGreyBackground)
                                 .clipShape(.rect(cornerRadius: 8))
+                                
                         }
                         
                         //Description Section
@@ -100,7 +119,7 @@ struct AddGoalView: View {
                                     .textFieldStyle(.plain)
                             }
                             .padding()
-                            .background(Color.white)
+                            .background(.darkGreyBackground)
                             .cornerRadius(8)
                         }
                         
@@ -115,19 +134,16 @@ struct AddGoalView: View {
                                     .padding(.leading, 10)
                                     .foregroundStyle(Color.gray)
                                 
-                                
                                 Spacer()
-                                DatePicker("", selection: $date, in: ...Date(), displayedComponents: .date)
-                                    .colorInvert()
-                                    .colorMultiply(.primaryTheme)
-                                    .tint(.primaryTheme)
+                                DatePicker("", selection: $dueDate, in: ...Date(), displayedComponents: .date)
+                                    .tint(colorScheme == .dark ? .white : .primaryTheme)
                                     .labelsHidden()
                                     .padding(.trailing, 10)
                                 
                                 
                             }.frame(height: 55)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(.white)
+                                .background(.darkGreyBackground)
                                 .clipShape(.rect(cornerRadius: 8))
                             
                         }
@@ -137,7 +153,7 @@ struct AddGoalView: View {
                             Text(Constants.TextField.Title.reminder)
                                 .customFont(.regular, 16)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            ReminderView()
+                            ReminderView(selectedOption: $selectedOption)
                         }
                         
                     }.padding(.horizontal, 15)
@@ -145,14 +161,42 @@ struct AddGoalView: View {
                     Spacer()
                 }
                     
-                    // MARK: - Login Button
+                    // MARK: - Add Goal Button
+                    VStack{
+                        Text(errorCatch)
+                            .customFont(.medium, 12)
+                            .foregroundStyle(.red)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }.padding(.horizontal, 15)
+                    
                     CustomButton(
                         title: Constants.AddYourGoalsViewTitle.addGoal,
                         action: {
+                            let isValidName = addGoalViewModel.checkValidGoalName(goalName: goalName)
+                            let isValidUser = whoIsThisGoalForViewModel.savedMembers.count > 0
+                            let goal = GoalDetails(progress: 0.0,
+                                        goalTitle: goalName,
+                                        updateDate: Date(),
+                                        savedMembers: whoIsThisGoalForViewModel.savedMembers,
+                                        description: description,
+                                        dueOnDate: dueDate,
+                                        reminder: selectedOption)
+                            if isValidName{
+                                if isValidUser && isValidName{
+                                    addGoalViewModel.addGoal(goal)
+                                    whoIsThisGoalForViewModel.savedMembers = []
+                                    dismiss()
+                                }else{
+                                    errorCatch = "Please add members for the goal."
+                                }
+                            }else{
+                                errorCatch = "Please fill a valid Goal name."
+                            }
                             
                         }
                     ).padding(.horizontal, 15)
                         .padding(.bottom)
+                    
             }
         }
     }
@@ -160,18 +204,14 @@ struct AddGoalView: View {
 
 #Preview {
     AddGoalView()
+        .environmentObject(ContactsViewModel())
+        .environmentObject(Router())
 }
 
 
 struct ReminderView: View {
     
-    enum DurationVal: String, Equatable {
-        case daily = "Daily"
-        case weekly = "Weekly"
-        case monthly = "Monthly"
-    }
-    
-    @State private var selectedOption: DurationVal = .daily
+    @Binding var selectedOption: DurationVal
     
     let options: [DurationVal] = [.daily, .weekly, .monthly]
     
@@ -182,20 +222,20 @@ struct ReminderView: View {
             ForEach(options, id: \.self) { option in
                 Button(action: {
                     selectedOption = option
-                    HapticFeedbackHelper.mediumImpact()
+                    HapticFeedbackHelper.softImpact()
                 }) {
                     Text(option.rawValue)
                         .customFont(.regular, 15)
-                        .foregroundColor(selectedOption == option ? .primaryTheme : .black)
+                        .foregroundColor(selectedOption == option ? .primaryTheme : .cursorTint)
                         .frame(maxWidth: .infinity, minHeight: 48)
                         .background(
                             selectedOption == option
                             ? Color.primaryTheme.opacity(0.2)
-                            : Color.white
+                            : Color.darkGreyBackground
                         )
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(selectedOption == option ? .primaryTheme : Color.gray, lineWidth: 1)
+                                .stroke(selectedOption == option ? .primaryTheme : .cursorTint , lineWidth: 1)
                         )
                         .cornerRadius(8)
                 }
@@ -207,7 +247,10 @@ struct ReminderView: View {
 
 struct ReminderView_Previews: PreviewProvider {
     static var previews: some View {
-        ReminderView()
+        ReminderView(selectedOption: .constant(.daily))
             .environmentObject(Router())
     }
 }
+
+
+

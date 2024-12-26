@@ -11,12 +11,12 @@ struct GoalsView: View {
     
     //MARK: - Variables -
     @EnvironmentObject private var router: Router
-    var havingNoGoal: Bool = true
+    @EnvironmentObject private var addGoalViewModel: AddGoalViewModel
     
     
     var body: some View {
         ZStack{
-            if havingNoGoal{
+            if addGoalViewModel.getAllGoals().isEmpty{
                 //MARK: - No goal view Section -
                 VStack{
                     Spacer()
@@ -33,6 +33,13 @@ struct GoalsView: View {
                 .frame(maxWidth: .infinity)
             }else{
                 
+                ScrollView{
+                    ForEach(addGoalViewModel.getAllGoals()) { goal in
+                        IndividualGoalCell(progress: 30.0, goal: goal)
+                            .padding(.horizontal)
+                            .padding(.bottom, 4)
+                    }
+                }
             }
         }.background(.backgroundTheme)
             .overlay(

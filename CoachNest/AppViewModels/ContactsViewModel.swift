@@ -34,8 +34,10 @@ public class ContactsViewModel: ObservableObject{
     
     @Published var members: [MemberDetail] = []
     @Published var selectedMembers: [MemberDetail] = []
+    @Published var savedMembers: [MemberDetail] = []
     var speechManager = SpeechRecognitionManager()
     private var cancellables: Set<AnyCancellable> = []
+    
     
     var groupedMembers: [String: [MemberDetail]] {
         Dictionary(grouping: members, by: { String($0.name.prefix(1)) })
@@ -57,6 +59,42 @@ public class ContactsViewModel: ObservableObject{
     
     func stopVoiceSearch(){
         speechManager.stopRecording()
+    }
+    
+    func saveMembers(){
+        savedMembers = selectedMembers
+        selectedMembers = savedMembers
+    }
+    
+    func getSelectedSaves(){
+        selectedMembers = savedMembers
+    }
+    
+    
+    func isSelected(member: MemberDetail) -> Bool {
+        return selectedMembers.contains { $0.id == member.id }
+    }
+       
+    func toggleSelection(for member: MemberDetail, isSelected: Bool? = nil) {
+        if let isSelected = isSelected {
+            // Explicitly set selection state
+            if isSelected {
+                if !selectedMembers.contains(where: { $0.id == member.id }) {
+                    selectedMembers.append(member)
+                }
+            } else {
+                if let index = selectedMembers.firstIndex(where: { $0.id == member.id }) {
+                    selectedMembers.remove(at: index)
+                }
+            }
+        } else {
+            // Toggle selection state
+            if let index = selectedMembers.firstIndex(where: { $0.id == member.id }) {
+                selectedMembers.remove(at: index)
+            } else {
+                selectedMembers.append(member)
+            }
+        }
     }
     
     func fetchContacts(){
@@ -108,8 +146,4 @@ public class ContactsViewModel: ObservableObject{
                 selectedMembers.append(member)
             }
         }
-
-    func isSelected(member: MemberDetail) -> Bool {
-        selectedMembers.contains(member)
-    }
 }

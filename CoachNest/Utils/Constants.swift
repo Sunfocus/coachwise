@@ -143,6 +143,7 @@ struct Constants {
     struct AddMemberViewTitle {
         static let addMember = "Add Member"
         static let next = "Next"
+        static let done = "Done"
         static let search = "Search"
         
     }

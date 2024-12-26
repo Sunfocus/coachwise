@@ -13,7 +13,9 @@ struct CoachNestApp: App {
     //MARK: - App-Router and state objects
     @StateObject var router = Router()
     @StateObject private var businessActivityViewModel = BusinessActivityViewModel()
+    @StateObject private var whoIsThisGoalFor = ContactsViewModel()
     @StateObject var selectionType = SelectionTypeViewModel()
+    @StateObject var addGoalViewModel = AddGoalViewModel()
     
     var body: some Scene {
         WindowGroup {
@@ -52,6 +54,8 @@ struct CoachNestApp: App {
         .environmentObject(router)
         .environmentObject(businessActivityViewModel)
         .environmentObject(selectionType)
+        .environmentObject(whoIsThisGoalFor)
+        .environmentObject(addGoalViewModel)
     }
 }
 

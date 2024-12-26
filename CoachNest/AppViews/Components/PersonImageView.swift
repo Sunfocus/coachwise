@@ -15,6 +15,7 @@ struct PersonImageView: View {
     var body: some View {
         Image(uiImage: image)
             .resizable()
+            .scaledToFill()
             .frame(width: 50, height: 50)
             .clipShape(.circle)
             .overlay {

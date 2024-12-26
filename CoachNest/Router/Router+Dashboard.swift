@@ -18,7 +18,7 @@ extension Router {
             AddGoalView(userType: userType)
                 .presentationDetents([.large])
         case .addMember:
-            AddMemberView( viewModel: ContactsViewModel())
+            AddMemberView()
                 .presentationDetents([.large])
         }
     }

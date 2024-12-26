@@ -10,12 +10,13 @@ import SwiftUI
 struct ContactCell: View {
     
     var contact: MemberDetail
-    @Binding var isSelected: Bool
+    var isSelected: Bool
     
     var body: some View {
         HStack{
             Image(uiImage: contact.profileImage ?? .sg1)
                 .resizable()
+                .scaledToFill()
                 .frame(width: 40, height: 40)
                 .clipShape(.circle)
             VStack(alignment: .leading){
@@ -31,17 +32,12 @@ struct ContactCell: View {
                 .resizable()
                 .frame(width: 24, height: 24)
                 .clipShape(.circle)
-                .onTapGesture {
-                    isSelected.toggle()
-                    HapticFeedbackHelper.lightImpact()
-                }
             
         } .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
 #Preview {
-    @Previewable @State var isSelected = false
     let member = MemberDetail(name: "Rahul Pathania", profileImage: .sg1, accountType: .coach)
-    ContactCell(contact: member, isSelected: $isSelected)
+    ContactCell(contact: member, isSelected: false)
 }

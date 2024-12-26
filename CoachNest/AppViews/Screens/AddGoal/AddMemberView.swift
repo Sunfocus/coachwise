@@ -5,8 +5,6 @@
 //  Created by ios on 24/12/24.
 //
 
-
-
 import SwiftUI
 
 struct AddMemberView: View {
@@ -15,14 +13,14 @@ struct AddMemberView: View {
     @EnvironmentObject var router: Router
     @State private var searchedText = ""
     @State private var isRecording: Bool = false
-    @ObservedObject var viewModel: ContactsViewModel
+    @EnvironmentObject var whoIsThisGoalForViewModel: ContactsViewModel
+    @Environment(\.colorScheme) var colorScheme
     
-    // Filtered contacts based on search text
     var filteredContacts: [String: [MemberDetail]] {
         if searchedText.isEmpty {
-            return viewModel.groupedMembers
+            return whoIsThisGoalForViewModel.groupedMembers
         } else {
-            return viewModel.groupedMembers.reduce(into: [:]) { result, group in
+            return whoIsThisGoalForViewModel.groupedMembers.reduce(into: [:]) { result, group in
                 // Filter the members in the group based on the search text
                 let filteredMembers = group.value.filter { $0.name.lowercased().contains(searchedText.lowercased()) }
                 
@@ -35,12 +33,12 @@ struct AddMemberView: View {
     }
     
     
-    
-    
     var body: some View {
         ZStack{
-            Color.lightGrey
-                .ignoresSafeArea()
+            if colorScheme != .dark{
+                Color.lightGrey
+                    .ignoresSafeArea()
+            }
             
             VStack{
                 // Heading and dismiss button section
@@ -51,22 +49,26 @@ struct AddMemberView: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .onTapGesture {
+                                //we have to dismiss the current view only
                                 router.navigate(to: .addGoalView(userType: .coach), style: .fullScreenCover)
                             }
                         Spacer()
-                        Text(Constants.AddMemberViewTitle.next)
+                        Text(Constants.AddMemberViewTitle.done)
                             .foregroundStyle(.primaryTheme)
                             .onTapGesture {
-                                print("next nutton tapped")
+                                print("save button tapped")
+                                whoIsThisGoalForViewModel.saveMembers()
+                                //we have to dismiss the current view only
+                                router.navigate(to: .addGoalView(userType: .coach), style: .fullScreenCover)
                             }
                     }.padding([.horizontal, .vertical], 15)
                         .overlay {
                             VStack{
                                 Text(Constants.AddMemberViewTitle.addMember)
                                     .customFont(.medium, 16)
-                                Text("\(viewModel.selectedMembers.count)/\(viewModel.members.count)")
+                                Text("\(whoIsThisGoalForViewModel.selectedMembers.count)/\(whoIsThisGoalForViewModel.members.count)")
                                     .customFont(.medium, 13)
-                                    .foregroundStyle(.darkGrey)
+                                    .foregroundStyle(.cursorTint.opacity(0.4))
                             }
                         }
                     
@@ -84,19 +86,19 @@ struct AddMemberView: View {
                             .resizable()
                             .renderingMode(.template)
                             .frame(width: 15, height: 20)
-                            .foregroundColor(isRecording ? .red : .gray) // Tint the image
+                            .foregroundColor(isRecording ? .red : .gray)
                             .padding(.trailing)
                             .onTapGesture {
                                 if isRecording{
                                     searchedText = ""
-                                    viewModel.stopVoiceSearch()
+                                    whoIsThisGoalForViewModel.stopVoiceSearch()
                                 }else{
-                                    viewModel.startVoiceSearch { voiceText in
+                                    whoIsThisGoalForViewModel.startVoiceSearch { voiceText in
                                         searchedText = voiceText
                                         if !voiceText.isEmpty{
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5){
                                                 print(voiceText)
-                                                viewModel.stopVoiceSearch()
+                                                whoIsThisGoalForViewModel.stopVoiceSearch()
                                                 isRecording = false
                                             }
                                         }
@@ -107,47 +109,40 @@ struct AddMemberView: View {
                     }
                     .frame(height: 45)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.lightGrey)
+                    .background(colorScheme == .dark ? .darkGreyBackground : .lightGrey)
                     .clipShape(.rect(cornerRadius: 18))
                     .padding([.horizontal, .bottom])
                     
                     Divider()
                     
-                }.background(.white)
+                }
+                .background(colorScheme == .dark ? .black : .white)
+                
                    
                 
                     // ScrollView{
                     VStack{
-                        if !viewModel.selectedMembers.isEmpty{
+                        if !whoIsThisGoalForViewModel.selectedMembers.isEmpty{
                             HStack{
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 20) {
-                                        ForEach(viewModel.selectedMembers) { member in
+                                    HStack(spacing: 12) {
+                                        ForEach(whoIsThisGoalForViewModel.selectedMembers) { member in
                                             PersonImageView(isSelected:  Binding(
                                                 get: {
-                                                    viewModel.selectedMembers.contains { $0.id == member.id } // Check if this contact is selected
+                                                    whoIsThisGoalForViewModel.isSelected(member: member) // Check if this contact is selected
                                                 },
                                                 set: { newValue in
-                                                    if newValue {
-                                                        viewModel.selectedMembers.append(member) // Add to selected
-                                                    } else {
-                                                        if let index = viewModel.selectedMembers.firstIndex(of: member) {
-                                                            viewModel.selectedMembers.remove(at: index) // Remove from selected
-                                                        }
-                                                    }
+                                                    whoIsThisGoalForViewModel.toggleSelection(for: member, isSelected: newValue) // Toggle selection
                                                 }
                                             ), image: member.profileImage ?? .sg1 )
-                                                .onTapGesture {
-                                                    HapticFeedbackHelper.lightImpact()
-                                                }
                                         }
                                     }
                                 }.safeAreaPadding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                                 
                             }.frame(height: 70)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(.white)
+                                .background(.darkGreyBackground)
                                 .clipShape(.rect(cornerRadius: 10))
                                 .padding(.vertical, 10)
                                 .padding(.horizontal)
@@ -162,40 +157,27 @@ struct AddMemberView: View {
                                             
                                     ){
                                         ForEach(filteredContacts[letter]!, id: \.id) { member in
-                                            ContactCell(contact: member, isSelected: Binding(
-                                                get: {
-                                                    viewModel.selectedMembers.contains { $0.id == member.id } // Check if this contact is selected
-                                                },
-                                                set: { newValue in
-                                                    if newValue {
-                                                        viewModel.selectedMembers.append(member) // Add to selected
-                                                    } else {
-                                                        if let index = viewModel.selectedMembers.firstIndex(of: member) {
-                                                            viewModel.selectedMembers.remove(at: index) // Remove from selected
-                                                        }
-                                                    }
-                                                }
-                                            ))
+                                            ContactCell(contact: member, isSelected: whoIsThisGoalForViewModel.isSelected(member: member))
+                                            .contentShape(Rectangle())
                                             .onTapGesture {
-                                                HapticFeedbackHelper.mediumImpact()
+                                                whoIsThisGoalForViewModel.toggleSelection(for: member)
                                             }
                                         }
-                                        
                                     }.id(letter)
                                 }
                             }
-                            .firstLetterSectionIndex(proxy: proxy, sections: filteredContacts.keys.sorted())
+                         //   .firstLetterSectionIndex(proxy: proxy, sections: filteredContacts.keys.sorted())
                             .listStyle(InsetGroupedListStyle())
                             .scrollIndicators(.hidden)
-                            .ignoresSafeArea()
                         }
-                        
                     }
             }
-        }
+        }.ignoresSafeArea(.keyboard)
     }
 }
 
 #Preview {
-    AddMemberView( viewModel: ContactsViewModel())
+    AddMemberView()
+        .environmentObject(ContactsViewModel())
+        .environmentObject(Router())
 }
