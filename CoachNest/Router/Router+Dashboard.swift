@@ -16,10 +16,10 @@ extension Router {
             TabBarView()
         case .addGoalView(let userType):
             AddGoalView(userType: userType)
-                .presentationDetents([.large])
         case .addMember:
             AddMemberView()
-                .presentationDetents([.large])
+        case .goalDetailedView(let goalId):
+            GoalDetailView(goalId: goalId )
         }
     }
 }

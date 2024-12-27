@@ -47,14 +47,6 @@ final class Router: ObservableObject {
 }
 
 extension Router {
-    func dismissPresentedView() {
-        if isModalPresented {
-            isModalPresented = false
-            currentModalDestination = nil
-        } else {
-            assertionFailure("No modal is currently presented to dismiss.")
-        }
-    }
 
     // Generic navigation to push or present a destination.
     func navigate<T: Hashable>(

@@ -145,6 +145,20 @@ struct Constants {
         static let next = "Next"
         static let done = "Done"
         static let search = "Search"
+    }
+    
+    // MARK: - GoalInfoViewTitle
+    struct GoalInfoViewTitle {
+        static let goalName = "Goal name"
+        static let description = "Description"
+        static let reminder = "Reminder"
+        static let goalStatus = "Goal Status"
+        static let working = "Working on it"
+        static let completed = "Completed"
+        static let dueOn = "Due on"
+        static let goalFor = "Goal for"
+        static let goalFrom = "Goal from"
+        static let markAsComplete = "Mark as complete!"
         
     }
     

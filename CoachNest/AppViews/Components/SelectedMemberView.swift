@@ -19,22 +19,22 @@ struct SelectedMemberView: View {
                     Image(uiImage: member.profileImage ?? .sg1 )
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 24, height: 24)
+                        .frame(width: 22, height: 22)
                         .clipShape(.circle)
                 }
                 // Show the remaining count if there are more than 5 members
                 if selectedMembers.count > 3 && selectedMembers.count < 100  {
-                    Text("+\(selectedMembers.count - 5)")
+                    Text("+\(selectedMembers.count - 3)")
                         .customFont(.semiBold, 12)
                         .foregroundColor(.white)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 22, height: 22)
                         .background(Color.gray)
                         .clipShape(Circle())
                 }
             }
             
             if selectedMembers.count >= 100  {
-                Text("and \(selectedMembers.count - 5) others")
+                Text("and \(selectedMembers.count - 3) others")
                     .customFont(.semiBold, 12)
             }
         }

@@ -35,9 +35,12 @@ struct GoalsView: View {
                 
                 ScrollView{
                     ForEach(addGoalViewModel.getAllGoals()) { goal in
-                        IndividualGoalCell(progress: 30.0, goal: goal)
+                        IndividualGoalCell(goal: goal)
                             .padding(.horizontal)
                             .padding(.bottom, 4)
+                            .onTapGesture {
+                                router.navigate(to: .goalDetailedView(goalId: goal.id))
+                            }
                     }
                 }
             }
@@ -45,7 +48,7 @@ struct GoalsView: View {
             .overlay(
                 Button(action: {
                     print("Add new tapped")
-                    router.navigate(to: .addGoalView(userType: .coach), style: .fullScreenCover)
+                    router.navigate(to: .addGoalView(userType: .coach))
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 50))

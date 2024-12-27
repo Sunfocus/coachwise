@@ -8,7 +8,7 @@ import SwiftUI
 
 public class AddGoalViewModel: ObservableObject {
     // Published property to notify views of changes
-    @Published var goals: [GoalDetails] = []
+    @Published var goals: [GoalDetails] = [GoalDetails(progress: 45, goalTitle: "Learn Swift", updateDate: Date(), savedMembers: [MemberDetail(name: "Jayson Anderson", profileImage: .sg1, accountType: .coach)], description: "play with swift", dueOnDate: Date(), reminder: .daily),GoalDetails(progress: 67, goalTitle: "Play Cricket", updateDate: Date(), savedMembers: [MemberDetail(name: "Natalie Brooks", profileImage: .f1, accountType: .coach)], description: "Play Tournament", dueOnDate: Date(), reminder: .daily) ]
     
 
     // Add a new goal to the array
@@ -19,6 +19,9 @@ public class AddGoalViewModel: ObservableObject {
     
     func checkValidGoalName(goalName: String) -> Bool{
         return !goalName.isEmpty
+    }
+    func checkValidGoalDescription(goalDescription: String) -> Bool{
+        return !goalDescription.isEmpty
     }
     
 

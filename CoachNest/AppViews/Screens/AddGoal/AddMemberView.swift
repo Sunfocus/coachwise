@@ -45,12 +45,12 @@ struct AddMemberView: View {
                 VStack{
                     // Heading and dismiss button section
                     HStack {
-                        Image(.greyCloseButton)
+                        Image(.arrowBack)
                             .resizable()
                             .frame(width: 24, height: 24)
                             .onTapGesture {
                                 //we have to dismiss the current view only
-                                router.navigate(to: .addGoalView(userType: .coach), style: .fullScreenCover)
+                                router.dashboardNavigateBack()
                             }
                         Spacer()
                         Text(Constants.AddMemberViewTitle.done)
@@ -58,8 +58,9 @@ struct AddMemberView: View {
                             .onTapGesture {
                                 print("save button tapped")
                                 whoIsThisGoalForViewModel.saveMembers()
+                                router.dashboardNavigateBack()
                                 //we have to dismiss the current view only
-                                router.navigate(to: .addGoalView(userType: .coach), style: .fullScreenCover)
+                               // router.navigate(to: .addGoalView(userType: .coach), style: .fullScreenCover)
                             }
                     }.padding([.horizontal, .vertical], 15)
                         .overlay {
@@ -117,10 +118,7 @@ struct AddMemberView: View {
                     
                 }
                 .background(colorScheme == .dark ? .black : .white)
-                
                    
-                
-                    // ScrollView{
                     VStack{
                         if !whoIsThisGoalForViewModel.selectedMembers.isEmpty{
                             HStack{
@@ -166,13 +164,13 @@ struct AddMemberView: View {
                                     }.id(letter)
                                 }
                             }
-                         //   .firstLetterSectionIndex(proxy: proxy, sections: filteredContacts.keys.sorted())
+                           // .firstLetterSectionIndex(proxy: proxy, sections: filteredContacts.keys.sorted())
                             .listStyle(InsetGroupedListStyle())
                             .scrollIndicators(.hidden)
                         }
                     }
             }
-        }.ignoresSafeArea(.keyboard)
+        }.navigationBarBackButtonHidden()
     }
 }
 

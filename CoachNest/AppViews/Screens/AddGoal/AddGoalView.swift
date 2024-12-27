@@ -17,7 +17,6 @@ struct AddGoalView: View {
     @State private var errorCatch: String = ""
     @State private var selectedOption: DurationVal = .daily
     @EnvironmentObject var router: Router
-    @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var whoIsThisGoalForViewModel: ContactsViewModel
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
@@ -37,11 +36,11 @@ struct AddGoalView: View {
                     // Heading and dismiss button section
                     VStack{
                         HStack {
-                            Image(.greyCloseButton)
+                            Image(.arrowBack)
                                 .resizable()
                                 .frame(width: 24, height: 24)
                                 .onTapGesture {
-                                    dismiss()
+                                    router.dashboardNavigateBack()
                                 }
                             Spacer()
                         }.padding([.horizontal, .vertical], 15)
@@ -95,7 +94,7 @@ struct AddGoalView: View {
                                     .padding(.trailing, 12)
                                     .onTapGesture {
                                         whoIsThisGoalForViewModel.getSelectedSaves()
-                                        router.navigate(to: .addMember, style: .fullScreenCover)
+                                        router.navigate(to: .addMember)
                                         HapticFeedbackHelper.softImpact()
                                     }
                                     
@@ -135,7 +134,7 @@ struct AddGoalView: View {
                                     .foregroundStyle(Color.gray)
                                 
                                 Spacer()
-                                DatePicker("", selection: $dueDate, in: ...Date(), displayedComponents: .date)
+                                DatePicker("", selection: $dueDate, in: Date()..., displayedComponents: .date)
                                     .tint(colorScheme == .dark ? .white : .primaryTheme)
                                     .labelsHidden()
                                     .padding(.trailing, 10)
@@ -174,6 +173,7 @@ struct AddGoalView: View {
                         action: {
                             let isValidName = addGoalViewModel.checkValidGoalName(goalName: goalName)
                             let isValidUser = whoIsThisGoalForViewModel.savedMembers.count > 0
+                            let isValidDescription = addGoalViewModel.checkValidGoalDescription(goalDescription: description)
                             let goal = GoalDetails(progress: 0.0,
                                         goalTitle: goalName,
                                         updateDate: Date(),
@@ -182,23 +182,26 @@ struct AddGoalView: View {
                                         dueOnDate: dueDate,
                                         reminder: selectedOption)
                             if isValidName{
-                                if isValidUser && isValidName{
-                                    addGoalViewModel.addGoal(goal)
-                                    whoIsThisGoalForViewModel.savedMembers = []
-                                    dismiss()
+                                if isValidUser{
+                                    if isValidDescription{
+                                        addGoalViewModel.addGoal(goal)
+                                        whoIsThisGoalForViewModel.savedMembers = []
+                                        router.dashboardNavigateBack()
+                                    }else{
+                                        errorCatch = "Please add description for the goal."
+                                    }
                                 }else{
                                     errorCatch = "Please add members for the goal."
                                 }
                             }else{
                                 errorCatch = "Please fill a valid Goal name."
                             }
-                            
                         }
                     ).padding(.horizontal, 15)
                         .padding(.bottom)
                     
             }
-        }
+        }.navigationBarBackButtonHidden()
     }
 }
 

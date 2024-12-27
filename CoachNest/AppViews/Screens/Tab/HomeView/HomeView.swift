@@ -8,13 +8,23 @@
 import SwiftUI
 
 struct HomeView: View {
+    
     var body: some View {
-        ZStack {
-            Text("Hello")
-        }.background(.backgroundTheme)
+        
+        VStack(spacing:0){
+            //Picker
+            Text("Home View")
+        }
     }
 }
 
 #Preview {
     HomeView()
+}
+
+extension UISegmentedControl {
+  override open func didMoveToSuperview() {
+     super.didMoveToSuperview()
+     self.setContentHuggingPriority(.defaultLow, for: .vertical)
+   }
 }

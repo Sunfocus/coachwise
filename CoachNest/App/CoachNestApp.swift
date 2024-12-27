@@ -17,6 +17,14 @@ struct CoachNestApp: App {
     @StateObject var selectionType = SelectionTypeViewModel()
     @StateObject var addGoalViewModel = AddGoalViewModel()
     
+    init() {
+        UISegmentedControl.appearance().selectedSegmentTintColor = .primaryTheme
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        UISegmentedControl.appearance().backgroundColor = UIColor.white.withAlphaComponent(0.1)
+        
+    }
+   
+    
     var body: some Scene {
         WindowGroup {
             if router.root == .onboarding {
@@ -57,5 +65,7 @@ struct CoachNestApp: App {
         .environmentObject(whoIsThisGoalFor)
         .environmentObject(addGoalViewModel)
     }
+    
+   
 }
 
