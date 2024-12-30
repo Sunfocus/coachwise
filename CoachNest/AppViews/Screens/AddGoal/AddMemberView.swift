@@ -62,13 +62,14 @@ struct AddMemberView: View {
                             .foregroundStyle(.primaryTheme)
                             .onTapGesture {
                                 print("save button tapped")
-                                if isComingFrom == .editGoal{
-                                    if !whoIsThisGoalForViewModel.selectedMembers.isEmpty{
-                                        addGoalViewModel.updateGoalMembers(goalId: goalId, members: whoIsThisGoalForViewModel.selectedMembers)
-                                    }
-                                }else{
-                                    whoIsThisGoalForViewModel.savedMembers = whoIsThisGoalForViewModel.selectedMembers
-                                }
+                                whoIsThisGoalForViewModel.savedMembers = whoIsThisGoalForViewModel.selectedMembers
+//                                if isComingFrom == .editGoal{
+//                                    if !whoIsThisGoalForViewModel.selectedMembers.isEmpty{
+//                                        addGoalViewModel.updateGoalMembers(goalId: goalId, members: whoIsThisGoalForViewModel.selectedMembers)
+//                                    }
+//                                }else{
+//                                    
+//                                }
                                 router.dashboardNavigateBack()
                             }
                     }.padding([.horizontal, .vertical], 15)

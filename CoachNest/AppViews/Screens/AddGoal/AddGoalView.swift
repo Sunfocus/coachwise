@@ -25,6 +25,7 @@ struct AddGoalView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var whoIsThisGoalForViewModel: ContactsViewModel
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
+    @State private var isInitialized = false
     
     var comingFrom: ComingFrom = .addNewGoal
     var goalId: UUID?
@@ -227,7 +228,13 @@ struct AddGoalView: View {
                         description = editedGoal?.description ?? ""
                         dueDate = editedGoal?.dueOnDate ?? Date()
                         selectedOption = editedGoal?.reminder ?? .daily
-                        whoIsThisGoalForViewModel.updateSelection(members: editedGoal?.savedMembers ?? [])
+                        if !isInitialized {
+                            print("MyView initialized for the first time.")
+                            isInitialized = true
+                            whoIsThisGoalForViewModel.updateSelection(members: editedGoal?.savedMembers ?? [])
+                        }else{
+                            
+                        }
                     }
                 }
         }.navigationBarBackButtonHidden()
