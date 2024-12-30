@@ -135,6 +135,7 @@ struct Constants {
     struct AddYourGoalsViewTitle {
         static let noGoals = "No Goals"
         static let addGoal = "Add Goal"
+        static let editGoal = "Edit Goal"
         static let tapAdd = "Tap \"+\" to add your first goal."
         static let exampleId = "Eg: “1pdsh2134”"
     }

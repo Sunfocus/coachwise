@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+public enum ComingFrom: Codable{
+    case addNewGoal
+    case editGoal
+}
+
 struct AddGoalView: View {
     
     //MARK: - Variables -
@@ -21,12 +26,25 @@ struct AddGoalView: View {
     @EnvironmentObject var whoIsThisGoalForViewModel: ContactsViewModel
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
     
+    var comingFrom: ComingFrom = .addNewGoal
+    var goalId: UUID?
+    var editedGoal: GoalDetails? {
+        return addGoalViewModel.getGoal(byID: goalId ?? UUID() )
+    }
+    
+    var savedMembers: [MemberDetail]{
+        if comingFrom == .editGoal{
+            return editedGoal?.savedMembers ?? []
+        }else{
+            return whoIsThisGoalForViewModel.savedMembers
+        }
+    }
+    
     
     var userType: AccountType = .coach
     
     var body: some View {
         ZStack{
-
             if colorScheme != .dark{
                 Color.lightGrey
                     .ignoresSafeArea()
@@ -41,6 +59,7 @@ struct AddGoalView: View {
                                 .frame(width: 24, height: 24)
                                 .onTapGesture {
                                     router.dashboardNavigateBack()
+                                    whoIsThisGoalForViewModel.resetSelection()
                                 }
                             Spacer()
                         }.padding([.horizontal, .vertical], 15)
@@ -67,7 +86,6 @@ struct AddGoalView: View {
                             TextField(Constants.TextField.Placeholder.goalName, text: $goalName)
                                 .customFont(.regular, 14)
                                 .frame(height: 48)
-                            
                                 .padding(.horizontal)
                                 .background(.darkGreyBackground)
                                 .clipShape(.rect(cornerRadius: 8))
@@ -80,7 +98,7 @@ struct AddGoalView: View {
                                 .customFont(.regular, 16)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             HStack{
-                                if !whoIsThisGoalForViewModel.savedMembers.isEmpty{
+                                if !savedMembers.isEmpty{
                                     SelectedMemberView(selectedMembers: whoIsThisGoalForViewModel.savedMembers)
                                         .padding(.leading)
                                     }
@@ -93,8 +111,7 @@ struct AddGoalView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                     .padding(.trailing, 12)
                                     .onTapGesture {
-                                        whoIsThisGoalForViewModel.getSelectedSaves()
-                                        router.navigate(to: .addMember)
+                                        router.navigate(to: .addMember(goalId: goalId ?? UUID(), comingFrom: comingFrom))
                                         HapticFeedbackHelper.softImpact()
                                     }
                                     
@@ -158,7 +175,7 @@ struct AddGoalView: View {
                     }.padding(.horizontal, 15)
                     
                     Spacer()
-                }
+                    }.scrollIndicators(.hidden)
                     
                     // MARK: - Add Goal Button
                     VStack{
@@ -169,12 +186,12 @@ struct AddGoalView: View {
                     }.padding(.horizontal, 15)
                     
                     CustomButton(
-                        title: Constants.AddYourGoalsViewTitle.addGoal,
+                        title: (comingFrom == .addNewGoal ? Constants.AddYourGoalsViewTitle.addGoal : Constants.AddYourGoalsViewTitle.editGoal),
                         action: {
                             let isValidName = addGoalViewModel.checkValidGoalName(goalName: goalName)
                             let isValidUser = whoIsThisGoalForViewModel.savedMembers.count > 0
                             let isValidDescription = addGoalViewModel.checkValidGoalDescription(goalDescription: description)
-                            let goal = GoalDetails(progress: 0.0,
+                            let goal = GoalDetails(
                                         goalTitle: goalName,
                                         updateDate: Date(),
                                         savedMembers: whoIsThisGoalForViewModel.savedMembers,
@@ -184,8 +201,12 @@ struct AddGoalView: View {
                             if isValidName{
                                 if isValidUser{
                                     if isValidDescription{
-                                        addGoalViewModel.addGoal(goal)
-                                        whoIsThisGoalForViewModel.savedMembers = []
+                                        if comingFrom == .editGoal{
+                                            addGoalViewModel.updateGoal(byID: editedGoal!.id , newGoal: goal)
+                                        }else{
+                                            addGoalViewModel.addGoal(goal)
+                                        }
+                                        whoIsThisGoalForViewModel.resetSelection()
                                         router.dashboardNavigateBack()
                                     }else{
                                         errorCatch = "Please add description for the goal."
@@ -200,7 +221,15 @@ struct AddGoalView: View {
                     ).padding(.horizontal, 15)
                         .padding(.bottom)
                     
-            }
+                }.onAppear{
+                    if comingFrom == .editGoal{
+                        goalName = editedGoal?.goalTitle ?? ""
+                        description = editedGoal?.description ?? ""
+                        dueDate = editedGoal?.dueOnDate ?? Date()
+                        selectedOption = editedGoal?.reminder ?? .daily
+                        whoIsThisGoalForViewModel.updateSelection(members: editedGoal?.savedMembers ?? [])
+                    }
+                }
         }.navigationBarBackButtonHidden()
     }
 }

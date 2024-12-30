@@ -14,7 +14,11 @@ struct AddMemberView: View {
     @State private var searchedText = ""
     @State private var isRecording: Bool = false
     @EnvironmentObject var whoIsThisGoalForViewModel: ContactsViewModel
+    @EnvironmentObject var addGoalViewModel: AddGoalViewModel
     @Environment(\.colorScheme) var colorScheme
+    
+    var goalId: UUID
+    var isComingFrom : ComingFrom = .addNewGoal
     
     var filteredContacts: [String: [MemberDetail]] {
         if searchedText.isEmpty {
@@ -50,6 +54,7 @@ struct AddMemberView: View {
                             .frame(width: 24, height: 24)
                             .onTapGesture {
                                 //we have to dismiss the current view only
+                                whoIsThisGoalForViewModel.selectedMembers = []
                                 router.dashboardNavigateBack()
                             }
                         Spacer()
@@ -57,10 +62,14 @@ struct AddMemberView: View {
                             .foregroundStyle(.primaryTheme)
                             .onTapGesture {
                                 print("save button tapped")
-                                whoIsThisGoalForViewModel.saveMembers()
+                                if isComingFrom == .editGoal{
+                                    if !whoIsThisGoalForViewModel.selectedMembers.isEmpty{
+                                        addGoalViewModel.updateGoalMembers(goalId: goalId, members: whoIsThisGoalForViewModel.selectedMembers)
+                                    }
+                                }else{
+                                    whoIsThisGoalForViewModel.savedMembers = whoIsThisGoalForViewModel.selectedMembers
+                                }
                                 router.dashboardNavigateBack()
-                                //we have to dismiss the current view only
-                               // router.navigate(to: .addGoalView(userType: .coach), style: .fullScreenCover)
                             }
                     }.padding([.horizontal, .vertical], 15)
                         .overlay {
@@ -144,7 +153,6 @@ struct AddMemberView: View {
                                 .clipShape(.rect(cornerRadius: 10))
                                 .padding(.vertical, 10)
                                 .padding(.horizontal)
-                               
                         }
                         
                         ScrollViewReader { proxy in
@@ -175,7 +183,7 @@ struct AddMemberView: View {
 }
 
 #Preview {
-    AddMemberView()
+    AddMemberView( goalId: UUID(), isComingFrom: .addNewGoal)
         .environmentObject(ContactsViewModel())
         .environmentObject(Router())
 }

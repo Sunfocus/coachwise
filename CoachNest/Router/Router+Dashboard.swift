@@ -14,12 +14,14 @@ extension Router {
         switch flow {
         case .tab:
             TabBarView()
-        case .addGoalView(let userType):
-            AddGoalView(userType: userType)
-        case .addMember:
-            AddMemberView()
-        case .goalDetailedView(let goalId):
-            GoalDetailView(goalId: goalId )
+        case .addGoalView(let userType, let goalId, let comingGrom):
+            AddGoalView(comingFrom: comingGrom, goalId: goalId, userType: userType)
+        case .addMember(let goalid, let comingFrom):
+            AddMemberView( goalId: goalid, isComingFrom: comingFrom)
+        case .goalDetailedView(let goalId, let member):
+            GoalDetailView(goalId: goalId, member: member)
+        case .multipleGoalUsersListing(goalId: let goalId):
+            MultipleGoalUsersListing(goalId: goalId)
         }
     }
 }

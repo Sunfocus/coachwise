@@ -26,7 +26,7 @@ final class Router: ObservableObject {
     @Published var isModalPresented = false
     @Published var isFullScreenPresented = false
     
-    var root: RootFlow = .onboarding
+    var root: RootFlow = .dashboard
     var currentModalDestination: AnyHashable?
     var currentFullScreenDestination: AnyHashable?
     

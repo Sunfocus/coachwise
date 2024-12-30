@@ -15,6 +15,7 @@ struct GoalDetailView: View {
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
     @State private var selectedSegment = 0
     var goalId: UUID
+    var member: MemberDetail
     
     
     //Segment Control Custom UI Section
@@ -142,13 +143,13 @@ struct GoalDetailView: View {
                                             }
                                             
                                             HStack{
-                                                Image(uiImage: goal?.savedMembers.first?.profileImage ?? .sg1)
+                                                Image(uiImage: member.profileImage ?? .sg1)
                                                     .resizable()
                                                     .scaledToFill()
                                                     .clipShape(.circle)
                                                     .frame(width: 22, height: 22)
                                                 
-                                                Text(goal?.savedMembers.first?.name ?? "Dummy Name")
+                                                Text(member.name)
                                                     .customFont(.regular, 14)
                                                     .lineLimit(1)
                                             }.frame(maxWidth: .infinity, alignment: .leading)
@@ -192,7 +193,7 @@ struct GoalDetailView: View {
                                         Text(Constants.GoalInfoViewTitle.goalStatus)
                                             .customFont(.semiBold,16)
                                             .frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\(Int(goal?.progress ?? 0))%")
+                                        Text("\(Int((member.progress)))%")
                                             .customFont(.regular, 14)
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                     }
@@ -269,6 +270,6 @@ struct GoalDetailView: View {
 }
 
 #Preview {
-    GoalDetailView( goalId: UUID())
+    GoalDetailView( goalId: UUID(), member: MemberDetail(id: 12, name: "dfgdg", profileImage: .sg1, accountType: .coach, progress: 32.0))
         .environmentObject(AddGoalViewModel())
 }

@@ -9,8 +9,8 @@ import SwiftUI
 
 public enum AccountType: String, Codable {
     case coach = "Coach"
-    case parent = "Individual"
-    case member = "Company"
+    case parent = "Parent"
+    case member = "Member"
 }
 
 class SelectionTypeViewModel: ObservableObject {

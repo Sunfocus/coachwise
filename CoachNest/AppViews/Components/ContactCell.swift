@@ -38,6 +38,6 @@ struct ContactCell: View {
 }
 
 #Preview {
-    let member = MemberDetail(name: "Rahul Pathania", profileImage: .sg1, accountType: .coach)
+    let member = MemberDetail(id: 01, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0)
     ContactCell(contact: member, isSelected: false)
 }

@@ -41,7 +41,7 @@ struct EmailVerificationView: View {
                 
                 // MARK: - Enter pin section
                 HStack(alignment: .center, spacing: 20){
-                    TextField("_", text: $pin1)
+                    TextField("-", text: $pin1)
                         .customFont(.medium, 20)
                         .frame(width: 30, height: 30)
                         .keyboardType(.numberPad)
@@ -65,7 +65,7 @@ struct EmailVerificationView: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(.gray, lineWidth: 1)
                         }
-                    TextField("_", text: $pin2)
+                    TextField("-", text: $pin2)
                         .customFont(.medium, 20)
                         .frame(width: 30, height: 30)
                         .padding()
@@ -90,7 +90,7 @@ struct EmailVerificationView: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(.gray, lineWidth: 1)
                         }
-                    TextField("_", text: $pin3)
+                    TextField("-", text: $pin3)
                         .customFont(.medium, 20)
                         .multilineTextAlignment(.center)
                         .frame(width: 30, height: 30)
@@ -113,7 +113,7 @@ struct EmailVerificationView: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(.gray, lineWidth: 1)
                         }
-                    TextField("_", text: $pin4)
+                    TextField("-", text: $pin4)
                         .customFont(.medium, 20)
                         .frame(width: 30, height: 30)
                         .padding()
@@ -140,6 +140,7 @@ struct EmailVerificationView: View {
                 
                 // MARK: - Resend Otp
                 HStack{
+                   
                     Text(Constants.EmailVerificationTitle.resendOtp)
                         .customFont(.medium, 15)
                         .frame(maxWidth: .infinity, alignment: .trailing)

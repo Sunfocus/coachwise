@@ -9,11 +9,20 @@
 		<string>Poppins-SemiBold.ttf</string>
 		<string>Poppins-Bold.ttf</string>
 	</array>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We need access to your speech to search contacts by voice.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to the microphone for voice search functionality.</string>
     
-    <key>NSSpeechRecognitionUsageDescription</key>
-    <string>We need access to your speech to search contacts by voice.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>We need access to the microphone for voice search functionality.</string>
-
+    <key>UILaunchScreen</key>
+        <dict>
+            <key>UIColorName</key>
+            <string>primaryThemeColor</string>
+            <key>UIImageName</key>
+            <string>appLogo</string>
+            <key>UIImageRespectsSafeAreaInsets</key>
+            <string>YES</string>
+        </dict>
+        
 </dict>
 </plist>

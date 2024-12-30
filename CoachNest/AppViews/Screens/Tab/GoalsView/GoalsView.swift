@@ -17,7 +17,7 @@ struct GoalsView: View {
     var body: some View {
         ZStack{
             if addGoalViewModel.getAllGoals().isEmpty{
-                //MARK: - No goal view Section -
+                //MARK: - No goal to view Section -
                 VStack{
                     Spacer()
                     Image(.goal)
@@ -33,22 +33,54 @@ struct GoalsView: View {
                 .frame(maxWidth: .infinity)
             }else{
                 
-                ScrollView{
-                    ForEach(addGoalViewModel.getAllGoals()) { goal in
-                        IndividualGoalCell(goal: goal)
-                            .padding(.horizontal)
-                            .padding(.bottom, 4)
-                            .onTapGesture {
-                                router.navigate(to: .goalDetailedView(goalId: goal.id))
+                List(addGoalViewModel.getAllGoals()) { goal in
+                    ProgressGoalCell(goal: goal)
+                        .padding(.horizontal)
+                        .padding(.bottom, 10)
+                        .swipeActions {
+                            // Edit Button
+                            Button(action: {
+                                // Handle the edit action (e.g., navigate to an edit screen)
+                                router.navigate(to: .addGoalView(userType: .coach, goalId: goal.id, comingFrom: .editGoal))
+                            }) {
+                                Label("Edit", image: .editGoal)
                             }
-                    }
-                }
+                            .tint(.blue)
+                            
+
+                            // Delete Button
+                            Button(action: {
+                                
+                                addGoalViewModel.deleteGoal(byID: goal.id)
+                            }) {
+                                Label("Delete", image: .deleteGoal)
+                            }
+                            .tint(.red)
+                        }
+                        .onTapGesture {
+                            if goal.cellType == .individual {
+                                if let member = addGoalViewModel.getFirstMember(byID: goal.id) {
+                                    router.navigate(to: .goalDetailedView(goalId: goal.id, member: member))
+                                } else {
+                                    print("Member not found for the given goal ID.")
+                                }
+                            } else {
+                                router.navigate(to: .multipleGoalUsersListing(goalId: goal.id))
+                            }
+                        }
+                        
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden, edges: .all)
+                        .background(.backgroundTheme)
+                }.listStyle(PlainListStyle())
+               
+
             }
         }.background(.backgroundTheme)
             .overlay(
                 Button(action: {
                     print("Add new tapped")
-                    router.navigate(to: .addGoalView(userType: .coach))
+                    router.navigate(to: .addGoalView(userType: .coach, goalId: UUID(), comingFrom: .addNewGoal))
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 50))
