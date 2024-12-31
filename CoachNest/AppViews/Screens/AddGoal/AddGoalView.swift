@@ -23,7 +23,7 @@ struct AddGoalView: View {
     @State private var selectedOption: DurationVal = .daily
     @EnvironmentObject var router: Router
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var whoIsThisGoalForViewModel: ContactsViewModel
+    @EnvironmentObject var contactsViewModel: ContactsViewModel
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
     @State private var isInitialized = false
     
@@ -37,7 +37,7 @@ struct AddGoalView: View {
         if comingFrom == .editGoal{
             return editedGoal?.savedMembers ?? []
         }else{
-            return whoIsThisGoalForViewModel.savedMembers
+            return contactsViewModel.savedMembers
         }
     }
     
@@ -60,7 +60,7 @@ struct AddGoalView: View {
                                 .frame(width: 24, height: 24)
                                 .onTapGesture {
                                     router.dashboardNavigateBack()
-                                    whoIsThisGoalForViewModel.resetSelection()
+                                    contactsViewModel.resetSelection()
                                 }
                             Spacer()
                         }.padding([.horizontal, .vertical], 15)
@@ -100,7 +100,7 @@ struct AddGoalView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             HStack{
                                 if !savedMembers.isEmpty{
-                                    SelectedMemberView(selectedMembers: whoIsThisGoalForViewModel.savedMembers)
+                                    SelectedMemberView(selectedMembers: contactsViewModel.savedMembers)
                                         .padding(.leading)
                                     }
                                 Spacer()
@@ -113,7 +113,6 @@ struct AddGoalView: View {
                                     .padding(.trailing, 12)
                                     .onTapGesture {
                                         router.navigate(to: .addMember(goalId: goalId ?? UUID(), comingFrom: comingFrom))
-                                        HapticFeedbackHelper.softImpact()
                                     }
                                     
                             }.frame(height: 48)
@@ -129,7 +128,7 @@ struct AddGoalView: View {
                                 .customFont(.regular, 16)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             VStack{
-                                TextField(Constants.TextField.Placeholder.addNotesHere, text: $description, axis: .vertical)
+                                TextField(Constants.TextField.Placeholder.goalDescription, text: $description, axis: .vertical)
                                     .customFont(.regular, 14)
                                     .tint(.primaryTheme)
                                     .lineLimit(4, reservesSpace: true)
@@ -190,12 +189,12 @@ struct AddGoalView: View {
                         title: (comingFrom == .addNewGoal ? Constants.AddYourGoalsViewTitle.addGoal : Constants.AddYourGoalsViewTitle.editGoal),
                         action: {
                             let isValidName = addGoalViewModel.checkValidGoalName(goalName: goalName)
-                            let isValidUser = whoIsThisGoalForViewModel.savedMembers.count > 0
+                            let isValidUser = contactsViewModel.savedMembers.count > 0
                             let isValidDescription = addGoalViewModel.checkValidGoalDescription(goalDescription: description)
                             let goal = GoalDetails(
                                         goalTitle: goalName,
                                         updateDate: Date(),
-                                        savedMembers: whoIsThisGoalForViewModel.savedMembers,
+                                        savedMembers: contactsViewModel.savedMembers,
                                         description: description,
                                         dueOnDate: dueDate,
                                         reminder: selectedOption)
@@ -207,7 +206,7 @@ struct AddGoalView: View {
                                         }else{
                                             addGoalViewModel.addGoal(goal)
                                         }
-                                        whoIsThisGoalForViewModel.resetSelection()
+                                        contactsViewModel.resetSelection()
                                         router.dashboardNavigateBack()
                                     }else{
                                         errorCatch = "Please add description for the goal."
@@ -231,7 +230,7 @@ struct AddGoalView: View {
                         if !isInitialized {
                             print("MyView initialized for the first time.")
                             isInitialized = true
-                            whoIsThisGoalForViewModel.updateSelection(members: editedGoal?.savedMembers ?? [])
+                            contactsViewModel.updateSelection(members: editedGoal?.savedMembers ?? [])
                         }else{
                             
                         }
@@ -261,7 +260,6 @@ struct ReminderView: View {
             ForEach(options, id: \.self) { option in
                 Button(action: {
                     selectedOption = option
-                    HapticFeedbackHelper.softImpact()
                 }) {
                     Text(option.rawValue)
                         .customFont(.regular, 15)

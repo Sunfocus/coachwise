@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ToDoCell: View {
+    
+    var action: AddAction
+    
     var body: some View {
         VStack(spacing: 16) {
             // Task name
@@ -19,18 +22,18 @@ struct ToDoCell: View {
                         .frame(width: 24, height: 24)
                         .scaledToFill()
                        
-                    Text("Complete Piano Lesson")
+                    Text(action.actionTitle)
                         .customFont(.semiBold, 15)
                         .lineLimit(1)
                 } .frame(maxWidth: .infinity, alignment: .leading)
                
                 HStack{
-                    Image(.sg1)
+                    Image(uiImage: action.assignedTo.profileImage ?? .sg1)
                         .resizable()
                         .frame(width: 20, height: 20)
                         .scaledToFill()
                         .clipShape(.circle)
-                    Text("Rahul Pathania")
+                    Text(action.assignedTo.name)
                         .customFont(.regular, 13)
                         .lineLimit(1)
                        
@@ -41,7 +44,7 @@ struct ToDoCell: View {
                         .resizable()
                         .foregroundStyle(.blue)
                         .frame(width: 20, height: 20)
-                    Text("27 Dec 2024")
+                    Text(action.dueOnDate.formattedDate(customFormat:"MMM dd, yyyy"))
                         .customFont(.regular, 12)
                         .lineLimit(1)
                         .padding(.trailing, 10)
@@ -49,23 +52,15 @@ struct ToDoCell: View {
                         .resizable()
                         .foregroundStyle(.blue)
                         .frame(width: 20, height: 20)
-                    Text("1")
+                    Text("\(action.attachedDocs)")
                         .customFont(.regular, 12)
                         .lineLimit(1)
-    
                 } .frame(maxWidth: .infinity, alignment: .leading)
-               
             }
-            
-           
         }
         .padding()
         .background(.darkGreyBackground)
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
-}
-
-#Preview {
-    ToDoCell()
 }

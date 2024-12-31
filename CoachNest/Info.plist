@@ -24,5 +24,9 @@
             <string>YES</string>
         </dict>
         
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>We need access to your photo library to let you select a photo.</string>
+
+        
 </dict>
 </plist>

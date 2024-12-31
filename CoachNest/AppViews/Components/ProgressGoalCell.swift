@@ -15,7 +15,20 @@ enum GoalType: Codable{
 
 struct ProgressGoalCell: View {
     var goal: GoalDetails
-    var colorArray: [Color] = [Color.green, Color.pink, Color.blue, Color.purple]
+    var colorArray: [Color] = [Color.yellow, Color.blue, Color.pink, Color.green]
+    // Function to assign a color based on progress
+        private var assignedColor: Color {
+            switch progress {
+            case 0..<25:
+                return colorArray[0] // Red for 0-24% progress
+            case 25..<50:
+                return colorArray[1] // Orange for 25-49% progress
+            case 50..<75:
+                return colorArray[2] // Yellow for 50-74% progress
+            default:
+                return colorArray[3] // Green for 75-100% progress
+            }
+        }
     @EnvironmentObject private var viewModel: AddGoalViewModel
     
     var progress: Double {
@@ -36,7 +49,7 @@ struct ProgressGoalCell: View {
                     .stroke(Color.gray.opacity(0.3), lineWidth: 10)
                 Circle()
                     .trim(from: 0, to: (progress) / 100)
-                    .stroke(colorArray.randomElement()!, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                    .stroke(assignedColor, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                 Text("\(Int((progress)))%")
                     .font(.system(size: 14, weight: .bold))
@@ -47,6 +60,7 @@ struct ProgressGoalCell: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(goal.goalTitle)
                         .customFont(.semiBold, 15)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(1)
                     if goal.cellType == .individual{
                         HStack(spacing: 7) {
@@ -66,7 +80,7 @@ struct ProgressGoalCell: View {
                     }
                 }
             
-            Spacer()
+         //   Spacer()
             
             // Update Date and Arrow
             VStack(alignment: .trailing, spacing: 4) {
@@ -90,7 +104,7 @@ struct ProgressGoalCell: View {
 struct ProgressGoalCell_Previews: PreviewProvider {
     static var previews: some View {
         
-        let goal = GoalDetails(goalTitle: "Learn Swift", updateDate: Date(), savedMembers: [MemberDetail(id: 01, name: "Jayson Anderson", profileImage: .sg1, accountType: .coach, progress: 53.0)], description: "play with swift", dueOnDate: Date(), reminder: .daily)
+        let goal = GoalDetails(goalTitle: "Learn to solve rubiks cube", updateDate: Date(), savedMembers: [MemberDetail(id: 01, name: "Jayson Anderson", profileImage: .sg1, accountType: .coach, progress: 53.0)], description: "play with swift", dueOnDate: Date(), reminder: .daily)
         
        ProgressGoalCell(goal: goal)
             .previewLayout(.sizeThatFits)

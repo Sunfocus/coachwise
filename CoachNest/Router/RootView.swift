@@ -12,9 +12,10 @@ struct RootView: View {
     //MARK: - App-Router and state objects
     @StateObject var router = Router()
     @StateObject private var businessActivityViewModel = BusinessActivityViewModel()
-    @StateObject private var whoIsThisGoalFor = ContactsViewModel()
+    @StateObject private var contactsViewModel = ContactsViewModel()
     @StateObject var selectionType = SelectionTypeViewModel()
     @StateObject var addGoalViewModel = AddGoalViewModel()
+    @StateObject private var addActionViewModel = AddActionViewModel()
     
     init() {
         UISegmentedControl.appearance().selectedSegmentTintColor = .primaryTheme
@@ -50,6 +51,7 @@ struct RootView: View {
                                 router.dashboardDestination(for: modalDestination)
                             }
                         }
+                        
                         .fullScreenCover(isPresented: $router.isFullScreenPresented) {
                             if let fullScreenDestination = router.currentFullScreenDestination as? DashboardFlow {
                                 router.dashboardDestination(for: fullScreenDestination)
@@ -61,8 +63,9 @@ struct RootView: View {
         .environmentObject(router)
         .environmentObject(businessActivityViewModel)
         .environmentObject(selectionType)
-        .environmentObject(whoIsThisGoalFor)
+        .environmentObject(contactsViewModel)
         .environmentObject(addGoalViewModel)
+        .environmentObject(addActionViewModel)
     }
 }
 

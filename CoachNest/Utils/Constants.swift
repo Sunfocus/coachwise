@@ -163,6 +163,20 @@ struct Constants {
         
     }
     
+    
+    // MARK: - AddActionViewTitle
+    struct AddActionViewTitle {
+        static let addNewAction = "Add new action"
+        static let uploadDocs = "Upload"
+        static let actionTitle = "Action title"
+        static let dueDate = "Due date"
+        static let members = "Members"
+        static let uploadPhotoVideo = "Upload photo videos or documents"
+        static let maxSizeLimit = "(Max. File size: 25 MB)"
+        static let addAction = "Add action"
+        static let status = "Status"
+    }
+    
     // MARK: - BusinessActivity View
     struct BusinessActivityViewTitle {
         static let businessActivity = "What activity does your business engage in?"
@@ -211,6 +225,7 @@ struct Constants {
             static let description = "Description"
             static let dueOn = "Due on"
             static let reminder = "Reminder"
+            
         }
         
         struct Placeholder {
@@ -228,6 +243,9 @@ struct Constants {
             static let enterTeamId = "Enter Team ID"
             static let goalName = "Enter goal name"
             static let addNotesHere = "Add your notes here!"
+            static let acionTitle = "Enter action title"
+            static let actionDescription = "Briefly describe the action"
+            static let goalDescription = "Briefly describe the goal"
         }
     }
 }

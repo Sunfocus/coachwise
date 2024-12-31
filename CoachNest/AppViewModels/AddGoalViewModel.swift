@@ -9,11 +9,49 @@ import SwiftUI
 public class AddGoalViewModel: ObservableObject {
     // Published property to notify views of changes
     @Published var goals: [GoalDetails] = [
-        GoalDetails(goalTitle: "Learn Swift", updateDate: Date(), savedMembers: [.init(id: 1, name: "Alice Anderson", profileImage: .sg1, accountType: .member, progress: 45.0),.init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 12.0), ], description: "play with swift", dueOnDate: Date(), reminder: .daily),
-        
-        GoalDetails(goalTitle: "Learn Piano", updateDate: Date(), savedMembers: [.init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 12.0), ], description: "play with swift", dueOnDate: Date(), reminder: .daily)
+        GoalDetails(
+            goalTitle: "Learn Swift",
+            updateDate: Date(),
+            savedMembers: [
+                .init(id: 1, name: "Alice Anderson", profileImage: .sg1, accountType: .member, progress: 15.0),
+                .init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 12.0)
+            ],
+            description: "Master the fundamentals of Swift programming to build powerful apps and become proficient in iOS development. Progress includes tackling beginner to intermediate challenges in Swift syntax, concepts, and libraries.",
+            dueOnDate: Date(),
+            reminder: .daily
+        ),
+        GoalDetails(
+            goalTitle: "Read a Book",
+            updateDate: Date(),
+            savedMembers: [
+                .init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 54.0)
+            ],
+            description: "Commit to reading a book to expand your knowledge or explore new ideas. This goal focuses on cultivating a daily reading habit and finishing books that inspire growth.",
+            dueOnDate: Date(),
+            reminder: .daily
+        ),
+        GoalDetails(
+            goalTitle: "Do 100 Pushups a Day",
+            updateDate: Date(),
+            savedMembers: [
+                .init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 12.0)
+            ],
+            description: "Challenge yourself to do 100 pushups every day to increase upper body strength and overall fitness. This goal is about discipline, consistency, and physical improvement.",
+            dueOnDate: Date(),
+            reminder: .daily
+        ),
+        GoalDetails(
+            goalTitle: "Learn to Solve Rubik's Cube",
+            updateDate: Date(),
+            savedMembers: [
+                .init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 76.0)
+            ],
+            description: "Improve problem-solving and memory skills by learning how to solve the Rubik's Cube. This goal encourages perseverance and cognitive flexibility.",
+            dueOnDate: Date(),
+            reminder: .weekly
+        )
     ]
-    
+
     
     // Add a new goal to the array
     func addGoal(_ goal: GoalDetails) {

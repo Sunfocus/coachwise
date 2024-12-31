@@ -22,6 +22,13 @@ extension Router {
             GoalDetailView(goalId: goalId, member: member)
         case .multipleGoalUsersListing(goalId: let goalId):
             MultipleGoalUsersListing(goalId: goalId)
+        case .addNewActionMenu:
+            AddNewActionMenu()
+                .presentationDetents([.height(300)])
+                .presentationDragIndicator(.visible)
+                .presentationContentInteraction(.scrolls)
+        case .addNewAction(let member):
+            AddNewAction(member: member)
         }
     }
 }
