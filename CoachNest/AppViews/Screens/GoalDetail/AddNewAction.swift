@@ -18,9 +18,10 @@ struct AddNewAction: View {
     @State private var dueDate = Date.now
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var addActionViewModel: AddActionViewModel
-    @State private var status: ActionListOption = .todo
+    @State private var status: StatusOption = .todo
     @EnvironmentObject var router: Router
     var member: MemberDetail
+    var goalId: UUID
     
     var body: some View {
         
@@ -135,7 +136,7 @@ struct AddNewAction: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             Menu {
-                                ForEach(ActionListOption.allCases, id: \.self) { option in
+                                ForEach(StatusOption.allCases, id: \.self) { option in
                                     Button(action: {
                                         status = option
                                     }) {
@@ -204,7 +205,7 @@ struct AddNewAction: View {
                             print("Form is valid")
                             addActionViewModel.addAction(
                                 action: AddAction(
-                                    id: UUID(),
+                                    id: UUID(), goalId: goalId ,
                                     actionTitle: addActionViewModel.actionName,
                                     dueOnDate: dueDate,
                                     assignedTo: member ,
@@ -246,5 +247,5 @@ struct AddNewAction: View {
    
 
 #Preview {
-    AddNewAction(member: MemberDetail(id: 01, name: "Max", profileImage: .sg1, accountType: .coach, progress: 12.6))
+    AddNewAction(member: MemberDetail(id: 01, name: "Max", profileImage: .sg1, accountType: .coach, progress: 12.6), goalId: UUID())
 }

@@ -19,7 +19,7 @@ struct PersonImageView: View {
             .frame(width: 50, height: 50)
             .clipShape(.circle)
             .overlay {
-                Image(.closeButton)
+                Image(.closeBtn)
                     .resizable()
                     .frame(width: 16, height: 16, alignment: .topTrailing)
                      .offset(x: 20, y: -15)

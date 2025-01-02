@@ -36,6 +36,6 @@ public enum DashboardFlow: Codable, Hashable {
     case goalDetailedView(goalId: UUID, member: MemberDetail)
     case multipleGoalUsersListing(goalId: UUID)
     case addNewActionMenu
-    case addNewAction(member: MemberDetail)
+    case addNewAction(member: MemberDetail, goalId: UUID)
 }
 

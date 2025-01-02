@@ -1,11 +1,5 @@
-//
-//  GoalDetailView.swift
-//  CoachNest
-//
-//  Created by ios on 27/12/24.
-//
-
 import SwiftUI
+import PhotosUI
 
 struct GoalDetailView: View {
     
@@ -15,9 +9,9 @@ struct GoalDetailView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
     @EnvironmentObject var addActionViewModel: AddActionViewModel
-    @StateObject private var helper = PhotoPickerHelper()
-    @State private var selectedImage: UIImage? = nil
-    @State private var selectedImages: [UIImage?] = []
+    @State private var images: [UIImage] = []
+    @State private var photosPickerItems: [PhotosPickerItem] = []
+    
     
     @State private var selectedSegment = 0
     var goalId: UUID
@@ -39,9 +33,6 @@ struct GoalDetailView: View {
     
     //Segment Control Custom UI Section
 
-    
-    
-    
     var body: some View {
         
         let goal = addGoalViewModel.getGoal(byID: goalId)
@@ -282,6 +273,7 @@ struct GoalDetailView: View {
                                 }
                             }
                         case 2:
+                            
                             //Feedback
                             VStack(spacing: 30){
                                 //Description Section
@@ -302,48 +294,82 @@ struct GoalDetailView: View {
                                 }
                                 
                                 //Upload photo/video Section
-                                VStack {
-                                    Image(.documentUpload)
-                                        .resizable()
-                                        .frame(width: 24, height: 24)
-                                        .padding(.bottom, 12)
-                                    
-                                    Text(Constants.AddActionViewTitle.uploadPhotoVideo)
-                                        .customFont(.medium, 14)
-                                        .foregroundStyle(.primaryTheme)
-                                    Text(Constants.AddActionViewTitle.maxSizeLimit)
-                                        .customFont(.regular, 12)
-                                }
-                                .frame(height: 130)
-                                .frame(maxWidth: .infinity)
-                                .background(Color.white)
-                                .clipShape(
-                                    RoundedRectangle(cornerRadius: 12.0, style: .continuous)
-                                )
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12.0, style: .continuous)
-                                        .stroke(
-                                            style: StrokeStyle(
-                                                lineWidth: 1.2,
-                                                dash: [7]
+                                PhotosPicker(
+                                    selection: $photosPickerItems,
+                                    maxSelectionCount: 5, // Max number of images to select
+                                    matching: .images // Only allow images
+                                ) {
+                                    VStack {
+                                        Image(.documentUpload)
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                            .padding(.bottom, 12)
+                                        
+                                        Text(Constants.AddActionViewTitle.uploadPhotoVideo)
+                                            .customFont(.medium, 14)
+                                            .foregroundStyle(.primaryTheme)
+                                        Text(Constants.AddActionViewTitle.maxSizeLimit)
+                                            .customFont(.regular, 12)
+                                    }
+                                    .frame(height: 130)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.white)
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 12.0, style: .continuous)
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12.0, style: .continuous)
+                                            .stroke(
+                                                style: StrokeStyle(
+                                                    lineWidth: 1.2,
+                                                    dash: [7]
+                                                )
                                             )
-                                        )
-                                        .foregroundColor(.gray)
-                                )
-                                .onTapGesture {
-                                    helper.openPhotoPicker()
+                                            .foregroundColor(.gray)
+                                    )
+                                    .padding(.horizontal, 1)
+                                }.shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            }
+                            
+                            
+                            ScrollView(.horizontal) {
+                                HStack(spacing: 2) {
+                                    
+                                    ForEach(0..<images.count, id: \.self){ index in
+                                        ZStack {
+                                            ZStack {
+                                                // Main image
+                                                Image(uiImage: images[index])
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: 100, height: 100) // Adjust size as needed
+                                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                                
+                                                // Close button overlay
+                                                Image(.closeBtn) // Replace with your close button image name
+                                                    .resizable()
+                                                    .frame(width: 18, height: 18)
+                                                    .offset(x: 44, y: -44)
+                                                    .onTapGesture {
+                                                        // Remove the tapped image from the array
+                                                        images.remove(at: index)
+                                                        HapticFeedbackHelper.lightImpact()
+                                                    }
+                                            }
+                                            .padding(8) // Add padding inside the ZStack
+                                            //                                            .background(Color.gray.opacity(0.1))
+                                            .cornerRadius(12)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 12)
+                                                    .stroke(Color.clear, lineWidth: 1)
+                                            )
+                                        }
+                                        .padding(1)
+                                    }
+                                    
                                 }
-                                .padding(.horizontal, 1)
-                                
-                                
-                               Image(uiImage: selectedImage ?? .sg1)
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .clipShape(RoundedRectangle(cornerRadius: 12.0))
-                                
-                                
-                                Spacer()
-                            }.shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            }.padding(.top)
+                            Spacer()
                         default:
                             EmptyView()
                         }
@@ -361,7 +387,7 @@ struct GoalDetailView: View {
                             case 0:
                                 router.dashboardNavigateBack()
                             case 1:
-                                router.navigate(to: .addNewAction(member: member))
+                                router.navigate(to: .addNewAction(member: member, goalId: goalId))
                             case 2:
                                 router.dashboardNavigateBack()
                             default:
@@ -374,15 +400,18 @@ struct GoalDetailView: View {
                 .padding([.horizontal])
             }
         }.navigationBarBackButtonHidden()
-        
-            .sheet(isPresented: $helper.isPickerPresented) {
-                // Show the picker when triggered
-                PhotoPickerCoordinator(selectedImage: $helper.selectedImage, selectedImages: $helper.selectedImages, isPresented: $helper.isPickerPresented, helper: helper)
+            .onChange(of: photosPickerItems) { _, _ in
+                Task{
+                    for item in photosPickerItems{
+                        if let data = try? await item.loadTransferable(type: Data.self){
+                            if let image = UIImage(data: data){
+                                images.append(image)
+                            }
+                        }
+                    }
+                }
             }
-        
-         
     }
-    
 }
 
 #Preview {
@@ -391,3 +420,4 @@ struct GoalDetailView: View {
         .environmentObject(AddActionViewModel())
         .environmentObject(Router())
 }
+

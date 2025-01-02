@@ -22,7 +22,7 @@ struct AddNewActionMenu: View {
                 }.padding()
                 
                 List{
-                    ForEach(ActionListOption.allCases, id: \.self) { menuOption in
+                    ForEach(StatusOption.allCases, id: \.self) { menuOption in
                         HStack {
                             Text(menuOption.rawValue)
                                 .customFont(.regular, 16)

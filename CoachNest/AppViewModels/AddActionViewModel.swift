@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ActionListOption: String, CaseIterable, Codable{
+enum StatusOption: String, CaseIterable, Codable{
     case todo = "To do"
     case inProgress = "In progress"
     case completed = "Completed"
@@ -15,15 +15,17 @@ enum ActionListOption: String, CaseIterable, Codable{
 
 struct AddAction: Codable, Hashable, Identifiable{
     let id: UUID
+    let goalId: UUID
     let actionTitle: String
     var dueOnDate: Date
     var assignedTo: MemberDetail
     var description: String
-    var status: ActionListOption
+    var status: StatusOption
     var attachedDocs: Int
     
-    init(id: UUID, actionTitle: String, dueOnDate: Date, assignedTo: MemberDetail, description: String, status: ActionListOption, attachedDocs: Int) {
+    init(id: UUID, goalId: UUID, actionTitle: String, dueOnDate: Date, assignedTo: MemberDetail, description: String, status: StatusOption, attachedDocs: Int) {
         self.id = id
+        self.goalId = goalId
         self.actionTitle = actionTitle
         self.dueOnDate = dueOnDate
         self.assignedTo = assignedTo
@@ -74,7 +76,7 @@ class AddActionViewModel: ObservableObject {
     }
     
     // Get an action by its status
-    func getActions(by status: ActionListOption) -> [AddAction] {
+    func getActions(by status: StatusOption) -> [AddAction] {
            return actions.filter { $0.status == status }
        }
     

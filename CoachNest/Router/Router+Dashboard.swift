@@ -27,8 +27,8 @@ extension Router {
                 .presentationDetents([.height(300)])
                 .presentationDragIndicator(.visible)
                 .presentationContentInteraction(.scrolls)
-        case .addNewAction(let member):
-            AddNewAction(member: member)
+        case .addNewAction(let member, let goalId):
+            AddNewAction(member: member, goalId: goalId)
         }
     }
 }
