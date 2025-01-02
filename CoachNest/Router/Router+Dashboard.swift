@@ -29,6 +29,8 @@ extension Router {
                 .presentationContentInteraction(.scrolls)
         case .addNewAction(let member, let goalId):
             AddNewAction(member: member, goalId: goalId)
+        case .actionDetailView(let actionId):
+            ActionDetailView(actionId: actionId)
         }
     }
 }

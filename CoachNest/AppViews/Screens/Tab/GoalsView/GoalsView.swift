@@ -18,6 +18,19 @@ struct GoalsView: View {
     @Environment(\.colorScheme) var colorScheme
     
     
+    var filteredGoals: [GoalDetails] {
+        if searchedText.isEmpty {
+            return addGoalViewModel.getAllGoals()
+        } else {
+            // Filter the goals based on the search text
+            let filteredGoals = addGoalViewModel.goals.filter { $0.goalTitle.lowercased().contains(searchedText.lowercased()) }
+            
+            // Return the filtered goals, or an empty array if no results are found
+            return filteredGoals
+        }
+    }
+
+        
     var body: some View {
         ZStack{
            
@@ -96,7 +109,7 @@ struct GoalsView: View {
                 .padding( .bottom, 10)
                 
                 
-                if addGoalViewModel.getAllGoals().isEmpty{
+                if addGoalViewModel.goals.isEmpty{
                     //MARK: - No goal to view Section -
                     VStack{
                         Spacer()
@@ -113,7 +126,7 @@ struct GoalsView: View {
                     .frame(maxWidth: .infinity)
                 }else{
                     
-                    List(addGoalViewModel.getAllGoals()) { goal in
+                    List(filteredGoals) { goal in
                         ProgressGoalCell(goal: goal)
                             .padding(.horizontal)
                             .padding(.bottom, 10)
@@ -155,8 +168,6 @@ struct GoalsView: View {
                     }.listStyle(PlainListStyle())
                     .safeAreaPadding(EdgeInsets(top: 5, leading: 0, bottom: 100, trailing: 0))
                     .scrollIndicators(.hidden)
-                    
-                    
                 }}
         }.background(.backgroundTheme)
             .overlay(
@@ -172,6 +183,9 @@ struct GoalsView: View {
                 .padding(.bottom, 40),
                alignment: .bottomTrailing
             )
+            .onTapGesture {
+                UIApplication.shared.dismissKeyboard()
+            }
         
     }
 }

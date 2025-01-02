@@ -40,7 +40,7 @@ struct ToDoCell: View {
                 } .frame(maxWidth: .infinity, alignment: .leading)
                 
                 HStack{
-                    Image(.schedule)
+                    Image(.scheduled)
                         .resizable()
                         .foregroundStyle(.blue)
                         .frame(width: 20, height: 20)

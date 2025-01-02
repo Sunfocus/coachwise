@@ -33,6 +33,7 @@ struct AddGoalView: View {
         return addGoalViewModel.getGoal(byID: goalId ?? UUID() )
     }
     
+    
     var savedMembers: [MemberDetail]{
         if comingFrom == .editGoal{
             return editedGoal?.savedMembers ?? []
@@ -194,6 +195,7 @@ struct AddGoalView: View {
                             let goal = GoalDetails(
                                         goalTitle: goalName,
                                         updateDate: Date(),
+                                        createdBy: MemberDetail(id: 007, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0),
                                         savedMembers: contactsViewModel.savedMembers,
                                         description: description,
                                         dueOnDate: dueDate,
@@ -237,6 +239,9 @@ struct AddGoalView: View {
                     }
                 }
         }.navigationBarBackButtonHidden()
+            .onTapGesture {
+                UIApplication.shared.dismissKeyboard()
+            }
     }
 }
 

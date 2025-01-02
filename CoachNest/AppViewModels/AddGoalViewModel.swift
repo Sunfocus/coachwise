@@ -12,6 +12,7 @@ public class AddGoalViewModel: ObservableObject {
         GoalDetails(
             goalTitle: "Learn Swift",
             updateDate: Date(),
+            createdBy: MemberDetail(id: 007, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0),
             savedMembers: [
                 .init(id: 1, name: "Alice Anderson", profileImage: .sg1, accountType: .member, progress: 15.0),
                 .init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 12.0)
@@ -23,6 +24,7 @@ public class AddGoalViewModel: ObservableObject {
         GoalDetails(
             goalTitle: "Read a Book",
             updateDate: Date(),
+            createdBy: MemberDetail(id: 007, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0),
             savedMembers: [
                 .init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 54.0)
             ],
@@ -33,6 +35,7 @@ public class AddGoalViewModel: ObservableObject {
         GoalDetails(
             goalTitle: "Do 100 Pushups a Day",
             updateDate: Date(),
+            createdBy: MemberDetail(id: 007, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0),
             savedMembers: [
                 .init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 12.0)
             ],
@@ -43,6 +46,7 @@ public class AddGoalViewModel: ObservableObject {
         GoalDetails(
             goalTitle: "Learn to Solve Rubik's Cube",
             updateDate: Date(),
+            createdBy: MemberDetail(id: 007, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0),
             savedMembers: [
                 .init(id: 2, name: "Amanda", profileImage: .f1, accountType: .member, progress: 76.0)
             ],
@@ -143,6 +147,7 @@ public enum DurationVal: String, Equatable, Codable {
 struct GoalDetails: Codable, Hashable, Identifiable {
     let id: UUID
     let goalTitle: String
+    let createdBy: MemberDetail
     let updateDate: Date
     var cellType: GoalType
     var savedMembers: [MemberDetail]
@@ -154,6 +159,7 @@ struct GoalDetails: Codable, Hashable, Identifiable {
         id: UUID = UUID(),
         goalTitle: String,
         updateDate: Date,
+        createdBy: MemberDetail,
         cellType: GoalType = .group,
         savedMembers: [MemberDetail],
         description: String,
@@ -164,6 +170,7 @@ struct GoalDetails: Codable, Hashable, Identifiable {
         self.id = id
         self.goalTitle = goalTitle
         self.updateDate = updateDate
+        self.createdBy = createdBy
         self.cellType = savedMembers.count > 1 ? .group : .individual
         self.savedMembers = savedMembers
         self.description = description

@@ -104,7 +104,7 @@ struct ProgressGoalCell: View {
 struct ProgressGoalCell_Previews: PreviewProvider {
     static var previews: some View {
         
-        let goal = GoalDetails(goalTitle: "Learn to solve rubiks cube", updateDate: Date(), savedMembers: [MemberDetail(id: 01, name: "Jayson Anderson", profileImage: .sg1, accountType: .coach, progress: 53.0)], description: "play with swift", dueOnDate: Date(), reminder: .daily)
+        let goal = GoalDetails(goalTitle: "Learn to solve rubiks cube", updateDate: Date(), createdBy: MemberDetail(id: 007, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0), savedMembers: [MemberDetail(id: 01, name: "Jayson Anderson", profileImage: .sg1, accountType: .coach, progress: 53.0)], description: "play with swift", dueOnDate: Date(), reminder: .daily)
         
        ProgressGoalCell(goal: goal)
             .previewLayout(.sizeThatFits)

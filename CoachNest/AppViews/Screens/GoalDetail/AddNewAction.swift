@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct AddNewAction: View {
     
@@ -16,6 +17,8 @@ struct AddNewAction: View {
     @State private var errorCatchMember: String = ""
     @State private var errorCatchDescription: String = ""
     @State private var dueDate = Date.now
+    @State private var images: [UIImage] = []
+    @State private var photosPickerItems: [PhotosPickerItem] = []
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var addActionViewModel: AddActionViewModel
     @State private var status: StatusOption = .todo
@@ -40,7 +43,6 @@ struct AddNewAction: View {
                             .frame(width: 24, height: 24)
                             .onTapGesture {
                                 router.dashboardNavigateBack()
-                                
                             }
                         Spacer()
                     }.padding([.horizontal, .vertical], 15)
@@ -157,40 +159,90 @@ struct AddNewAction: View {
                                 .frame(height: 50)
                                 .background(Color.white)
                                 .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.gray, lineWidth: 1)
+                                )
                             }
                         }
                         .padding(.bottom)
                         
                         //Upload photo/video Section
-                        VStack {
-                            Image(.documentUpload)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .padding(.bottom, 12)
-                            
-                            Text(Constants.AddActionViewTitle.uploadPhotoVideo)
-                                .customFont(.medium, 14)
-                                .foregroundStyle(.primaryTheme)
-                            Text(Constants.AddActionViewTitle.maxSizeLimit)
-                                .customFont(.regular, 12)
-                        }
-                        .frame(height: 130)
-                        .frame(maxWidth: .infinity)
-                        .background(Color.white)
-                        .clipShape(
-                            RoundedRectangle(cornerRadius: 12.0, style: .continuous)
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12.0, style: .continuous)
-                                .stroke(
-                                    style: StrokeStyle(
-                                        lineWidth: 1.2,
-                                        dash: [7]
+                        PhotosPicker(
+                            selection: $photosPickerItems,
+                            maxSelectionCount: 5,
+                            matching: .images
+                        ) {
+                            VStack {
+                                Image(.documentUpload)
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .padding(.bottom, 12)
+                                
+                                Text(Constants.AddActionViewTitle.uploadPhotoVideo)
+                                    .customFont(.medium, 14)
+                                    .foregroundStyle(.primaryTheme)
+                                Text(Constants.AddActionViewTitle.maxSizeLimit)
+                                    .customFont(.regular, 12)
+                            }
+                            .frame(height: 130)
+                            .frame(maxWidth: .infinity)
+                            .background(Color.white)
+                            .clipShape(
+                                RoundedRectangle(cornerRadius: 12.0, style: .continuous)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12.0, style: .continuous)
+                                    .stroke(
+                                        style: StrokeStyle(
+                                            lineWidth: 1.2,
+                                            dash: [7]
+                                        )
                                     )
-                                )
-                                .foregroundColor(.gray)
-                            
-                        )
+                                    .foregroundColor(.gray)
+                            )
+                            .padding(.horizontal, 1)
+                        }.shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                        
+                        ScrollView(.horizontal) {
+                            HStack(spacing: 2) {
+                                
+                                ForEach(0..<images.count, id: \.self){ index in
+                                    ZStack {
+                                        ZStack {
+                                            // Main image
+                                            Image(uiImage: images[index])
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 100, height: 100) // Adjust size as needed
+                                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                            
+                                            // Close button overlay
+                                            Image(.closeBtn) // Replace with your close button image name
+                                                .resizable()
+                                                .frame(width: 18, height: 18)
+                                                .offset(x: 44, y: -44)
+                                                .onTapGesture {
+                                                    // Remove the tapped image from the array
+                                                    images.remove(at: index)
+                                                    HapticFeedbackHelper.lightImpact()
+                                                }
+                                        }
+                                        .padding(8)
+                                        .cornerRadius(12)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(Color.clear, lineWidth: 1)
+                                        )
+                                    }
+                                    .padding(1)
+                                }
+                                
+                            }
+                        }.padding(.top)
+                        Spacer()
+                        
+                      
                     }.padding(.horizontal)
                     Spacer()
                 }.scrollIndicators(.hidden)
@@ -203,17 +255,34 @@ struct AddNewAction: View {
                         
                         if addActionViewModel.isValidateForm() {
                             print("Form is valid")
-                            addActionViewModel.addAction(
-                                action: AddAction(
-                                    id: UUID(), goalId: goalId ,
-                                    actionTitle: addActionViewModel.actionName,
-                                    dueOnDate: dueDate,
-                                    assignedTo: member ,
-                                    description: addActionViewModel.taskDescription,
-                                    status: status,
-                                    attachedDocs: 1
+                            var imageData: [Data] = [] // Ensure the array is initialized
+
+                            Task {
+                                // Wait for all items to load their transferable data
+                                for item in photosPickerItems {
+                                    if let data = try? await item.loadTransferable(type: Data.self) {
+                                        imageData.append(data)
+                                    }
+                                }
+
+                                // After the task completes, use the imageData
+                                addActionViewModel.addAction(
+                                    action: AddAction(
+                                        id: UUID(),
+                                        goalId: goalId,
+                                        actionTitle: addActionViewModel.actionName,
+                                        updatedDate: Date(),
+                                        dueOnDate: dueDate,
+                                        assignedBy: MemberDetail(id: 007, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0),
+                                        assignedTo: member,
+                                        description: addActionViewModel.taskDescription,
+                                        status: status,
+                                        attachedDocs: 1,
+                                        attachedImages: imageData
+                                    )
                                 )
-                            )
+                            }
+
                             router.dashboardNavigateBack()
                         }
                         handleValidationErrors()
@@ -221,7 +290,22 @@ struct AddNewAction: View {
                 .padding(.horizontal)
                 
             }
-        }.navigationBarBackButtonHidden()
+        }
+        .navigationBarBackButtonHidden()
+        .onChange(of: photosPickerItems) { _, _ in
+            Task{
+                for item in photosPickerItems{
+                    if let data = try? await item.loadTransferable(type: Data.self){
+                        if let image = UIImage(data: data){
+                            images.append(image)
+                        }
+                    }
+                }
+            }
+        }
+            .onTapGesture {
+                UIApplication.shared.dismissKeyboard()
+            }
         
         
     }
@@ -248,4 +332,5 @@ struct AddNewAction: View {
 
 #Preview {
     AddNewAction(member: MemberDetail(id: 01, name: "Max", profileImage: .sg1, accountType: .coach, progress: 12.6), goalId: UUID())
+        .environmentObject(AddActionViewModel())
 }

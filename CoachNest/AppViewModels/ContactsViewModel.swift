@@ -9,8 +9,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-
-
 public struct MemberDetail: Codable, Hashable, Identifiable {
     public let id: Int
     let name: String

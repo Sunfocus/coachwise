@@ -72,7 +72,7 @@ struct PersonGoalCell: View {
 
 #Preview {
     
-    let goal = GoalDetails(goalTitle: "Learn Swift", updateDate: Date(), savedMembers: [MemberDetail(id: 01, name: "Jayson Anderson", profileImage: .sg1, accountType: .coach, progress: 53.0)], description: "play with swift", dueOnDate: Date(), reminder: .daily)
+    let goal = GoalDetails(goalTitle: "Learn Swift", updateDate: Date(), createdBy: MemberDetail(id: 007, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0), savedMembers: [MemberDetail(id: 01, name: "Jayson Anderson", profileImage: .sg1, accountType: .coach, progress: 53.0)], description: "play with swift", dueOnDate: Date(), reminder: .daily)
     let member = MemberDetail(id: 09, name: "Jayson Anderson", profileImage: .sg1, accountType: .coach, progress: 53.0)
     
     
