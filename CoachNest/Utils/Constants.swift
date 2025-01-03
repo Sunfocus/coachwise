@@ -248,5 +248,14 @@ struct Constants {
             static let goalDescription = "Briefly describe the goal"
         }
     }
+    
+    static let applyFilter = "Apply Filter"
+    static let notifications = "Notifications"
+    
+    static let filterOptions = [
+            RadioButtonOption(title: "All (default)"),
+            RadioButtonOption(title: "Goals assigned to me"),
+            RadioButtonOption(title: "Goals assigned by me")
+        ]
 }
 

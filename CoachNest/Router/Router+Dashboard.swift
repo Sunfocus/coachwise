@@ -31,6 +31,13 @@ extension Router {
             AddNewAction(member: member, goalId: goalId)
         case .actionDetailView(let actionId):
             ActionDetailView(actionId: actionId)
+        case .goalFilterView:
+            GoalFilterView()
+                .presentationDetents([.height(300)])
+                .presentationDragIndicator(.visible)
+                .presentationContentInteraction(.scrolls)
+        case .notificationView:
+            NotificationsListView(notificationsViewModel: NotificationsViewModel())
         }
     }
 }

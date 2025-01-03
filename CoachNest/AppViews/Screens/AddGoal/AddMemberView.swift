@@ -63,13 +63,6 @@ struct AddMemberView: View {
                             .onTapGesture {
                                 print("save button tapped")
                                 contactsViewModel.savedMembers = contactsViewModel.selectedMembers
-//                                if isComingFrom == .editGoal{
-//                                    if !whoIsThisGoalForViewModel.selectedMembers.isEmpty{
-//                                        addGoalViewModel.updateGoalMembers(goalId: goalId, members: whoIsThisGoalForViewModel.selectedMembers)
-//                                    }
-//                                }else{
-//                                    
-//                                }
                                 router.dashboardNavigateBack()
                             }
                     }.padding([.horizontal, .vertical], 15)

@@ -15,7 +15,6 @@ struct ToDoCell: View {
         VStack(spacing: 16) {
             // Task name
             VStack{
-                
                 HStack(spacing: 5){
                     Image(.checklist)
                         .resizable()

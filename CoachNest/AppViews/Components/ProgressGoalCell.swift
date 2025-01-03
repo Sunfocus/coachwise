@@ -35,7 +35,6 @@ struct ProgressGoalCell: View {
         if goal.cellType == .individual {
             return goal.savedMembers.first?.progress ?? 0.0
         } else {
-            print("group percentage total: \(viewModel.getGroupProgress(byID: goal.id))")
             return viewModel.getGroupProgress(byID: goal.id)
         }
     }
