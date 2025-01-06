@@ -34,10 +34,7 @@ public class ContactsViewModel: ObservableObject{
     @Published var members: [MemberDetail] = []
     @Published var savedMembers: [MemberDetail] = []
     @Published var selectedMembers: [MemberDetail] = []
-    
-    var speechManager = SpeechRecognitionManager()
-    private var cancellables: Set<AnyCancellable> = []
-    
+      
     
     var groupedMembers: [String: [MemberDetail]] {
         Dictionary(grouping: members, by: { String($0.name.prefix(1)) })
@@ -51,31 +48,12 @@ public class ContactsViewModel: ObservableObject{
         savedMembers = members
         selectedMembers = members
     }
-        
-    func startVoiceSearch(completion: @escaping (String) -> Void) {
-        speechManager.startRecording()
-        speechManager.$recognizedText
-            .receive(on: DispatchQueue.main)
-            .sink { recognizedText in
-                completion(recognizedText)
-            }
-            .store(in: &cancellables)
-    }
-    
-    func stopVoiceSearch(){
-        speechManager.stopRecording()
-    }
     
     
     func resetSelection(){
         selectedMembers = []
         savedMembers = []
     }
-    
-   
-    
-  
-    
     
     func isSelected(member: MemberDetail) -> Bool {
         return selectedMembers.contains { $0.id == member.id }

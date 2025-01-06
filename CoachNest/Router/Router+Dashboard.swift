@@ -17,16 +17,11 @@ extension Router {
         case .addGoalView(let userType, let goalId, let comingGrom):
             AddGoalView(comingFrom: comingGrom, goalId: goalId, userType: userType)
         case .addMember(let goalid, let comingFrom):
-            AddMemberView( goalId: goalid, isComingFrom: comingFrom)
+            AddMemberView( speechManager: SpeechManager(), goalId: goalid, isComingFrom: comingFrom)
         case .goalDetailedView(let goalId, let member):
             GoalDetailView(goalId: goalId, member: member)
         case .multipleGoalUsersListing(goalId: let goalId):
             MultipleGoalUsersListing(goalId: goalId)
-        case .addNewActionMenu:
-            AddNewActionMenu()
-                .presentationDetents([.height(300)])
-                .presentationDragIndicator(.visible)
-                .presentationContentInteraction(.scrolls)
         case .addNewAction(let member, let goalId):
             AddNewAction(member: member, goalId: goalId)
         case .actionDetailView(let actionId):
@@ -37,7 +32,11 @@ extension Router {
                 .presentationDragIndicator(.visible)
                 .presentationContentInteraction(.scrolls)
         case .notificationView:
-            NotificationsListView(notificationsViewModel: NotificationsViewModel())
+            NotificationsListView(notificationViewModel: NotificationsViewModel())
+        case .coachSendNotificationView:
+            CoachSendNotifivationView(sendNotificationViewModel: SendNotifictionViewModel())
+        case .chatView:
+            ChatView()
         }
     }
 }

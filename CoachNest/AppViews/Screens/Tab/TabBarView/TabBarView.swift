@@ -70,11 +70,11 @@ struct TabBarView: View {
         case .home:
             HomeView()
         case .messages:
-            MessagesView()
+            MessagesView(messageViewModel: MessagesViewModel(), speechManager: SpeechManager())
         case .schedule:
             ScheduleView()
         case .goals:
-            GoalsView()
+            GoalsView(speechManager: SpeechManager())
         case .memories:
             MemoriesView()
         }

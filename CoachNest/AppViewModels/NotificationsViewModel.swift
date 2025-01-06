@@ -51,25 +51,25 @@ struct NotificationInfo: Codable, Hashable, Identifiable{
 public class NotificationsViewModel: ObservableObject{
     @Published var notifications: [NotificationInfo] = [
            // Notifications for Today
-           NotificationInfo(id: UUID(), notificationText: "Team workout session at 6:30 AM", notificationDate: "2025-01-03T06:30:00.000Z"), // Today
-           NotificationInfo(id: UUID(), notificationText: "Strategy meeting with coaching staff at 3:00 PM", notificationDate: "2025-01-03T15:00:00.000Z"), // Today
-           NotificationInfo(id: UUID(), notificationText: "Review performance stats with the team at 8:00 PM", notificationDate: "2025-01-03T20:00:00.000Z"), // Today
-           NotificationInfo(id: UUID(), notificationText: "Team workout session at 6:30 AM", notificationDate: "2025-01-03T06:30:00.000Z"), // Today
-           NotificationInfo(id: UUID(), notificationText: "Strategy meeting with coaching staff at 3:00 PM", notificationDate: "2025-01-03T15:00:00.000Z"), // Today
-           NotificationInfo(id: UUID(), notificationText: "Review performance stats with the team at 8:00 PM", notificationDate: "2025-01-03T20:00:00.000Z"), // Today
-           NotificationInfo(id: UUID(), notificationText: "Review performance stats with the team at 8:00 PM", notificationDate: "2025-01-03T20:00:00.000Z"), // Today
-           NotificationInfo(id: UUID(), notificationText: "Team workout session at 6:30 AM", notificationDate: "2025-01-03T06:30:00.000Z"), // Today
+           NotificationInfo(id: UUID(), notificationText: "Team workout session at 6:30 AM", notificationDate: "2025-01-06T06:30:00.000Z"), // Today
+           NotificationInfo(id: UUID(), notificationText: "Strategy meeting with coaching staff at 3:00 PM", notificationDate: "2025-01-06T15:00:00.000Z"), // Today
+           NotificationInfo(id: UUID(), notificationText: "Review performance stats with the team at 8:00 PM", notificationDate: "2025-01-06T20:00:00.000Z"), // Today
+           NotificationInfo(id: UUID(), notificationText: "Team workout session at 6:30 AM", notificationDate: "2025-01-06T06:30:00.000Z"), // Today
+           NotificationInfo(id: UUID(), notificationText: "Strategy meeting with coaching staff at 3:00 PM", notificationDate: "2025-01-06T15:00:00.000Z"), // Today
+           NotificationInfo(id: UUID(), notificationText: "Review performance stats with the team at 8:00 PM", notificationDate: "2025-01-06T20:00:00.000Z"), // Today
+           NotificationInfo(id: UUID(), notificationText: "Review performance stats with the team at 8:00 PM", notificationDate: "2025-01-06T20:00:00.000Z"), // Today
+           NotificationInfo(id: UUID(), notificationText: "Team workout session at 6:30 AM", notificationDate: "2025-01-06T06:30:00.000Z"), // Today
            NotificationInfo(id: UUID(), notificationText: "Strategy meeting with coaching staff at 3:00 PM", notificationDate: "2025-01-03T15:00:00.000Z"), // Today
            NotificationInfo(id: UUID(), notificationText: "Review performance stats with the team at 8:00 PM", notificationDate: "2025-01-03T20:00:00.000Z"), // Today
 
 
            // Notifications for Yesterday
-           NotificationInfo(id: UUID(), notificationText: "One-on-one session with John Doe at 10:00 AM", notificationDate: "2025-01-02T10:00:00.000Z"), // Yesterday
-           NotificationInfo(id: UUID(), notificationText: "Team bonding dinner at 7:00 PM", notificationDate: "2025-01-02T10:00:00.000Z"), // Yesterday
-           NotificationInfo(id: UUID(), notificationText: "One-on-one session with John Doe at 10:00 AM", notificationDate: "2025-01-02T10:00:00.000Z"), // Yesterday
-           NotificationInfo(id: UUID(), notificationText: "Team bonding dinner at 7:00 PM", notificationDate: "2025-01-02T10:00:00.000Z"), // Yesterday
-           NotificationInfo(id: UUID(), notificationText: "One-on-one session with John Doe at 10:00 AM", notificationDate: "2025-01-02T10:00:00.000Z"), // Yesterday
-           NotificationInfo(id: UUID(), notificationText: "Team bonding dinner at 7:00 PM", notificationDate: "2025-01-02T10:00:00.000Z"), // Yesterday
+           NotificationInfo(id: UUID(), notificationText: "One-on-one session with John Doe at 10:00 AM", notificationDate: "2025-01-05T10:00:00.000Z"), // Yesterday
+           NotificationInfo(id: UUID(), notificationText: "Team bonding dinner at 7:00 PM", notificationDate: "2025-01-05T10:00:00.000Z"), // Yesterday
+           NotificationInfo(id: UUID(), notificationText: "One-on-one session with John Doe at 10:00 AM", notificationDate: "2025-01-05T10:00:00.000Z"), // Yesterday
+           NotificationInfo(id: UUID(), notificationText: "Team bonding dinner at 7:00 PM", notificationDate: "2025-01-05T10:00:00.000Z"), // Yesterday
+           NotificationInfo(id: UUID(), notificationText: "One-on-one session with John Doe at 10:00 AM", notificationDate: "2025-01-05T10:00:00.000Z"), // Yesterday
+           NotificationInfo(id: UUID(), notificationText: "Team bonding dinner at 7:00 PM", notificationDate: "2025-01-05T10:00:00.000Z"), // Yesterday
 
            // Notifications for Past Days
            NotificationInfo(id: UUID(), notificationText: "Leadership workshop for coaches", notificationDate: "2024-12-15T10:00:00.000Z"), // December 15, 2024
@@ -87,6 +87,14 @@ public class NotificationsViewModel: ObservableObject{
     func deleteNotificationById(id: UUID){
         notifications.removeAll(where: { $0.id == id })
       
+    }
+    
+    func deleteNotifications(at indexSet: IndexSet) {
+        // Iterate through the index set
+        for index in indexSet {
+            let notificationToDelete = notifications[index]
+            deleteNotificationById(id: notificationToDelete.id) // Delete by ID
+        }
     }
     
     func getTodayNotifications() -> [NotificationInfo] {

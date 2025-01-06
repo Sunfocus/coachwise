@@ -13,6 +13,7 @@ struct AddMemberView: View {
     @EnvironmentObject var router: Router
     @State private var searchedText = ""
     @State private var isRecording: Bool = false
+    @StateObject var speechManager: SpeechManager
     @EnvironmentObject var contactsViewModel: ContactsViewModel
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
     @Environment(\.colorScheme) var colorScheme
@@ -95,14 +96,14 @@ struct AddMemberView: View {
                             .onTapGesture {
                                 if isRecording{
                                     searchedText = ""
-                                    contactsViewModel.stopVoiceSearch()
+                                    speechManager.stopVoiceSearch()
                                 }else{
-                                    contactsViewModel.startVoiceSearch { voiceText in
+                                    speechManager.startVoiceSearch { voiceText in
                                         searchedText = voiceText
                                         if !voiceText.isEmpty{
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5){
                                                 print(voiceText)
-                                                contactsViewModel.stopVoiceSearch()
+                                                speechManager.stopVoiceSearch()
                                                 isRecording = false
                                             }
                                         }
@@ -177,7 +178,7 @@ struct AddMemberView: View {
 }
 
 #Preview {
-    AddMemberView( goalId: UUID(), isComingFrom: .addNewGoal)
+    AddMemberView(speechManager: SpeechManager(), goalId: UUID(), isComingFrom: .addNewGoal)
         .environmentObject(ContactsViewModel())
         .environmentObject(Router())
 }

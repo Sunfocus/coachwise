@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct GoalsView: View {
     
     //MARK: - Variables -
@@ -17,11 +15,11 @@ struct GoalsView: View {
     @State private var searchedText = ""
     @State private var isRecording: Bool = false
     @EnvironmentObject var contactsViewModel: ContactsViewModel
+    @StateObject var speechManager: SpeechManager
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ZStack{
-           
             VStack{
                 // top header view
                 topHeaderView
@@ -29,7 +27,8 @@ struct GoalsView: View {
                     noGoalToView
                 }else{
                     goalListingView
-                }}
+                }
+            }
         }.background(.backgroundTheme)
             .overlay(
                 Button(action: {
@@ -96,14 +95,14 @@ struct GoalsView: View {
                         .onTapGesture {
                             if isRecording{
                                 searchedText = ""
-                                contactsViewModel.stopVoiceSearch()
+                                speechManager.stopVoiceSearch()
                             }else{
-                                contactsViewModel.startVoiceSearch { voiceText in
+                                speechManager.startVoiceSearch { voiceText in
                                     searchedText = voiceText
                                     if !voiceText.isEmpty{
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5){
                                             print(voiceText)
-                                            contactsViewModel.stopVoiceSearch()
+                                            speechManager.stopVoiceSearch()
                                             isRecording = false
                                         }
                                     }
@@ -187,7 +186,7 @@ struct GoalsView: View {
 }
 
 #Preview {
-    GoalsView()
+    GoalsView(speechManager: SpeechManager())
         .environmentObject(Router())
         .environmentObject(AddGoalViewModel())
 }

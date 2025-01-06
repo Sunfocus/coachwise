@@ -140,6 +140,15 @@ struct Constants {
         static let exampleId = "Eg: “1pdsh2134”"
     }
     
+    // MARK: - No Messages Available
+    struct AddYourMessageViewTitle {
+        static let noMessage = "It’s quiet in here..."
+        static let startConversation = "Start your first conversation!"
+        static let editGoal = "Edit Goal"
+        static let tapAdd = "Tap \"+\" to add your first goal."
+        static let exampleId = "Eg: “1pdsh2134”"
+    }
+    
     // MARK: - AddMembersViewTitle
     struct AddMemberViewTitle {
         static let addMember = "Add Member"
@@ -222,7 +231,10 @@ struct Constants {
             static let anyInjury = "Any Injuries"
             static let goal = "Goal"
             static let whoIsThisGoalFor = "Who is this goal for?"
+            static let recipients = "Recipients"
+            static let selectedRecipients = "(This will send a push notification to the selected recipients)"
             static let description = "Description"
+            static let message = "Message"
             static let dueOn = "Due on"
             static let reminder = "Reminder"
             
@@ -246,11 +258,14 @@ struct Constants {
             static let acionTitle = "Enter action title"
             static let actionDescription = "Briefly describe the action"
             static let goalDescription = "Briefly describe the goal"
+            static let writeMessage = "Write your message here"
         }
     }
     
     static let applyFilter = "Apply Filter"
     static let notifications = "Notifications"
+    static let coachNotification = "Coach Notification"
+    static let save = "Save"
     
     static let filterOptions = [
             RadioButtonOption(title: "All (default)"),

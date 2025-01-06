@@ -10,10 +10,9 @@ import SwiftUI
 struct NotificationsListView: View {
     
     //MARK: - Variables -
-    @StateObject var notificationsViewModel: NotificationsViewModel
+    @StateObject var notificationViewModel: NotificationsViewModel
     @EnvironmentObject var router: Router
     @Environment(\.colorScheme) var colorScheme
-    
     
     var body: some View {
         ZStack{
@@ -23,93 +22,24 @@ struct NotificationsListView: View {
             VStack{
                 notificationTopView
                 
-                
-                let todayNotification = notificationsViewModel.getTodayNotifications()
-                let yesterdayNotification = notificationsViewModel.getYesterdayNotifications()
-                let pastNotification = notificationsViewModel.getPastNotificationsExcludingTodayAndYesterday()
+                //Fetch notifications based on different time
+                let todayNotification = notificationViewModel.getTodayNotifications()
+                let yesterdayNotification = notificationViewModel.getYesterdayNotifications()
+                let pastNotification = notificationViewModel.getPastNotificationsExcludingTodayAndYesterday()
                 
                 List {
                     // Today Section
                     if !todayNotification.isEmpty {
-                        NotificationHeader(headerTitle: "Today")
-                            .listRowBackground(Color.clear)
-                            .padding(.top)
-                        
-                        ForEach(todayNotification, id: \.self) { item in
-                            let time = item.notificationDate.getFormattedStringByTimeStamp(format: .time)
-                            NotificationsRowCell(notification: item, time: time ?? "dummy")
-                                .listRowInsets(EdgeInsets())
-                                .padding(.vertical, 0.4)
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(.hidden)
-                                .padding(.bottom, 5)
-                                .swipeActions {
-                                    // Delete Button
-                                    Button(action: {
-                                        withAnimation {
-                                            notificationsViewModel.deleteNotificationById(id: item.id)
-                                        }
-                                    }) {
-                                        Label("Delete", image: .deleteGoal)
-                                    }
-                                    .tint(.red)
-                                }
-                        }
+                        NotificationListView(headerType: .today, notifications: todayNotification, notificationsViewModel: notificationViewModel)
                     }
                     // Yesterday Section
                     if !yesterdayNotification.isEmpty {
-                        NotificationHeader(headerTitle: "Yesterday")
-                            .listRowBackground(Color.clear)
-                            .padding(.top)
+                        NotificationListView(headerType: .yesterday, notifications: yesterdayNotification, notificationsViewModel: notificationViewModel)
                         
-                        ForEach(yesterdayNotification, id: \.self) { item in
-                            let time = item.notificationDate.getFormattedStringByTimeStamp(format: .time)
-                            NotificationsRowCell(notification: item, time: time ?? "dummy")
-                                .listRowInsets(EdgeInsets())
-                                .padding(.vertical, 0.4)
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(.hidden)
-                                .padding(.bottom, 5)
-                                .swipeActions {
-                                    // Delete Button
-                                    Button(action: {
-                                        withAnimation {
-                                            notificationsViewModel.deleteNotificationById(id: item.id)
-                                        }
-                                    }) {
-                                        Label("Delete", image: .deleteGoal)
-                                    }
-                                    .tint(.red)
-                                }
-                        }
-                       
                     }
                     // Past Section
                     if !pastNotification.isEmpty {
-                        NotificationHeader(headerTitle: "Previous")
-                            .listRowBackground(Color.clear)
-                            .padding(.top)
-                        
-                        ForEach(pastNotification, id: \.self) { item in
-                            let time = item.notificationDate.getFormattedStringByTimeStamp(format: .date)
-                            NotificationsRowCell(notification: item, time: time ?? "dummy")
-                                .listRowInsets(EdgeInsets())
-                                .padding(.vertical, 0.4)
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(.hidden)
-                                .padding(.bottom, 5)
-                                .swipeActions {
-                                    // Delete Button
-                                    Button(action: {
-                                        withAnimation {
-                                            notificationsViewModel.deleteNotificationById(id: item.id)
-                                        }
-                                    }) {
-                                        Label("Delete", image: .deleteGoal)
-                                    }
-                                    .tint(.red)
-                                }
-                        }
+                        NotificationListView(headerType: .previous, notifications: pastNotification, notificationsViewModel: notificationViewModel)
                     }
                 }
                 .listStyle(.plain)
@@ -120,20 +50,16 @@ struct NotificationsListView: View {
                 CustomButton(
                     title: "Send notification",
                     action: {
-                        
-                        
+                        router.navigate(to: .coachSendNotificationView)
                     }
                 ).padding(.horizontal)
             }
-            
-        }.navigationBarBackButtonHidden()
-        
+        }.navigationBarBackButtonHidden() 
     }
-    
     
     //MARK: - Subviews -
     var notificationTopView: some View{
-        HStack{
+        VStack{
             // Heading and dismiss button section
             HStack {
                 Image(.arrowBack)
@@ -157,12 +83,13 @@ struct NotificationsListView: View {
                             .customFont(.medium, 16)
                     }
                 }
+            Divider()
            
         }.background(colorScheme == .dark ? .black : .white)
     }
-    
 }
 //MARK: - Reusable Views -
+//Notification header view (Previous, today, yesterday)
 struct NotificationHeader: View {
     let headerTitle: String
     var body: some View {
@@ -175,11 +102,56 @@ struct NotificationHeader: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
 }
+//Header type enum
+enum HeaderType: String{
+    case today = "Today"
+    case yesterday = "Yesterday"
+    case previous = "Previous"
+}
+//Notification List View Header Title and listing
+struct NotificationListView: View {
+    
+    let headerType: HeaderType
+    let notifications:  [NotificationInfo]
+    @ObservedObject var notificationsViewModel: NotificationsViewModel
+    
+    var body: some View {
+        NotificationHeader(headerTitle: headerType.rawValue)
+            .listRowBackground(Color.clear)
+            .padding(.top)
+        
+        ForEach(notifications, id: \.self) { item in
+            let time = item.notificationDate.getFormattedStringByTimeStamp(format: (headerType == .previous ? .date : .time))
+            NotificationsRowCell(notification: item, time: time ?? "dummy")
+                .listRowInsets(EdgeInsets())
+                .padding(.vertical, 0.4)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .padding(.bottom, 5)
+            
+                .swipeActions {
+                    // Delete Button
+                    Button(action: {
+                        withAnimation {
+                            notificationsViewModel.deleteNotificationById(id: item.id)
+                        }
+                    }) {
+                        Label("Delete", image: .deleteGoal)
+                    }
+                    .tint(.red)
+                }
+        }//loop ends
+//        .onDelete { indexSet in
+//            notificationsViewModel.deleteNotifications(at: indexSet)
+//        }
+    }
+}
 
 
     
 #Preview {
-    NotificationsListView(notificationsViewModel: NotificationsViewModel())
+    NotificationsListView(notificationViewModel: NotificationsViewModel())
+        .environmentObject(NotificationsViewModel())
 }
     
     
