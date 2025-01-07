@@ -29,7 +29,7 @@ struct RootView: View {
         ZStack{
             if router.root == .onboarding {
                 NavigationStack(path: $router.authNavPath) {
-                    LoginView()
+                    EmailVerificationView()
                         .navigationDestination(for: AuthFlow.self) { destination in
                             router.onboardDestination(for: destination)
                         }

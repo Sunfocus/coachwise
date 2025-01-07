@@ -147,6 +147,9 @@ struct MessagesView: View {
             ScrollView{
                 ForEach(0..<50) { index in
                     MessageCell()
+                        .onTapGesture {
+                            router.navigate(to: .chatView)
+                        }
                         .padding(.horizontal)
                        
                 }

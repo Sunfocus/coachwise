@@ -7,22 +7,24 @@
 
 import SwiftUI
 
+enum OTPField: Hashable {
+    case pin1, pin2, pin3, pin4
+}
+
 struct EmailVerificationView: View {
     
     //MARK: - @State variables -
     @State private var email = ""
-    @EnvironmentObject var router: Router
     @State private var pin1 = ""
     @State private var pin2 = ""
     @State private var pin3 = ""
     @State private var pin4 = ""
+    @EnvironmentObject var router: Router
     
     //MARK: - View Modifiers -
-    @FocusState private var focusedField: Field?
+    @FocusState private var focusedField: OTPField?
     //MARK: - Variables -
-    enum Field: Hashable {
-        case pin1, pin2, pin3, pin4
-    }
+    
     
     
     var body: some View {
@@ -39,105 +41,13 @@ struct EmailVerificationView: View {
                 .padding(.bottom, 24)
                 .frame(maxWidth: .infinity, alignment: .center)
                 
-                // MARK: - Enter pin section
-                HStack(alignment: .center, spacing: 20){
-                    TextField("-", text: $pin1)
-                        .customFont(.medium, 20)
-                        .frame(width: 30, height: 30)
-                        .keyboardType(.numberPad)
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .focused($focusedField, equals: .pin1)
-                        .onChange(of: pin1,{
-                            
-                            if pin1.count > 1 {
-                                pin1 = String(pin1.prefix(1))
-                            }
-                            
-                            
-                            if pin1.isEmpty == false{
-                                focusedField = .pin2
-                            }else{
-                                focusedField = .pin1
-                            }
-                        })
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(.gray, lineWidth: 1)
-                        }
-                    TextField("-", text: $pin2)
-                        .customFont(.medium, 20)
-                        .frame(width: 30, height: 30)
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .keyboardType(.numberPad)
-                        .focused($focusedField, equals: .pin2)
-                        .onChange(of: pin2,{
-                            if pin2.count > 1 {
-                                pin2 = String(pin2.prefix(1))
-                            }
-                            
-                            if pin2.isEmpty == false{
-                                focusedField = .pin3
-                            }else{
-                                focusedField = .pin1
-                            }
-                            
-                            
-                            
-                        })
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(.gray, lineWidth: 1)
-                        }
-                    TextField("-", text: $pin3)
-                        .customFont(.medium, 20)
-                        .multilineTextAlignment(.center)
-                        .frame(width: 30, height: 30)
-                        .padding()
-                        .keyboardType(.numberPad)
-                        .focused($focusedField, equals: .pin3)
-                        .onChange(of: pin3,{
-                            if pin3.count > 1 {
-                                pin3 = String(pin3.prefix(1))
-                            }
-                            
-                            if pin3.isEmpty == false{
-                                focusedField = .pin4
-                            }else{
-                                focusedField = .pin2
-                            }
-                         
-                        })
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(.gray, lineWidth: 1)
-                        }
-                    TextField("-", text: $pin4)
-                        .customFont(.medium, 20)
-                        .frame(width: 30, height: 30)
-                        .padding()
-                        .keyboardType(.numberPad)
-                        .multilineTextAlignment(.center)
-                        .focused($focusedField, equals: .pin4)
-                        .onChange(of: pin4,{
-                            if pin4.count > 1 {
-                                pin4 = String(pin4.prefix(1))
-                            }
-                            
-                            if pin4.isEmpty == false{
-                                focusedField = .pin4
-                            }else{
-                                focusedField = .pin3
-                            }
-                           
-                        })
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(.gray, lineWidth: 1)
-                        }
-                }
-                
+                HStack(alignment: .center, spacing: 16) {
+                    OTPTextField(text: $pin1, focusedField: $focusedField, currentField: .pin1, nextField: .pin2)
+                    OTPTextField(text: $pin2, focusedField: $focusedField, currentField: .pin2, nextField: .pin3, previousField: .pin1)
+                    OTPTextField(text: $pin3, focusedField: $focusedField, currentField: .pin3, nextField: .pin4, previousField: .pin2)
+                    OTPTextField(text: $pin4, focusedField: $focusedField, currentField: .pin4, previousField: .pin3)
+                }.padding()
+
                 // MARK: - Resend Otp
                 HStack{
                    
@@ -167,6 +77,9 @@ struct EmailVerificationView: View {
                 }
             }.padding(.horizontal, 20)
                 .padding(.top, 20)
+                .onAppear{
+                    
+                }
         }.background(.backgroundTheme)
             .ignoresSafeArea(.keyboard)
             .navigationBarBackButtonHidden(true)
@@ -180,10 +93,57 @@ struct EmailVerificationView: View {
                     })
                 }
             }
+            .onAppear {
+                focusedField = .pin1
+            }
 
     }
 }
 
-#Preview {
-    EmailVerificationView()
+struct OTPTextField: View {
+    @Binding var text: String
+    var focusedField: FocusState<OTPField?>.Binding
+    let currentField: OTPField
+    var nextField: OTPField?
+    var previousField: OTPField?
+
+    var body: some View {
+        ZStack {
+            // The TextField will be invisible but still focusable and editable
+            TextField("", text: $text)
+                .customFont(.medium, 20)
+                .frame(width: 50, height: 50)
+                .tint(.black)
+                .multilineTextAlignment(.center)
+                .keyboardType(.numberPad)
+                .focused(focusedField, equals: currentField)
+        }
+        .onChange(of: text) { oldValue, newValue in
+            print("we're in onchange block")
+                
+            // Ensure only 1 character in the text field
+            if newValue.count > 1 {
+                text = String(newValue.prefix(1)) // Ensure only 1 character
+            }
+                
+            // Move to the next field if text is not empty
+            if !newValue.isEmpty {
+                if let next = nextField {
+                    focusedField.wrappedValue = next
+                }else{
+                    focusedField.wrappedValue = nil
+                }
+            } else {
+                // Move to the previous field if the text is empty
+                if let previous = previousField {
+                    focusedField.wrappedValue = previous
+                }
+            }
+        }
+        .overlay {
+            let isFocused = (focusedField.wrappedValue == currentField)
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(isFocused ? Color.primaryTheme : Color.gray, lineWidth: isFocused ? 3 : 2)
+        }
+    }
 }

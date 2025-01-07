@@ -16,24 +16,33 @@ struct SenderView: View {
                 Spacer()
                 VStack(alignment: .trailing){
                     Text(chat.message)
-                        .customFont(.regular, 14)
+                        .customFont(.medium, 15)
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.leading)
                 }
-                .padding()
-                .background(.backgroundTheme)
-                .clipShape(.rect(cornerRadius: 10))
+                .padding(10)
+                .background(.primaryTheme)
+                .clipShape(.rect(cornerRadius: 8))
                 Image(.sg1)
                     .resizable()
+                    .scaledToFill()
                     .frame(width: 30, height: 30)
                     .clipShape(Circle())
+                    .padding(.top, 7)
                
             }
             
             VStack{
-                Text(chat.time)
-                    .customFont(.regular, 12)
-                    .padding(.trailing, 45)
+                HStack(spacing: 5){
+                    Spacer()
+                    Text(chat.time)
+                        .customFont(.regular, 12)
+                        .foregroundStyle(.primary.opacity(0.75))
+                    Image(.checkRead)
+                        .resizable()
+                        .frame(width: 14, height: 14)
+                        .padding(.trailing, 42)
+                }
             }
         }.padding(.trailing, 10)
             .padding(.leading, 50)

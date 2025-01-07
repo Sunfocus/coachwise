@@ -40,7 +40,7 @@ final class Router: ObservableObject {
         case .onboarding:
             authNavigateToRoot()
         case .dashboard:
-            self.isUserLoggedIn = true
+            self.isUserLoggedIn = false
             dashboardNavigateToRoot()
         }
     }

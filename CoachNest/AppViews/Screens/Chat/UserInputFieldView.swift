@@ -10,34 +10,90 @@ import SwiftUI
 struct UserInputFieldView: View {
     @Binding var text: String
     let placeholder: String
-    let actionButtonImage: Image
     let onSend: () -> Void
+    @State var isRecording: Bool = false
     
     var body: some View {
-        HStack {
-           
+        
+        VStack{
+            Divider()
             HStack{
-                TextField(placeholder, text: $text)
-                    .customFont(.regular, 16)
-                    .padding()
-                    .foregroundStyle(.white)
-                    
+                Spacer()
+                Button {
+                    isRecording ? isRecording.toggle() : print("attach docs")
+                } label: {
+                    if isRecording{
+                        Image(.deleteLines)
+                            .resizable()
+                            .frame(width: 23, height: 23)
+                            .foregroundStyle(.primaryTheme)
+                            .padding(9)
+                            .background(.primaryTheme.opacity(0.2))
+                            .clipShape(.rect(cornerRadius: 12.0))
+                    }else{
+                        Image(.attachmentPin)
+                            .resizable()
+                            .frame(width:  24, height:  24)
+                    }
+                }
                 
-                if !text.isEmpty {
-                    Image(systemName: "paperplane.fill")
+                HStack{
+                    if isRecording{
+                        AudioWaveformView()  
+                    }else{
+                        TextField(placeholder, text: $text)
+                            .customFont(.regular, 14)
+                            .padding(10)
+                        
+                        if text.isEmpty {
+                            Image(.files)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .onTapGesture {
+                                    onSend()
+                                }
+                                .padding(.trailing)
+                        }
+                    }
+                    
+                }
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+                .padding(.horizontal, 5)
+                
+                
+                if text.isEmpty && !isRecording{
+                    Image(.camera)
                         .resizable()
-                        .foregroundStyle(.white)
-                        .frame(width: 20, height: 20)
-                        .padding()
+                        .frame(width: 24, height: 24)
                         .onTapGesture {
                             onSend()
                         }
+                    
+                    Image(.microphone)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .onTapGesture {
+                            isRecording.toggle()
+                        }
+                }else{
+                    Button {
+                        onSend()
+                        isRecording ? isRecording.toggle() : print("no record")
+                        
+                    } label: {
+                        Image(.send)
+                            .resizable()
+                            .frame(width: 23, height: 23)
+                            .foregroundStyle(.primaryTheme)
+                            .padding(9)
+                            .background(.primaryTheme.opacity(0.2))
+                            .clipShape(.rect(cornerRadius: 12.0))
+                    }
+                    Spacer()
                 }
             }
-            .background(Color.primaryTheme.opacity(0.4))
-               .cornerRadius(20)
         }
-        .padding()
     }
 }
 
@@ -47,10 +103,9 @@ struct UserInputFieldView: View {
             UserInputFieldView(
                 text: text,
                 placeholder: "Write your message",
-                actionButtonImage: Image(systemName: "paperplane.fill"),
                 onSend: {
                     print("Message sent: \(text.wrappedValue)")
-                    text.wrappedValue = "" // Clear the text
+                    text.wrappedValue = ""
                 }
             )
         )
