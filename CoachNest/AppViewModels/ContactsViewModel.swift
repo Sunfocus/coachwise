@@ -28,7 +28,6 @@ public struct MemberDetail: Codable, Hashable, Identifiable {
     }
 }
 
-
 public class ContactsViewModel: ObservableObject{
     
     @Published var members: [MemberDetail] = []

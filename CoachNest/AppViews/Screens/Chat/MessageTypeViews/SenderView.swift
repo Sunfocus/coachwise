@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SenderView: View {
-    var chat: ChatMessage
+    var chat: MessageDetail
     var body: some View {
         
         VStack(alignment: .trailing){
@@ -29,11 +29,10 @@ struct SenderView: View {
                     .frame(width: 30, height: 30)
                     .clipShape(Circle())
                     .padding(.top, 7)
-               
             }
             
             VStack{
-                HStack(spacing: 5){
+                HStack(spacing: 2){
                     Spacer()
                     Text(chat.time)
                         .customFont(.regular, 12)
@@ -44,15 +43,19 @@ struct SenderView: View {
                         .padding(.trailing, 42)
                 }
             }
-        }.padding(.trailing, 10)
+        }.padding(.trailing)
             .padding(.leading, 50)
     }
 }
 
 #Preview {
-    SenderView(chat: ChatMessage(
-        message: "Hey! How are you doing? I was just thinking about the trip we planned last month. Let’s finalize the dates and start booking the tickets. Let me know what works for you!",
-        time: "10:40 PM"
-    ))
+    let message = MessageDetail(id: UUID(),
+                                time: "10:40 PM",
+                                message: "Hey! How are you doing? I was just thinking about the trip we planned last month. Let’s finalize the dates and start booking the tickets. Let me know what works for you!",
+                                messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
+                                messageType: .text,
+                                recordingUrl: nil,
+                                sendImage: UIImage())
+    SenderView(chat: message)
 
 }

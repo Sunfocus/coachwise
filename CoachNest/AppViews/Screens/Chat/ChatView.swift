@@ -6,18 +6,16 @@
 //
 
 import SwiftUI
-
-struct ChatMessage: Identifiable, Hashable{
-    var id: UUID = UUID()
-    var message: String
-    var time: String
-}
+import PhotosUI
 
 struct ChatView: View {
     
     @EnvironmentObject var router: Router
     @State private var newMessage: String = ""
-    @State private var messages: [ChatMessage] = []
+    @State private var messages: [MessageDetail] = []
+    @State private var images: [UIImage] = []
+    @State private var photosPickerItems: [PhotosPickerItem] = []
+    @StateObject private var audioRecorderHelper = AudioRecorderHelper()
     
     var body: some View {
         ZStack{
@@ -25,15 +23,12 @@ struct ChatView: View {
                 topHeaderView
                     .padding()
                     .background(.white)
-                    
-                
                 if messages.isEmpty{
                     VStack(spacing: 15){
                         Spacer()
                         Image(.noMessage)
                             .resizable()
                             .frame(width: 50, height: 50)
-                           
                          Text("No Chats available, Send a message to start a chat")
                             .customFont(.regular, 15)
                             .multilineTextAlignment(.center)
@@ -42,21 +37,45 @@ struct ChatView: View {
                         Spacer()
                     }
                 }else{
-                    ScrollView{
-                        ForEach(messages) { message in
-                            SenderView(chat: message)
-                        }
-                    }.safeAreaPadding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
-                        .scrollIndicators(.hidden)
+                    ScrollViewReader { scrollViewProxy in
+                        ScrollView{
+                            ForEach(messages) { message in
+                                switch message.messageType{
+                                case .audio:
+                                    SenderAudioView(chat: message)
+                                case .image:
+                                    SenderImageView(chat: message)
+                                case .document:
+                                    SenderView(chat: message)
+                                case .text:
+                                    SenderView(chat: message)
+                                case .video:
+                                    SenderView(chat: message)
+                                }
+                            }
+                        }.safeAreaPadding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
+                            .scrollIndicators(.hidden)
+                            .onChange(of: messages.count) {
+                                if let lastMessage = messages.last {
+                                    withAnimation {
+                                        scrollViewProxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                    }
+                                }
+                            }
+                    }
                 }
+                
+                
                 // User input field
                 UserInputFieldView(
                     text: $newMessage,
+                    images: $images,
+                    photosPickerItems: $photosPickerItems,
+                    audioRecorder: audioRecorderHelper,
                     placeholder: "Write a message...",
-                    onSend: {
+                    onSend: { messageType in
                         HapticFeedbackHelper.mediumImpact()
-                        guard !newMessage.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                        sendMessage()
+                        sendMessage(messageType: messageType)
                     }
                     )
                 .padding()
@@ -106,13 +125,50 @@ struct ChatView: View {
             Divider()
         }
     }
-    func sendMessage() {
-           guard !newMessage.isEmpty else { return }
-           let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
-           let newChatMessage = ChatMessage(message: newMessage, time: currentTime)
-           messages.append(newChatMessage)
-           newMessage = ""
-       }
+    func sendMessage(messageType: MessageType) {
+        
+        if messageType == .audio{
+            if let recordingURL = audioRecorderHelper.getRecordingURL() {
+                print("Recording URL: \(recordingURL)")
+                let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
+                let newChatMessage = MessageDetail(id: UUID(),
+                                                   time: currentTime,
+                                                   message: "",
+                                                   messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
+                                                   messageType: messageType, recordingUrl: recordingURL,
+                                                   sendImage: UIImage())
+                messages.append(newChatMessage)
+            } else {
+                print("No recording URL available.")
+            }
+        }
+        
+        if messageType == .text{
+            guard !newMessage.isEmpty else { return }
+            let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
+            let newChatMessage = MessageDetail(id: UUID(),
+                                               time: currentTime,
+                                               message: newMessage,
+                                               messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
+                                               messageType: messageType, recordingUrl: nil, sendImage: UIImage())
+            messages.append(newChatMessage)
+            newMessage = ""
+        }
+        
+        if messageType == .image{
+            for img in images{
+                let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
+                let newChatMessage = MessageDetail(id: UUID(),
+                                                   time: currentTime,
+                                                   message: "",
+                                                   messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
+                                                   messageType: messageType, recordingUrl: nil, sendImage: img)
+                messages.append(newChatMessage)
+            }
+            images = []
+            photosPickerItems = []
+        }
+    }
 }
 
 #Preview {
