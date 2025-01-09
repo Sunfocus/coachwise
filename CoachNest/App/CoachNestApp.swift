@@ -9,12 +9,10 @@ import SwiftUI
 
 @main
 struct CoachNestApp: App {
- 
     var body: some Scene {
         WindowGroup {
             RootView()
         }
     }
-   
 }
 

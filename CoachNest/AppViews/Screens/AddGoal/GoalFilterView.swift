@@ -13,10 +13,11 @@ struct GoalFilterView: View {
     @State private var selectedOptionIndex = 0
     @EnvironmentObject private var router: Router
     @Environment(\.dismiss) var dismiss
+    var isComingFrom: ComingFrom = .addNewGoal
     
     var body: some View {
         ZStack{
-            VStack{
+            VStack(alignment: .leading){
                 HStack{
                     Text("Filters")
                         .customFont(.semiBold, 24)
@@ -29,7 +30,13 @@ struct GoalFilterView: View {
                         }
                 }.padding()
                 
-                RadioButtonListView(selectedIndex: $selectedOptionIndex, options: Constants.filterOptions)
+                if isComingFrom == .chat{
+                    Text("Filter by Roles")
+                        .customFont(.medium, 16)
+                        .padding(.leading)
+                }
+                
+                RadioButtonListView(selectedIndex: $selectedOptionIndex, options: isComingFrom == .chat ? Constants.chatContactFilterOptions : Constants.filterOptions)
                     .padding(.horizontal)
                 
                 CustomButton(

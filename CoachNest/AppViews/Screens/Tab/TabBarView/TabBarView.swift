@@ -41,25 +41,40 @@ enum Tab: Int, CaseIterable {
 // MARK: - TabBarView
 struct TabBarView: View {
     @State private var selectedTab: Tab = .home
-    
+    @EnvironmentObject var router: Router
+    @State private var presentSideMenu = false
+
     var body: some View {
-        TabView(selection: $selectedTab) {
-            // Iterate over all tabs to create their views
-            ForEach(Tab.allCases, id: \.self) { tab in
-                tabView(for: tab)
-                    .tabItem {
-                        Image(tab.imageName) // Use the tab's image
-                        Text(tab.title) // Use the tab's title
-                    }
-                    .tag(tab)
+        ZStack{
+            TabView(selection: $selectedTab) {
+                // Iterate over all tabs to create their views
+                ForEach(Tab.allCases, id: \.self) { tab in
+                    tabView(for: tab)
+                        .tabItem {
+                            Image(tab.imageName) // Use the tab's image
+                            Text(tab.title) // Use the tab's title
+                        }
+                        .tag(tab)
+                }
             }
-        }
-        .tint(.primaryTheme)
-        .onAppear(perform: {
-            configureTabBarAppearance()
-        })
-        .onChange(of: selectedTab) { (oldValue, newValue) in
-            HapticFeedbackHelper.mediumImpact()
+            .tint(.primaryTheme)
+            .onAppear(perform: {
+                configureTabBarAppearance()
+            })
+            .onChange(of: selectedTab) { (oldValue, newValue) in
+                HapticFeedbackHelper.mediumImpact()
+            }
+            .environment(\.presentSideMenu, $presentSideMenu)
+            
+            SideMenu(
+                isShowing: $presentSideMenu,
+                content: AnyView(
+                    SideMenuView(
+                        activeTab: $selectedTab,
+                        presentSideMenu: $presentSideMenu
+                    )
+                )
+            )
         }
     }
     
@@ -68,13 +83,13 @@ struct TabBarView: View {
     private func tabView(for tab: Tab) -> some View {
         switch tab {
         case .home:
-            HomeView()
+            HomeView(speechManager: SpeechManager())
         case .messages:
             MessagesView(messageViewModel: MessagesViewModel(), speechManager: SpeechManager())
         case .schedule:
             ScheduleView()
         case .goals:
-            GoalsView(speechManager: SpeechManager())
+            GoalsView( speechManager: SpeechManager())
         case .memories:
             MemoriesView()
         }
@@ -85,6 +100,7 @@ struct TabBarView: View {
         let standardAppearance = UITabBarAppearance()
         standardAppearance.configureWithOpaqueBackground()
         standardAppearance.shadowColor = .black.withAlphaComponent(0.3)
+        
         UITabBar.appearance().standardAppearance = standardAppearance
         UITabBar.appearance().scrollEdgeAppearance = standardAppearance
     }
@@ -92,4 +108,16 @@ struct TabBarView: View {
 
 #Preview {
     TabBarView()
+}
+
+
+struct PresentSideMenuKey: EnvironmentKey {
+    static let defaultValue: Binding<Bool> = .constant(false)
+}
+
+extension EnvironmentValues {
+    var presentSideMenu: Binding<Bool> {
+        get { self[PresentSideMenuKey.self] }
+        set { self[PresentSideMenuKey.self] = newValue }
+    }
 }

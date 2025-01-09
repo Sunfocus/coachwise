@@ -23,13 +23,11 @@ struct RootView: View {
         UISegmentedControl.appearance().backgroundColor = UIColor.white.withAlphaComponent(0.1)
     }
     
-    
-    
     var body: some View {
         ZStack{
             if router.root == .onboarding {
                 NavigationStack(path: $router.authNavPath) {
-                    EmailVerificationView()
+                    LoginView()
                         .navigationDestination(for: AuthFlow.self) { destination in
                             router.onboardDestination(for: destination)
                         }
@@ -38,7 +36,6 @@ struct RootView: View {
                                 router.onboardDestination(for: modalDestination)
                             }
                         }
-                    
                 }
             }else if router.root == .dashboard {
                 NavigationStack(path: $router.dashboardNavPath) {
@@ -71,4 +68,11 @@ struct RootView: View {
 
 #Preview {
     RootView()
+}
+
+extension UISegmentedControl {
+  override open func didMoveToSuperview() {
+     super.didMoveToSuperview()
+     self.setContentHuggingPriority(.defaultLow, for: .vertical)
+   }
 }

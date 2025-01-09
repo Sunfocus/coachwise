@@ -11,6 +11,7 @@ struct ContactCell: View {
     
     var contact: MemberDetail
     var isSelected: Bool
+    var isComingFrom: ComingFrom = .chat
     
     var body: some View {
         HStack{
@@ -28,10 +29,14 @@ struct ContactCell: View {
             }
             
             Spacer()
-            Image(isSelected ? .checkboxFill : .checkboxEmpty)
-                .resizable()
-                .frame(width: 24, height: 24)
-                .clipShape(.circle)
+            if isComingFrom != .chat{
+                HStack{
+                    Image(isSelected ? .checkboxFill : .checkboxEmpty)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .clipShape(.circle)
+                }
+            }
             
         } .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -39,5 +44,5 @@ struct ContactCell: View {
 
 #Preview {
     let member = MemberDetail(id: 01, name: "Rahul Pathania", profileImage: .sg1, accountType: .coach, progress: 0.0)
-    ContactCell(contact: member, isSelected: false)
+    ContactCell(contact: member, isSelected: false, isComingFrom: .chat)
 }

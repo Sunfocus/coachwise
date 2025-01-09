@@ -14,9 +14,11 @@ struct GoalsView: View {
     @EnvironmentObject private var addGoalViewModel: AddGoalViewModel
     @State private var searchedText = ""
     @State private var isRecording: Bool = false
+    @State private var addGoalViewIsPresented: Bool = false
     @EnvironmentObject var contactsViewModel: ContactsViewModel
     @StateObject var speechManager: SpeechManager
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.presentSideMenu) var presentSideMenu
     
     var body: some View {
         ZStack{
@@ -33,16 +35,26 @@ struct GoalsView: View {
             .overlay(
                 Button(action: {
                     print("Add new tapped")
-                    router.navigate(to: .addGoalView(userType: .coach, goalId: UUID(), comingFrom: .addNewGoal))
+                    addGoalViewIsPresented = true
+                   // router.navigate(to: .addGoalView(userType: .coach, goalId: UUID(), comingFrom: .addNewGoal))
                 }) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.system(size: 50))
-                        .foregroundColor(.primaryTheme)
+                    Circle()
+                        .foregroundStyle(.primaryTheme)
+                        .frame(width: 50, height: 50)
+                        .overlay {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .tint(.white)
+                        }
                 }
                 .padding(.trailing, 30)
                 .padding(.bottom, 40),
                alignment: .bottomTrailing
             )
+            .fullScreenCover(isPresented: $addGoalViewIsPresented) {
+                AddGoalView(comingFrom: .addNewGoal, goalId: UUID(), userType: .coach)
+            }
     }
     
     //MARK: - Subviews -
@@ -55,7 +67,8 @@ struct GoalsView: View {
                     .resizable()
                     .frame(width: 32, height: 32)
                     .onTapGesture {
-                        
+                        presentSideMenu.wrappedValue.toggle()
+
                     }
                 Text("Goals")
                     .customFont(.semiBold, 24)

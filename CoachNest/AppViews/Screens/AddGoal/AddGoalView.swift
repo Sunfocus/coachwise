@@ -10,6 +10,7 @@ import SwiftUI
 public enum ComingFrom: Codable{
     case addNewGoal
     case editGoal
+    case chat
 }
 
 struct AddGoalView: View {
@@ -23,9 +24,11 @@ struct AddGoalView: View {
     @State private var selectedOption: DurationVal = .daily
     @EnvironmentObject var router: Router
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var contactsViewModel: ContactsViewModel
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
     @State private var isInitialized = false
+    @State private var addMemberViewIsPresented = false
     
     var comingFrom: ComingFrom = .addNewGoal
     var goalId: UUID?
@@ -56,11 +59,12 @@ struct AddGoalView: View {
                     // Heading and dismiss button section
                     VStack{
                         HStack {
-                            Image(.arrowBack)
+                            Image(.greyCloseButton)
                                 .resizable()
                                 .frame(width: 24, height: 24)
                                 .onTapGesture {
-                                    router.dashboardNavigateBack()
+//                                    router.dashboardNavigateBack()
+                                    dismiss()
                                     contactsViewModel.resetSelection()
                                 }
                             Spacer()
@@ -113,7 +117,8 @@ struct AddGoalView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                     .padding(.trailing, 12)
                                     .onTapGesture {
-                                        router.navigate(to: .addMember(goalId: goalId ?? UUID(), comingFrom: comingFrom))
+                                   //     router.navigate(to: .addMember(goalId: goalId ?? UUID(), comingFrom: comingFrom))
+                                        addMemberViewIsPresented = true
                                     }
                                     
                             }.frame(height: 48)
@@ -209,7 +214,8 @@ struct AddGoalView: View {
                                             addGoalViewModel.addGoal(goal)
                                         }
                                         contactsViewModel.resetSelection()
-                                        router.dashboardNavigateBack()
+                                      //  router.dashboardNavigateBack()
+                                        dismiss()
                                     }else{
                                         errorCatch = "Please add description for the goal."
                                     }
@@ -242,6 +248,9 @@ struct AddGoalView: View {
             .onTapGesture {
                 UIApplication.shared.dismissKeyboard()
             }
+            .fullScreenCover(isPresented: $addMemberViewIsPresented) {
+                AddMemberView(speechManager: SpeechManager(), goalId: goalId ?? UUID(), isComingFrom: .addNewGoal)
+            }
     }
 }
 
@@ -260,7 +269,6 @@ struct ReminderView: View {
     
     var body: some View {
        
-            
         HStack(spacing: 12) {
             ForEach(options, id: \.self) { option in
                 Button(action: {

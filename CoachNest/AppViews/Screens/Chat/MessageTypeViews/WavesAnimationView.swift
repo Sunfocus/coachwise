@@ -8,15 +8,11 @@
 import SwiftUI
 
 struct AudioWaveformView: View {
-    @State private var barHeights: [CGFloat] = Array(repeating: 10, count: 30) // Initial bar heights
+    @State private var barHeights: [CGFloat] = Array(repeating: 13, count: 30) // Initial bar heights
     @State private var isRecording: Bool = true
     @State private var elapsedTime: TimeInterval = 0 // Tracks elapsed time
     @State private var timer: Timer? = nil // Holds the animation timer
-    
-    init(){
-        startElapsedTimeTimer()
-    }
-    
+
     var body: some View {
         HStack(spacing: 4) {
             ForEach(0..<barHeights.count, id: \.self) { index in
@@ -33,7 +29,6 @@ struct AudioWaveformView: View {
         .frame(height: 40) // Max height of the waveform
         .padding(.horizontal)
         .background(Color.primaryTheme.cornerRadius(12))
-      
         .onAppear {
             startAnimatingBars()
             startElapsedTimeTimer()
@@ -45,15 +40,19 @@ struct AudioWaveformView: View {
         }
     }
     
-    // MARK: - Animating the Bar Heights
+    // MARK: - Smooth Bar Animation
     private func startAnimatingBars() {
-        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { _ in
             if !isRecording {
-                timer.invalidate()
+                timer?.invalidate()
                 return
             }
-            // Randomize the bar heights to simulate an audio waveform
-            barHeights = barHeights.map { _ in CGFloat.random(in: 4...20) }
+
+            // Animate the bar heights with a leftward shift
+            withAnimation(.linear(duration: 0.12)) {
+                barHeights.removeFirst()
+                barHeights.append(CGFloat.random(in: 4...20))
+            }
         }
     }
     
@@ -72,21 +71,17 @@ struct AudioWaveformView: View {
         }
     }
 
-       // MARK: - Formatting Time
+    // MARK: - Formatting Time
     private func formatTime(_ time: TimeInterval) -> String {
         let minutes = Int(time) / 60
         let seconds = Int(time) % 60
         return String(format: "%d:%02d", minutes, seconds)
     }
-    
-    
-    
 }
 
 struct AudioWaveformView_Previews: PreviewProvider {
     static var previews: some View {
         AudioWaveformView()
             .frame(height: 85)
-       //     .background(Color.black.edgesIgnoringSafeArea(.all))
     }
 }

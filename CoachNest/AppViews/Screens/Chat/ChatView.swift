@@ -16,13 +16,14 @@ struct ChatView: View {
     @State private var images: [UIImage] = []
     @State private var photosPickerItems: [PhotosPickerItem] = []
     @StateObject private var audioRecorderHelper = AudioRecorderHelper()
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ZStack{
             VStack{
                 topHeaderView
                     .padding()
-                    .background(.white)
+                    .background(.darkGreyBackground)
                 if messages.isEmpty{
                     VStack(spacing: 15){
                         Spacer()
@@ -65,7 +66,6 @@ struct ChatView: View {
                     }
                 }
                 
-                
                 // User input field
                 UserInputFieldView(
                     text: $newMessage,
@@ -79,7 +79,7 @@ struct ChatView: View {
                     }
                     )
                 .padding()
-                .background(.white)
+                .background(.darkGreyBackground)
             }
         }.background(
             Image(.chatBackground)
@@ -122,7 +122,10 @@ struct ChatView: View {
                         .frame(width: 24, height: 24)
                 }
             }
-            Divider()
+            if colorScheme == .light{
+                Divider()
+            }
+           
         }
     }
     func sendMessage(messageType: MessageType) {

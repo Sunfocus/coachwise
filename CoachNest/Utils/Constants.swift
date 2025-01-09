@@ -272,5 +272,15 @@ struct Constants {
             RadioButtonOption(title: "Goals assigned to me"),
             RadioButtonOption(title: "Goals assigned by me")
         ]
+    
+    static let chatContactFilterOptions = [
+        RadioButtonOption(title: "All (default)"),
+        RadioButtonOption(title: "Individual"),
+        RadioButtonOption(title: "Group"),
+        RadioButtonOption(title: "Admin"),
+        RadioButtonOption(title: "Coach"),
+        RadioButtonOption(title: "Student"),
+        RadioButtonOption(title: "Parent")
+    ]
 }
 

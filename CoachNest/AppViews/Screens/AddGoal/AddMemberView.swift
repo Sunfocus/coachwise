@@ -13,10 +13,12 @@ struct AddMemberView: View {
     @EnvironmentObject var router: Router
     @State private var searchedText = ""
     @State private var isRecording: Bool = false
+    @State private var isFilterPresented: Bool = false
     @StateObject var speechManager: SpeechManager
     @EnvironmentObject var contactsViewModel: ContactsViewModel
     @EnvironmentObject var addGoalViewModel: AddGoalViewModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) var dismiss
     
     var goalId: UUID
     var isComingFrom : ComingFrom = .addNewGoal
@@ -50,30 +52,52 @@ struct AddMemberView: View {
                 VStack{
                     // Heading and dismiss button section
                     HStack {
-                        Image(.arrowBack)
+                        Image(.greyCloseButton)
                             .resizable()
                             .frame(width: 24, height: 24)
                             .onTapGesture {
                                 //we have to dismiss the current view only
+                                dismiss()
+//                                if isComingFrom == .chat{
+//                                    dismiss()
+//                                }else{
+//                                    router.dashboardNavigateBack()
+//                                }
                                 contactsViewModel.selectedMembers = []
-                                router.dashboardNavigateBack()
+                               
+                                
                             }
                         Spacer()
-                        Text(Constants.AddMemberViewTitle.done)
-                            .foregroundStyle(.primaryTheme)
-                            .onTapGesture {
-                                print("save button tapped")
-                                contactsViewModel.savedMembers = contactsViewModel.selectedMembers
-                                router.dashboardNavigateBack()
-                            }
+                        if isComingFrom == .chat{
+                            Image(.filterList)
+                                .foregroundStyle(.primaryTheme)
+                                .onTapGesture {
+                                    isFilterPresented = true
+                                }
+                        }else{
+                            Text(Constants.AddMemberViewTitle.done)
+                                .foregroundStyle(.primaryTheme)
+                                .onTapGesture {
+                                    print("save button tapped")
+                                    contactsViewModel.savedMembers = contactsViewModel.selectedMembers
+                                    dismiss()
+                                  //  router.dashboardNavigateBack()
+                                }
+                        }
+                        
+                        
+                        
+                        
                     }.padding([.horizontal, .vertical], 15)
                         .overlay {
                             VStack{
-                                Text(Constants.AddMemberViewTitle.addMember)
+                                Text(isComingFrom == .chat ? "Directory" : Constants.AddMemberViewTitle.addMember)
                                     .customFont(.medium, 16)
-                                Text("\(contactsViewModel.selectedMembers.count)/\(contactsViewModel.members.count)")
-                                    .customFont(.medium, 13)
-                                    .foregroundStyle(.cursorTint.opacity(0.4))
+                                if isComingFrom != .chat{
+                                    Text("\(contactsViewModel.selectedMembers.count)/\(contactsViewModel.members.count)")
+                                        .customFont(.medium, 13)
+                                        .foregroundStyle(.cursorTint.opacity(0.4))
+                                }
                             }
                         }
                     
@@ -124,7 +148,7 @@ struct AddMemberView: View {
                 .background(colorScheme == .dark ? .black : .white)
                    
                     VStack{
-                        if !contactsViewModel.selectedMembers.isEmpty{
+                        if !contactsViewModel.selectedMembers.isEmpty && isComingFrom != .chat{
                             HStack{
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
@@ -158,7 +182,7 @@ struct AddMemberView: View {
                                             
                                     ){
                                         ForEach(filteredContacts[letter]!, id: \.id) { member in
-                                            ContactCell(contact: member, isSelected: contactsViewModel.isSelected(member: member))
+                                            ContactCell(contact: member, isSelected: contactsViewModel.isSelected(member: member), isComingFrom: isComingFrom)
                                             .contentShape(Rectangle())
                                             .onTapGesture {
                                                 contactsViewModel.toggleSelection(for: member)
@@ -174,6 +198,12 @@ struct AddMemberView: View {
                     }
             }
         }.navigationBarBackButtonHidden()
+            .sheet(isPresented: $isFilterPresented) {
+                GoalFilterView(isComingFrom: .chat)
+                    .presentationDetents([.height(500)])
+                    .presentationDragIndicator(.visible)
+                    .presentationContentInteraction(.scrolls)
+            }
     }
 }
 

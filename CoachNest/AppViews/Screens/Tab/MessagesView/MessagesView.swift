@@ -18,7 +18,8 @@ struct MessagesView: View {
     @StateObject var speechManager: SpeechManager
     @Environment(\.colorScheme) var colorScheme
     @State private var selectedSegment = 0
-    
+    @State private var isContactListPresented = false
+    @Environment(\.presentSideMenu) var presentSideMenu
     
     var body: some View {
         ZStack{
@@ -32,6 +33,12 @@ struct MessagesView: View {
                     messageListingView
                 }}
         }.background(.backgroundTheme)
+            .sheet(isPresented: $isContactListPresented) {
+                AddMemberView(speechManager: SpeechManager(), goalId: UUID(), isComingFrom: .chat)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+                    .presentationContentInteraction(.scrolls)
+            }
     }
     
     //MARK: - Subviews -
@@ -44,7 +51,8 @@ struct MessagesView: View {
                     .resizable()
                     .frame(width: 32, height: 32)
                     .onTapGesture {
-                        
+                        //Open sidemenu
+                        presentSideMenu.wrappedValue.toggle()
                     }
                 Text("Messages")
                     .customFont(.semiBold, 24)
@@ -60,7 +68,7 @@ struct MessagesView: View {
                     .resizable()
                     .frame(width: 24, height: 24)
                     .onTapGesture {
-                        
+                        isContactListPresented = true
                     }
             }.padding([.horizontal, .vertical], 15)
             
