@@ -210,5 +210,6 @@ struct AddMemberView: View {
 #Preview {
     AddMemberView(speechManager: SpeechManager(), goalId: UUID(), isComingFrom: .addNewGoal)
         .environmentObject(ContactsViewModel())
+        .environmentObject(AddGoalViewModel())
         .environmentObject(Router())
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(\.presentSideMenu) var presentSideMenu
+    @EnvironmentObject private var addGoalViewModel: AddGoalViewModel
     @State private var isSearchActive: Bool = false
     @State private var searchedText = ""
     @State private var isRecording: Bool = false
@@ -56,15 +57,19 @@ struct HomeView: View {
                      goalAchieverImage: "placeholder",
                      lastUpdatedDate: "20/12/24",
                      goalTitle: "Fitness Goal")])
+    @EnvironmentObject var tabManager: TabSelectionManager
+    
     
     var body: some View {
         ZStack {
             VStack {
+                //Search and menu section
                 topHeaderView
+                //Welcome User Section
                 welcomeUserView
                 ScrollView(showsIndicators: false) {
                     VStack {
-                        // MARK: - Schedule Title & SubTitle Text
+                        //Schedule detail section
                         if let scheduleCount = homeViewModel.schedule?.count {
                             if scheduleCount > 0{
                                 scheduleDataView
@@ -72,10 +77,12 @@ struct HomeView: View {
                                 noScheduleView
                             }
                         }
-                    }.background(.backgroundTheme)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .padding(.horizontal, 12)
-                    // MARK: - Recent Messages View
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal, 18)
+                    .background(.backgroundTheme)
+                    
+                    // Recent Messages View
                     VStack {
                         if let messagesCount = homeViewModel.recentMessages?.count {
                             if messagesCount > 0 {
@@ -88,7 +95,7 @@ struct HomeView: View {
                     .padding(.top, 12)
                     .background(.backgroundTheme)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 18)
 
                     // MARK: - New Memories
                     VStack {
@@ -97,18 +104,19 @@ struct HomeView: View {
                                  memoriesView
                              }else {
                                  noNewMemoriesView
+                                     .padding(.horizontal, 16)
                              }
                          }
                     }
                     .padding(.top, 12)
                     .background(.backgroundTheme)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .padding(.horizontal, 20)
+                    
                    
                     // MARK: - Goals
                     if let goalsCount = homeViewModel.goals?.count {
                         if goalsCount > 0 {
-                            // Add new Goals View Here
+                            goalView
                         }else {
                             noNewGoalView
                         }
@@ -214,7 +222,7 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 15)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 16)
     }
     var scheduleDataView: some View {
         VStack{
@@ -227,14 +235,13 @@ struct HomeView: View {
                     .customFont(.medium, 14)
                     .onTapGesture {
                         print("View All Schedule Tapped")
-                        
                     }
             }
-            .padding(.horizontal, 12)
             .background(.backgroundTheme)
             ForEach(homeViewModel.schedule!, id: \.self) { scheduleEvent in
                 ScheduleDataView(schedule: scheduleEvent)
                     .padding(.bottom, 2)
+                    .padding(.horizontal, 3)
             }
         }
     }
@@ -257,6 +264,9 @@ struct HomeView: View {
                 }) .padding(.bottom, 12)
             }
         }.padding(.horizontal, 12)
+            
+        
+        
     }
     var recentMessagesView: some View {
         VStack{
@@ -270,7 +280,7 @@ struct HomeView: View {
                         print("On Tap View All")
                         presentSideMenu.wrappedValue.toggle()
                     }
-            }.padding(.horizontal, 12)
+            }
                 .background(.backgroundTheme)
             RecentMessagesDataView(recentMessages: homeViewModel.recentMessages ?? [Messages]())
         }
@@ -310,11 +320,8 @@ struct HomeView: View {
                     .onTapGesture {
                         print("View All Memories Tapped")
                     }
-            }.padding(.horizontal, 12)
-               
+            }.padding(.horizontal, 16)
             NewMemoriesDataView(memories: homeViewModel.memories)
-                
-               
         }
     }
     var noNewMemoriesView: some View {
@@ -348,6 +355,22 @@ struct HomeView: View {
             .padding(.bottom, 12)
         }
     }
+    var goalView: some View {
+        VStack {
+            HStack {
+                Text("Goals")
+                    .customFont(.medium, 18)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Spacer()
+                Text("View All")
+                    .customFont(.medium, 14)
+                    .onTapGesture {
+                        tabManager.selectedTab = .goals
+                    }
+            }.padding(.horizontal, 18)
+            goalListingView
+        }
+    }
     var noNewGoalView: some View{
         VStack {
             HStack {
@@ -360,14 +383,60 @@ struct HomeView: View {
         }
         .padding(.top, 12)
         .padding(.bottom, 12)
-        .background(.white)
+        .background(.backgroundTheme)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 18)
+    }
+    var goalListingView: some View{
+        
+        ForEach(addGoalViewModel.getAllGoals().prefix(4)) { goal in
+            ProgressGoalCell(goal: goal)
+                
+                .padding(.bottom, 3)
+                .swipeActions {
+                    // Edit Button
+                    Button(action: {
+                        // Handle the edit action (e.g., navigate to an edit screen)
+                        router.navigate(to: .addGoalView(userType: .coach, goalId: goal.id, comingFrom: .editGoal))
+                    }) {
+                        Label("Edit", image: .editGoal)
+                    }
+                    .tint(.blue)
+                    
+                    
+                    // Delete Button
+                    Button(action: {
+                        withAnimation {
+                            addGoalViewModel.deleteGoal(byID: goal.id)
+                        }
+                    }) {
+                        Label("Delete", image: .deleteGoal)
+                    }
+                    .tint(.red)
+                }
+                .onTapGesture {
+                    if goal.cellType == .individual {
+                        if let member = addGoalViewModel.getFirstMember(byID: goal.id) {
+                            router.navigate(to: .goalDetailedView(goalId: goal.id, member: member))
+                        } else {
+                            print("Member not found for the given goal ID.")
+                        }
+                    } else {
+                        router.navigate(to: .multipleGoalUsersListing(goalId: goal.id))
+                    }
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden, edges: .all)
+                .background(.backgroundTheme)
+        }.padding(.horizontal, 20)
+        
+        //list ends
     }
 }
 
 #Preview {
     HomeView( speechManager: SpeechManager())
+        .environmentObject(AddGoalViewModel())
 }
 
 // MARK: - Plus Add Icon Options View

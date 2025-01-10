@@ -34,7 +34,7 @@ struct NotificationsRowCell: View {
                 Spacer()
             }
             .padding()
-            .background(.white)
+            .background(.darkGreyBackground)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal)
             .padding(.bottom, 2)

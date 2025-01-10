@@ -108,6 +108,7 @@ struct ProgressGoalCell_Previews: PreviewProvider {
        ProgressGoalCell(goal: goal)
             .previewLayout(.sizeThatFits)
             .padding()
+            .environmentObject(AddGoalViewModel())
     }
 }
 

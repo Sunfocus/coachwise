@@ -23,7 +23,6 @@ struct GoalsView: View {
     var body: some View {
         ZStack{
             VStack{
-                // top header view
                 topHeaderView
                 if addGoalViewModel.getAllGoals().isEmpty{
                     noGoalToView
@@ -33,21 +32,7 @@ struct GoalsView: View {
             }
         }.background(.backgroundTheme)
             .overlay(
-                Button(action: {
-                    print("Add new tapped")
-                    addGoalViewIsPresented = true
-                   // router.navigate(to: .addGoalView(userType: .coach, goalId: UUID(), comingFrom: .addNewGoal))
-                }) {
-                    Circle()
-                        .foregroundStyle(.primaryTheme)
-                        .frame(width: 50, height: 50)
-                        .overlay {
-                            Image(systemName: "plus")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .tint(.white)
-                        }
-                }
+                addGoalButtonView
                 .padding(.trailing, 30)
                 .padding(.bottom, 40),
                alignment: .bottomTrailing
@@ -195,6 +180,25 @@ struct GoalsView: View {
         }.listStyle(PlainListStyle())
         .safeAreaPadding(EdgeInsets(top: 5, leading: 0, bottom: 100, trailing: 0))
         .scrollIndicators(.hidden)
+        
+        //list ends
+    }
+    var addGoalButtonView: some View {
+        Button(action: {
+            print("Add new tapped")
+            addGoalViewIsPresented = true
+           // router.navigate(to: .addGoalView(userType: .coach, goalId: UUID(), comingFrom: .addNewGoal))
+        }) {
+            Circle()
+                .foregroundStyle(.primaryTheme)
+                .frame(width: 50, height: 50)
+                .overlay {
+                    Image(systemName: "plus")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .tint(.white)
+                }
+        }
     }
 }
 

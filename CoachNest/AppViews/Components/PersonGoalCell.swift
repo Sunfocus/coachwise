@@ -77,4 +77,5 @@ struct PersonGoalCell: View {
     
     
     PersonGoalCell(goal: goal, member: member)
+        .environmentObject(AddGoalViewModel())
 }

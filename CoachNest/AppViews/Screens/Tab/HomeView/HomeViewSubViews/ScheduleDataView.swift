@@ -17,10 +17,9 @@ struct ScheduleDataView: View {
         }
         .frame(height: 86)
         .padding(10)
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .padding(.horizontal, 10)
-        .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
+        .background(.darkGreyBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
 }
 

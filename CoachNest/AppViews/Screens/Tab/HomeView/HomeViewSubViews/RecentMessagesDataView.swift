@@ -36,8 +36,8 @@ struct RecentMessagesDataView: View {
                 .frame(height: 76)
                 .padding(.horizontal)
                 .background(.darkGreyBackground)
-                .cornerRadius(8)
-                .shadow(color: Color.black.opacity(0.3), radius: 4, x: 0, y: 2)
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.2), radius: 4, x: 2, y: 2)
             }
         }.padding(.horizontal, 8)
             .padding(.bottom, 12)

@@ -40,13 +40,13 @@ enum Tab: Int, CaseIterable {
 
 // MARK: - TabBarView
 struct TabBarView: View {
-    @State private var selectedTab: Tab = .home
+    @StateObject private var tabManager = TabSelectionManager()
     @EnvironmentObject var router: Router
     @State private var presentSideMenu = false
 
     var body: some View {
         ZStack{
-            TabView(selection: $selectedTab) {
+            TabView(selection: $tabManager.selectedTab) {
                 // Iterate over all tabs to create their views
                 ForEach(Tab.allCases, id: \.self) { tab in
                     tabView(for: tab)
@@ -61,7 +61,7 @@ struct TabBarView: View {
             .onAppear(perform: {
                 configureTabBarAppearance()
             })
-            .onChange(of: selectedTab) { (oldValue, newValue) in
+            .onChange(of: tabManager.selectedTab) { (oldValue, newValue) in
                 HapticFeedbackHelper.mediumImpact()
             }
             .environment(\.presentSideMenu, $presentSideMenu)
@@ -70,7 +70,7 @@ struct TabBarView: View {
                 isShowing: $presentSideMenu,
                 content: AnyView(
                     SideMenuView(
-                        activeTab: $selectedTab,
+                        activeTab: $tabManager.selectedTab,
                         presentSideMenu: $presentSideMenu
                     )
                 )
@@ -84,6 +84,7 @@ struct TabBarView: View {
         switch tab {
         case .home:
             HomeView(speechManager: SpeechManager())
+                .environmentObject(tabManager)
         case .messages:
             MessagesView(messageViewModel: MessagesViewModel(), speechManager: SpeechManager())
         case .schedule:
@@ -108,6 +109,8 @@ struct TabBarView: View {
 
 #Preview {
     TabBarView()
+        .environmentObject(Router())
+        .environmentObject(AddGoalViewModel())
 }
 
 

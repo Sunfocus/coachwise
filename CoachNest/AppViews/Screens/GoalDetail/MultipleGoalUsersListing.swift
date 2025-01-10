@@ -74,4 +74,5 @@ struct MultipleGoalUsersListing: View {
 
 #Preview {
     MultipleGoalUsersListing(goalId: UUID())
+        .environmentObject(AddGoalViewModel())
 }

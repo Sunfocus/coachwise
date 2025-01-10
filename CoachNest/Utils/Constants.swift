@@ -140,6 +140,12 @@ struct Constants {
         static let exampleId = "Eg: “1pdsh2134”"
     }
     
+    // MARK: - AddYourScheduleViewTitle
+    struct AddYourScheduleViewTitle {
+        static let noSchedule = "No Schedule"
+        static let tapAdd = "Tap \"+\" to add your first event."
+    }
+    
     // MARK: - No Messages Available
     struct AddYourMessageViewTitle {
         static let noMessage = "It’s quiet in here..."

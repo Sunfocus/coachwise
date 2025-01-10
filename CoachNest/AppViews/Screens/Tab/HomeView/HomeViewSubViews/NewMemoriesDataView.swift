@@ -18,16 +18,18 @@ struct NewMemoriesDataView: View {
                         Image(image)
                             .resizable()
                             .frame(width: 150, height: 150)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .padding(5)
-                            .padding(.bottom, 2)
-                            .background(.darkGreyBackground).clipShape(RoundedRectangle(cornerRadius: 8))
-                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-                            
+                            .cornerRadius(12)
+                            .padding(8) // Inner padding for the content
+                            .background(Color.darkGreyBackground) // Ensure this is a defined color
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .shadow(color: Color.black.opacity(0.2), radius: 4, x: 2, y: 2)
+                            .padding(.trailing, 5)
+                        
                     }
                 }
-            }
-        }.padding(.horizontal, 8)
-            .padding(.bottom, 12)
+                .padding(.vertical, 3) // Add space to the top and bottom for the shadow
+            }  .safeAreaPadding(EdgeInsets(top: 0, leading: 28, bottom: 0, trailing: 0))
+        }
+        .padding(.bottom, 12)
     }
 }

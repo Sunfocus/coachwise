@@ -85,7 +85,7 @@ struct NotificationsListView: View {
                 }
             Divider()
            
-        }.background(colorScheme == .dark ? .black : .white)
+        }.background(.darkGreyBackground)
     }
 }
 //MARK: - Reusable Views -
