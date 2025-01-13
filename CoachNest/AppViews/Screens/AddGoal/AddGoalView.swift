@@ -32,11 +32,10 @@ struct AddGoalView: View {
     
     var comingFrom: ComingFrom = .addNewGoal
     var goalId: UUID?
+    var userType: AccountType = .coach
     var editedGoal: GoalDetails? {
         return addGoalViewModel.getGoal(byID: goalId ?? UUID() )
     }
-    
-    
     var savedMembers: [MemberDetail]{
         if comingFrom == .editGoal{
             return editedGoal?.savedMembers ?? []
@@ -46,138 +45,21 @@ struct AddGoalView: View {
     }
     
     
-    var userType: AccountType = .coach
-    
     var body: some View {
         ZStack{
             if colorScheme != .dark{
                 Color.lightGrey
                     .ignoresSafeArea()
             }
-            
                 VStack{
-                    // Heading and dismiss button section
-                    VStack{
-                        HStack {
-                            Image(.greyCloseButton)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .onTapGesture {
-//                                    router.dashboardNavigateBack()
-                                    dismiss()
-                                    contactsViewModel.resetSelection()
-                                }
-                            Spacer()
-                        }.padding([.horizontal, .vertical], 15)
-                            .overlay {
-                                HStack{
-                                    Text(Constants.AddYourGoalsViewTitle.addGoal)
-                                        .customFont(.medium, 16)
-                                }
-                            }
-                        Divider()
-                    }
-                    .background(.darkGreyBackground)
-                    .padding( .bottom)
-                    
+                    topHeaderView
                     ScrollView{
-                    // Add Goal Input fields Section
                     VStack(spacing: 20){
-                        
-                        // Enter Goal Name Section
-                        VStack(spacing: 6){
-                            Text(Constants.TextField.Title.goal)
-                                .customFont(.regular, 16)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            TextField(Constants.TextField.Placeholder.goalName, text: $goalName)
-                                .customFont(.regular, 14)
-                                .frame(height: 48)
-                                .padding(.horizontal)
-                                .background(.darkGreyBackground)
-                                .clipShape(.rect(cornerRadius: 8))
-                                .tint(.black)
-                        }
-                        
-                        //Who is this goal for Section
-                        VStack(spacing: 6){
-                            Text(Constants.TextField.Title.whoIsThisGoalFor)
-                                .customFont(.regular, 16)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            HStack{
-                                if !savedMembers.isEmpty{
-                                    SelectedMemberView(selectedMembers: contactsViewModel.savedMembers)
-                                        .padding(.leading)
-                                    }
-                                Spacer()
-                                Text("Add Members")
-                                    .customFont(.medium, 15)
-                                    .padding(8)
-                                    .foregroundStyle(.primaryTheme)
-                                    .background(.primaryTheme.opacity(0.3))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .padding(.trailing, 12)
-                                    .onTapGesture {
-                                   //     router.navigate(to: .addMember(goalId: goalId ?? UUID(), comingFrom: comingFrom))
-                                        addMemberViewIsPresented = true
-                                    }
-                                    
-                            }.frame(height: 48)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(.darkGreyBackground)
-                                .clipShape(.rect(cornerRadius: 8))
-                                
-                        }
-                        
-                        //Description Section
-                        VStack(spacing: 6){
-                            Text(Constants.TextField.Title.description)
-                                .customFont(.regular, 16)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            VStack{
-                                TextField(Constants.TextField.Placeholder.goalDescription, text: $description, axis: .vertical)
-                                    .customFont(.regular, 14)
-                                    .tint(.primaryTheme)
-                                    .lineLimit(4, reservesSpace: true)
-                                    .textFieldStyle(.plain)
-                            }
-                            .padding()
-                            .background(.darkGreyBackground)
-                            .cornerRadius(8)
-                        }
-                        
-                        //Due on selection date Section
-                        VStack(spacing: 6){
-                            Text(Constants.TextField.Title.dueOn)
-                                .customFont(.regular, 16)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            HStack(){
-                                Text("Select Date")
-                                    .customFont(.regular, 16)
-                                    .padding(.leading, 10)
-                                    .foregroundStyle(Color.gray)
-                                
-                                Spacer()
-                                DatePicker("", selection: $dueDate, in: Date()..., displayedComponents: .date)
-                                    .tint(colorScheme == .dark ? .white : .primaryTheme)
-                                    .labelsHidden()
-                                    .padding(.trailing, 10)
-                                
-                                
-                            }.frame(height: 55)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(.darkGreyBackground)
-                                .clipShape(.rect(cornerRadius: 8))
-                            
-                        }
-                        
-                        //Reminder selection Section
-                        VStack(spacing: 6){
-                            Text(Constants.TextField.Title.reminder)
-                                .customFont(.regular, 16)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            ReminderView(selectedOption: $selectedOption)
-                        }
-                        
+                        addGoalNameView
+                        addGoalMembers
+                        goalDescription
+                        selectGoalDueDate
+                        selectReminderType
                     }.padding(.horizontal, 15)
                     
                     Spacer()
@@ -252,6 +134,130 @@ struct AddGoalView: View {
                 AddMemberView(speechManager: SpeechManager(), goalId: goalId ?? UUID(), isComingFrom: .addNewGoal)
             }
     }
+    //MARK: - Subviews
+    var topHeaderView: some View{
+        // Heading and dismiss button section
+        VStack{
+            HStack {
+                Image(.greyCloseButton)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .onTapGesture {
+                        dismiss()
+                        contactsViewModel.resetSelection()
+                    }
+                Spacer()
+            }.padding([.horizontal, .vertical], 15)
+                .overlay {
+                    HStack{
+                        Text(Constants.AddYourGoalsViewTitle.addGoal)
+                            .customFont(.medium, 16)
+                    }
+                }
+            Divider()
+        }
+        .background(.darkGreyBackground)
+        .padding( .bottom)
+    }
+    var addGoalNameView: some View{
+        // Enter Goal Name Section
+        VStack(spacing: 6){
+            Text(Constants.TextField.Title.goal)
+                .customFont(.regular, 16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            TextField(Constants.TextField.Placeholder.goalName, text: $goalName)
+                .customFont(.regular, 14)
+                .frame(height: 48)
+                .padding(.horizontal)
+                .background(.darkGreyBackground)
+                .clipShape(.rect(cornerRadius: 8))
+                .tint(.primary)
+        }
+    }
+    var addGoalMembers: some View{
+        //Who is this goal for Section
+        VStack(spacing: 6){
+            Text(Constants.TextField.Title.whoIsThisGoalFor)
+                .customFont(.regular, 16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack{
+                if !savedMembers.isEmpty{
+                    SelectedMemberView(selectedMembers: contactsViewModel.savedMembers)
+                        .padding(.leading)
+                    }
+                Spacer()
+                Text("Add Members")
+                    .customFont(.medium, 15)
+                    .padding(8)
+                    .foregroundStyle(.primaryTheme)
+                    .background(.primaryTheme.opacity(0.3))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding(.trailing, 12)
+                    .onTapGesture {
+                   //     router.navigate(to: .addMember(goalId: goalId ?? UUID(), comingFrom: comingFrom))
+                        addMemberViewIsPresented = true
+                    }
+                    
+            }.frame(height: 48)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.darkGreyBackground)
+                .clipShape(.rect(cornerRadius: 8))
+                
+        }
+    }
+    var goalDescription: some View{
+        //Description Section
+        VStack(spacing: 6){
+            Text(Constants.TextField.Title.description)
+                .customFont(.regular, 16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            VStack{
+                TextField(Constants.TextField.Placeholder.goalDescription, text: $description, axis: .vertical)
+                    .customFont(.regular, 14)
+                    .tint(.primary)
+                    .lineLimit(4, reservesSpace: true)
+                    .textFieldStyle(.plain)
+            }
+            .padding()
+            .background(.darkGreyBackground)
+            .cornerRadius(8)
+        }
+    }
+    var selectGoalDueDate: some View{
+        //Due on selection date Section
+        VStack(spacing: 6){
+            Text(Constants.TextField.Title.dueOn)
+                .customFont(.regular, 16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack(){
+                Text("Select Date")
+                    .customFont(.regular, 16)
+                    .padding(.leading, 10)
+                    .foregroundStyle(Color.gray)
+                
+                Spacer()
+                DatePicker("", selection: $dueDate, in: Date()..., displayedComponents: .date)
+                    .tint(colorScheme == .dark ? .white : .primaryTheme)
+                    .labelsHidden()
+                    .padding(.trailing, 10)
+                
+                
+            }.frame(height: 55)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.darkGreyBackground)
+                .clipShape(.rect(cornerRadius: 8))
+            
+        }
+    }
+    var selectReminderType: some View{
+        //Reminder selection Section
+        VStack(spacing: 6){
+            Text(Constants.TextField.Title.reminder)
+                .customFont(.regular, 16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            ReminderView(selectedOption: $selectedOption)
+        }
+    }
 }
 
 #Preview {
@@ -259,7 +265,6 @@ struct AddGoalView: View {
         .environmentObject(ContactsViewModel())
         .environmentObject(Router())
 }
-
 
 struct ReminderView: View {
     
@@ -294,7 +299,6 @@ struct ReminderView: View {
         
     }
 }
-
 struct ReminderView_Previews: PreviewProvider {
     static var previews: some View {
         ReminderView(selectedOption: .constant(.daily))

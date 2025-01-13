@@ -140,11 +140,39 @@ struct Constants {
         static let exampleId = "Eg: “1pdsh2134”"
     }
     
-    // MARK: - AddYourScheduleViewTitle
-    struct AddYourScheduleViewTitle {
+    // MARK: - AddScheduleEventViewTitle
+    struct AddScheduleEventViewTitle {
         static let noSchedule = "No Schedule"
         static let tapAdd = "Tap \"+\" to add your first event."
+        static let addEvent = "Add Event"
+        static let eventName = "Event Name"
+        static let eventType = "Event Type"
+        static let recurrance = "Recurrance"
+        static let on = "On"
+        static let startTime = "Start time"
+        static let endTime = "End time"
+        static let from = "From"
+        static let to = "To"
+        static let venue = "Venue"
+        static let locationDetails = "Location Details"
+        static let memberLimit = "Member Limit"
+        static let coaches = "Coaches"
+        static let runsEvery = "Runs every"
     }
+    
+    // MARK: - AddVenueViewTitle
+    struct AddVenueViewTitle{
+        static let addVenue = "Add Venue"
+        static let venueName = "Venue Name"
+        static let address = "Address"
+        static let meetingName = "Meeting Name"
+        static let onlineLink = "Online Link"
+        
+    }
+    
+    
+    
+    
     
     // MARK: - No Messages Available
     struct AddYourMessageViewTitle {
@@ -243,6 +271,7 @@ struct Constants {
             static let message = "Message"
             static let dueOn = "Due on"
             static let reminder = "Reminder"
+            static let addCoach = "Add Coach"
             
         }
         
@@ -265,10 +294,19 @@ struct Constants {
             static let actionDescription = "Briefly describe the action"
             static let goalDescription = "Briefly describe the goal"
             static let writeMessage = "Write your message here"
+            //Add event
+            static let eventType = "Select event type"
+            static let venueType = "Select venue"
+            static let eventName = "Enter event name"
+            static let selectNumber = "Select Number"
+            static let locationDetails = "Enter nearby landmarks"
+            
         }
     }
     
     static let applyFilter = "Apply Filter"
+    static let addSchedule = "Add Schedule"
+    static let addVenue = "Add Venue"
     static let notifications = "Notifications"
     static let coachNotification = "Coach Notification"
     static let save = "Save"

@@ -48,7 +48,6 @@ class AddActionViewModel: ObservableObject {
     enum AddActionViewModelValidationErrors: LocalizedError {
         case emptyActionTitle
         case emptyDescription
-        
         var errorDescription: String? {
             switch self {
             case .emptyActionTitle:
@@ -58,9 +57,9 @@ class AddActionViewModel: ObservableObject {
             }
         }
     }
+    
     @Published var actionName: String = ""
     @Published var taskDescription: String = ""
-    
     @Published var actions: [AddAction] = []
     
     // Add a new action
@@ -71,7 +70,6 @@ class AddActionViewModel: ObservableObject {
     func deleteAction(byId id: UUID) {
         actions.removeAll { $0.id == id }
     }
-    
     func updateActionStatus(byId id: UUID, status: StatusOption ){
         if let index = actions.firstIndex(where: { $0.id == id }) {
             actions[index].status = status

@@ -12,7 +12,7 @@ struct ScheduleView: View {
     @Environment(\.presentSideMenu) var presentSideMenu
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var router: Router
-    @State private var addScheduleViewIsPresented: Bool = true
+    @State private var addScheduleViewIsPresented: Bool = false
     @State private var scheduleModelHasData: Bool = true
     @State private var selectedSegment = 0
     @State private var selectedDate: Date = Date()
@@ -25,7 +25,6 @@ struct ScheduleView: View {
                 topHeaderView
                 if scheduleModelHasData{
                     scheduleView
-
                 }else{
                     noScheduleToView
                 }
@@ -38,6 +37,9 @@ struct ScheduleView: View {
                     .padding(.bottom, 40),
                    alignment: .bottomTrailing
             )
+            .fullScreenCover(isPresented: $addScheduleViewIsPresented) {
+                AddEventView()
+            }
     }
     
     //MARK: - Subviews -
@@ -99,10 +101,10 @@ struct ScheduleView: View {
                 Image(.addSchedule)
                     .resizable()
                     .frame(width: 64, height: 64)
-                Text(Constants.AddYourScheduleViewTitle.noSchedule)
+                Text(Constants.AddScheduleEventViewTitle.noSchedule)
                     .customFont(.medium, 16)
                     .foregroundStyle(.primaryTheme)
-                Text(Constants.AddYourScheduleViewTitle.tapAdd)
+                Text(Constants.AddScheduleEventViewTitle.tapAdd)
                     .customFont(.regular, 14)
                 Spacer()
             }
@@ -119,38 +121,40 @@ struct ScheduleView: View {
             default:
                 dateSelectView
             }
-            ScrollView{
-                HStack {
-                    Text("Schedule")
-                        .customFont(.medium, 18)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Spacer()
-                    Text("View All")
-                        .customFont(.medium, 14)
-                        .onTapGesture {
-                            print("View All Schedule Tapped")
-                        }
-                } .padding(.horizontal, 18)
+            
+            HStack {
+                Text(selectedDate.formattedDate(customFormat:"MMM dd, yyyy"))
+                    .customFont(.medium, 18)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Spacer()
+//                Text("View All")
+//                    .customFont(.medium, 14)
+//                    .onTapGesture {
+//                        print("View All Schedule Tapped")
+//                    }
+            } .padding(.horizontal, 18)
                 .background(.backgroundTheme)
+            ScrollView{
                 scheduledEventList
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .padding(.horizontal, 18)
                     .background(.backgroundTheme)
             }.scrollIndicators(.hidden)
-               
+                .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
+            
         }
     }
     var pickerView: some View{
-            VStack{
-                Picker("Select Option", selection: $selectedSegment) {
-                    Text("Week").tag(0)
-                    Text("Month").tag(1)
-                }
-                .pickerStyle(.segmented)
-                .frame(height: 44)
+        VStack{
+            Picker("Select Option", selection: $selectedSegment) {
+                Text("Week").tag(0)
+                Text("Month").tag(1)
             }
-            .padding([.horizontal, .top])
+            .pickerStyle(.segmented)
+            .frame(height: 44)
         }
+        .padding([.horizontal, .top])
+    }
     var dateSelectView: some View{
         // Calendar Navigation
         VStack{
@@ -186,7 +190,7 @@ struct ScheduleView: View {
                                         .font(.caption)
                                         .foregroundColor(Calendar.current.isDate(selectedDate, inSameDayAs: date) ? .primaryTheme : colorScheme == .dark ? .white : .black.opacity(0.8))
                                     Text(day(for: date))
-                                        .fontWeight(.semibold)
+                                        .fontWeight(.regular)
                                         .frame(width: 35, height: 35)
                                         .background(Calendar.current.isDate(selectedDate, inSameDayAs: date) ? .primaryTheme : Color.clear)
                                         .clipShape(Circle())
@@ -194,7 +198,7 @@ struct ScheduleView: View {
                                             Circle()
                                                 .strokeBorder(
                                                     Calendar.current.isDate(selectedDate, inSameDayAs: date) ? Color.clear : colorScheme == .dark ? .white : .black.opacity(0.8),
-                                                    lineWidth: 1
+                                                    lineWidth: 0.8
                                                 )
                                                 .padding(2)
                                         )
