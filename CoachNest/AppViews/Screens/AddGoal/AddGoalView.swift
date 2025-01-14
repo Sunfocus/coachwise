@@ -47,10 +47,6 @@ struct AddGoalView: View {
     
     var body: some View {
         ZStack{
-            if colorScheme != .dark{
-                Color.lightGrey
-                    .ignoresSafeArea()
-            }
                 VStack{
                     topHeaderView
                     ScrollView{
@@ -126,7 +122,8 @@ struct AddGoalView: View {
                         }
                     }
                 }
-        }.navigationBarBackButtonHidden()
+        }.background(.backgroundTheme)
+        .navigationBarBackButtonHidden()
             .onTapGesture {
                 UIApplication.shared.dismissKeyboard()
             }

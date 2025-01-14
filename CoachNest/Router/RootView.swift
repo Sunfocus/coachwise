@@ -16,6 +16,9 @@ struct RootView: View {
     @StateObject var selectionType = SelectionTypeViewModel()
     @StateObject var addGoalViewModel = AddGoalViewModel()
     @StateObject private var addActionViewModel = AddActionViewModel()
+    @StateObject private var addVenueViewModel = AddVenueViewModel()
+    @StateObject private var addEventViewModel = AddEventViewModel()
+    @StateObject private var addEventTypeViewModel = AddEventTypeViewModel()
     
     init() {
         UISegmentedControl.appearance().selectedSegmentTintColor = .primaryTheme
@@ -63,6 +66,9 @@ struct RootView: View {
         .environmentObject(contactsViewModel)
         .environmentObject(addGoalViewModel)
         .environmentObject(addActionViewModel)
+        .environmentObject(addVenueViewModel)
+        .environmentObject(addEventViewModel)
+        .environmentObject(addEventTypeViewModel)
     }
 }
 

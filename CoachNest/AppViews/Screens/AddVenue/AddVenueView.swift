@@ -10,32 +10,27 @@ import SwiftUI
 struct AddVenueView: View {
     
     //MARK: - Variables -
-    @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
-    @StateObject var venueViewModel = AddVenueViewModel()
+    @EnvironmentObject var addVenueViewModel: AddVenueViewModel
     
     var body: some View {
         ZStack{
-            if colorScheme != .dark{
-                Color.lightGrey
-                    .ignoresSafeArea()
-            }
             VStack{
                 topHeaderView
-                VStack(spacing: 15){
-                    pickerView
-                    fieldBasedOnToggle
-                }.padding(.horizontal)
+                segmentView
+                fieldBasedOnToggle
+                    .padding(.horizontal)
                 Spacer()
                 CustomButton(
                     title: Constants.addVenue,
                     action: {
+                        addVenueViewModel.addVenue()
                         dismiss()
                     }
                 ).padding(.horizontal)
                     .padding(.bottom)
             }
-        }
+        }.background(.backgroundTheme)
     }
     
     
@@ -64,9 +59,9 @@ struct AddVenueView: View {
         .background(.darkGreyBackground)
         .padding( .bottom)
     }
-    var pickerView: some View{
+    var segmentView: some View{
         VStack{
-            Picker("Select Option", selection: $venueViewModel.selectedSegment) {
+            Picker("Select Option", selection: $addVenueViewModel.selectedSegment) {
                 Text("In-Person").tag(0)
                 Text("Online").tag(1)
             }
@@ -77,7 +72,7 @@ struct AddVenueView: View {
     }
     var fieldBasedOnToggle: some View{
         VStack{
-            if venueViewModel.selectedSegment == 0{
+            if addVenueViewModel.selectedSegment == 0{
                 addVenueNameView
                 addAddressView
             }else{
@@ -92,7 +87,7 @@ struct AddVenueView: View {
             Text(Constants.AddVenueViewTitle.venueName)
                 .customFont(.regular, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField(Constants.AddVenueViewTitle.venueName, text: $venueViewModel.venueName)
+            TextField(Constants.AddVenueViewTitle.venueName, text: $addVenueViewModel.venueName)
                 .customFont(.regular, 14)
                 .frame(height: 48)
                 .padding(.horizontal)
@@ -106,7 +101,7 @@ struct AddVenueView: View {
             Text(Constants.AddVenueViewTitle.address)
                 .customFont(.regular, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField(Constants.AddVenueViewTitle.address, text: $venueViewModel.address)
+            TextField(Constants.AddVenueViewTitle.address, text: $addVenueViewModel.address)
                 .customFont(.regular, 14)
                 .frame(height: 48)
                 .padding(.horizontal)
@@ -121,7 +116,7 @@ struct AddVenueView: View {
             Text(Constants.AddVenueViewTitle.meetingName)
                 .customFont(.regular, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField(Constants.AddVenueViewTitle.meetingName, text: $venueViewModel.meetingName)
+            TextField(Constants.AddVenueViewTitle.meetingName, text: $addVenueViewModel.meetingName)
                 .customFont(.regular, 14)
                 .frame(height: 48)
                 .padding(.horizontal)
@@ -136,7 +131,7 @@ struct AddVenueView: View {
             Text(Constants.AddVenueViewTitle.onlineLink)
                 .customFont(.regular, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField(Constants.AddVenueViewTitle.onlineLink, text: $venueViewModel.meetingLink)
+            TextField(Constants.AddVenueViewTitle.onlineLink, text: $addVenueViewModel.meetingLink)
                 .customFont(.regular, 14)
                 .frame(height: 48)
                 .padding(.horizontal)
@@ -149,4 +144,5 @@ struct AddVenueView: View {
 
 #Preview {
     AddVenueView()
+        .environmentObject(AddVenueViewModel())
 }

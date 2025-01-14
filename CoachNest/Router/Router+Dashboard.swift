@@ -37,6 +37,8 @@ extension Router {
             CoachSendNotifivationView(sendNotificationViewModel: SendNotifictionViewModel())
         case .chatView:
             ChatView()
+        case .eventDetailsView:
+            EventDetailView()
         }
     }
 }

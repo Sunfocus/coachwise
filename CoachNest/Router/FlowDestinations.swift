@@ -41,5 +41,6 @@ public enum DashboardFlow: Codable, Hashable {
     case notificationView
     case coachSendNotificationView
     case chatView
+    case eventDetailsView
 }
 

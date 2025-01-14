@@ -12,8 +12,10 @@ struct AddEventView: View {
     //MARK: - Variables -
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
-    @StateObject var eventViewModel = AddEventViewModel()
     @EnvironmentObject var contactsViewModel: ContactsViewModel
+    @EnvironmentObject var addEventViewModel: AddEventViewModel
+    @EnvironmentObject var addEventTypeViewModel: AddEventTypeViewModel
+    @EnvironmentObject var addVenueViewModel: AddVenueViewModel
     @State private var isAddNewVenueViewPresented = false
     @State private var isAddNewEventTypeViewPresented = false
     @State private var isAddMemberViewIsPresented = false
@@ -23,10 +25,6 @@ struct AddEventView: View {
     
     var body: some View {
         ZStack{
-            if colorScheme != .dark{
-                Color.lightGrey
-                    .ignoresSafeArea()
-            }
             VStack{
                 topHeaderView
                 ScrollView{
@@ -52,12 +50,24 @@ struct AddEventView: View {
                 ).padding(.horizontal, 15)
                     .padding(.bottom)
             }
-        }.fullScreenCover(isPresented: $isAddMemberViewIsPresented) {
+        }
+        .background(.backgroundTheme)
+        .fullScreenCover(isPresented: $isAddMemberViewIsPresented) {
             AddMemberView(speechManager: SpeechManager(), goalId: UUID())
         }
-        .fullScreenCover(isPresented: $isAddNewVenueViewPresented) {
-            AddVenueView()
+        .sheet(isPresented: $isAddNewEventTypeViewPresented) {
+            AddEventType()
+                .presentationDetents([.height(300)])
+                .presentationDragIndicator(.visible)
+                .presentationContentInteraction(.scrolls)
         }
+        .sheet(isPresented: $isAddNewVenueViewPresented) {
+            AddVenueView()
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+                .presentationContentInteraction(.scrolls)
+        }
+        
     }
     
     //MARK: - Subviews
@@ -90,7 +100,7 @@ struct AddEventView: View {
             Text(Constants.AddScheduleEventViewTitle.eventName)
                 .customFont(.regular, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField(Constants.TextField.Placeholder.eventName, text: $eventViewModel.eventName)
+            TextField(Constants.TextField.Placeholder.eventName, text: $addEventViewModel.eventName)
                 .customFont(.regular, 14)
                 .frame(height: 48)
                 .padding(.horizontal)
@@ -107,13 +117,13 @@ struct AddEventView: View {
             HStack{
                 DropDownMenu(
                     placeholder: Constants.TextField.Placeholder.eventType,
-                    options: eventViewModel.eventTypes,
-                    selectedOption: $eventViewModel.selectedEventType)
+                    options: addEventTypeViewModel.eventTypes,
+                    selectedOption: $addEventViewModel.selectedEventType)
                 Spacer()
                 Button{
                     isAddNewEventTypeViewPresented = true
                 } label: {
-                    Text("Add Event")
+                    Text("Add Event Type")
                         .customFont(.medium, 14)
                         .foregroundStyle(.primaryTheme)
                         .padding()
@@ -129,13 +139,13 @@ struct AddEventView: View {
                 .customFont(.regular, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 20){
-                RecurrenceTypeSelectView(isSelected: eventViewModel.selectedRecurrenceType.rawValue == "One time", name: "One time")
+                RecurrenceTypeSelectView(isSelected: addEventViewModel.selectedRecurrenceType.rawValue == "One time", name: "One time")
                     .onTapGesture {
-                        eventViewModel.selectedRecurrenceType = .once
+                        addEventViewModel.selectedRecurrenceType = .once
                     }
-                RecurrenceTypeSelectView(isSelected: eventViewModel.selectedRecurrenceType.rawValue == "Recurring", name: "Recurring")
+                RecurrenceTypeSelectView(isSelected: addEventViewModel.selectedRecurrenceType.rawValue == "Recurring", name: "Recurring")
                     .onTapGesture {
-                        eventViewModel.selectedRecurrenceType = .recurring
+                        addEventViewModel.selectedRecurrenceType = .recurring
                     }
                 
                 
@@ -147,7 +157,7 @@ struct AddEventView: View {
     }
     var selectDateBasedOnRecurringTypeView: some View{
         Group{
-            if eventViewModel.selectedRecurrenceType == .once{
+            if addEventViewModel.selectedRecurrenceType == .once{
                 selectOneTimeDateView
             }else{
                 reccuringDaysView
@@ -169,7 +179,7 @@ struct AddEventView: View {
                     .foregroundStyle(Color.gray)
                 
                 Spacer()
-                DatePicker("", selection: $eventViewModel.onetimeDate, in: Date()..., displayedComponents: .date)
+                DatePicker("", selection: $addEventViewModel.onetimeDate, in: Date()..., displayedComponents: .date)
                     .tint(colorScheme == .dark ? .white : .primaryTheme)
                     .labelsHidden()
                     .padding(.trailing, 10)
@@ -188,7 +198,7 @@ struct AddEventView: View {
                     .customFont(.regular, 16)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(){
-                    DatePicker("", selection: $eventViewModel.fromDate, in: Date()..., displayedComponents: .date)
+                    DatePicker("", selection: $addEventViewModel.fromDate, in: Date()..., displayedComponents: .date)
                         .tint(colorScheme == .dark ? .white : .primaryTheme)
                         .labelsHidden()
                     
@@ -212,7 +222,7 @@ struct AddEventView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(){
                     
-                    DatePicker("", selection: $eventViewModel.toDate, in: Date()..., displayedComponents: .date)
+                    DatePicker("", selection: $addEventViewModel.toDate, in: Date()..., displayedComponents: .date)
                         .tint(colorScheme == .dark ? .white : .primaryTheme)
                         .labelsHidden()
                     Spacer()
@@ -237,7 +247,7 @@ struct AddEventView: View {
                     .customFont(.regular, 16)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(){
-                    DatePicker("", selection: $eventViewModel.fromDate, in: Date()..., displayedComponents: .hourAndMinute)
+                    DatePicker("", selection: $addEventViewModel.fromDate, in: Date()..., displayedComponents: .hourAndMinute)
                         .tint(colorScheme == .dark ? .white : .primaryTheme)
                         .labelsHidden()
                     
@@ -259,7 +269,7 @@ struct AddEventView: View {
                     .customFont(.regular, 16)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(){
-                    DatePicker("", selection: $eventViewModel.toDate, in: Date()..., displayedComponents: .hourAndMinute)
+                    DatePicker("", selection: $addEventViewModel.toDate, in: Date()..., displayedComponents: .hourAndMinute)
                         .tint(colorScheme == .dark ? .white : .primaryTheme)
                         .labelsHidden()
                     Spacer()
@@ -284,8 +294,8 @@ struct AddEventView: View {
             HStack{
                 DropDownMenu(
                     placeholder: Constants.TextField.Placeholder.venueType,
-                    options: eventViewModel.venueTypes,
-                    selectedOption: $eventViewModel.selectedVenueType)
+                    options: addVenueViewModel.venueTypes,
+                    selectedOption: $addEventViewModel.selectedVenueType)
                 Spacer()
                 Button{
                     isAddNewVenueViewPresented = true
@@ -306,7 +316,7 @@ struct AddEventView: View {
             Text(Constants.AddScheduleEventViewTitle.locationDetails)
                 .customFont(.regular, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField(Constants.TextField.Placeholder.locationDetails, text: $eventViewModel.eventName)
+            TextField(Constants.TextField.Placeholder.locationDetails, text: $addEventViewModel.eventName)
                 .customFont(.regular, 14)
                 .frame(height: 48)
                 .padding(.horizontal)
@@ -323,8 +333,8 @@ struct AddEventView: View {
             HStack{
                 DropDownMenu(
                     placeholder: "20",
-                    options: eventViewModel.memberLimits,
-                    selectedOption: $eventViewModel.selectedMemberLimit)
+                    options: addEventViewModel.memberLimits,
+                    selectedOption: $addEventViewModel.selectedMemberLimit)
                 Spacer()
             }
         }
@@ -367,13 +377,13 @@ struct AddEventView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             HStack{
-                ForEach(eventViewModel.reccuringDays, id: \.self) { day in
-                    DaySelectionView(isSelected: eventViewModel.selectedReccuringDays.contains(where: { $0 == day}) , name: day)
+                ForEach(addEventViewModel.reccuringDays, id: \.self) { day in
+                    DaySelectionView(isSelected: addEventViewModel.selectedReccuringDays.contains(where: { $0 == day}) , name: day)
                         .onTapGesture {
-                            if let index = eventViewModel.selectedReccuringDays.firstIndex(where: { $0 == day }) {
-                                eventViewModel.selectedReccuringDays.remove(at: index)
+                            if let index = addEventViewModel.selectedReccuringDays.firstIndex(where: { $0 == day }) {
+                                addEventViewModel.selectedReccuringDays.remove(at: index)
                             } else {
-                                eventViewModel.selectedReccuringDays.append(day)
+                                addEventViewModel.selectedReccuringDays.append(day)
                             }
                         }
                 }

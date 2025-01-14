@@ -24,10 +24,10 @@ struct ActionDetailView: View {
     
     var body: some View {
         ZStack{
-            if colorScheme != .dark{
-                Color.lightGrey
-                    .ignoresSafeArea()
-            }
+//            if colorScheme != .dark{
+//                Color.lightGrey
+//                    .ignoresSafeArea()
+//            }
             
             VStack{
                 topNavView
@@ -56,7 +56,8 @@ struct ActionDetailView: View {
                     })
                 .padding(.horizontal)
             }
-        }.onAppear{
+        }.background(.backgroundTheme)
+        .onAppear{
             action = addActionViewModel.getAction(byId: actionId)
             status = action?.status ?? .todo
             
@@ -251,7 +252,7 @@ struct ActionDetailView: View {
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.gray, lineWidth: 1)
                             )
-                        }
+                        }//label End
                        
                     }
                     Divider()
@@ -363,4 +364,5 @@ struct ActionDetailView: View {
 #Preview {
     ActionDetailView(actionId: UUID())
         .environmentObject(AddGoalViewModel())
+        .environmentObject(AddActionViewModel())
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 // MARK: - Schedule View
 struct ScheduleDataView: View {
+    
     let schedule: ScheduleEvent
     var body: some View {
         VStack {
@@ -77,7 +78,8 @@ struct ScheduleMemberView: View {
             Text("\(20)+")
                 .customFont(.regular, 8)
                 .frame(width: 20, height: 20)
-                .background(Color.white)
+                .background(.darkGreyBackground)
+                
                 .clipShape(Circle())
                 .overlay(
                     Circle()

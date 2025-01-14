@@ -167,7 +167,15 @@ struct Constants {
         static let address = "Address"
         static let meetingName = "Meeting Name"
         static let onlineLink = "Online Link"
+        static let manageVenues = "Manage Venues"
         
+    }
+    
+    // MARK: - AddEventTypeViewTitle
+    struct AddEventTypeViewTitle{
+        static let addEventType = "Add Event Type"
+        static let eventType = "Event Type"
+        static let plusEventType = "+ Event Type"
     }
     
     

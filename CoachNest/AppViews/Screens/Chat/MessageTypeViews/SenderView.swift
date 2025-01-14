@@ -23,12 +23,12 @@ struct SenderView: View {
                 .padding(10)
                 .background(.primaryTheme)
                 .clipShape(.rect(cornerRadius: 8))
-                Image(.sg1)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 30, height: 30)
-                    .clipShape(Circle())
-                    .padding(.top, 7)
+//                Image(.sg1)
+//                    .resizable()
+//                    .scaledToFill()
+//                    .frame(width: 30, height: 30)
+//                    .clipShape(Circle())
+//                    .padding(.top, 7)
             }
             
             VStack{

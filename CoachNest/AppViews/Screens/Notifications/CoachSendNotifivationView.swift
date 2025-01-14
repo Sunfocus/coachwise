@@ -20,9 +20,7 @@ struct CoachSendNotifivationView: View {
     
     var body: some View {
         ZStack{
-            if colorScheme != .dark{
-                Color.lightGrey .ignoresSafeArea()
-            }
+          
             VStack{
                 notificationTopView
                 VStack(spacing: 20){
@@ -38,6 +36,7 @@ struct CoachSendNotifivationView: View {
                 ).padding(.horizontal)
             }
         }.navigationBarBackButtonHidden()
+            .background(.backgroundTheme)
     }
         
     

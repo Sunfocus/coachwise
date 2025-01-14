@@ -29,10 +29,7 @@ struct AddNewAction: View {
     var body: some View {
         
         ZStack{
-            if colorScheme != .dark{
-                Color.lightGrey
-                    .ignoresSafeArea()
-            }
+            
             
             VStack{
                 // Heading and dismiss button section
@@ -163,7 +160,7 @@ struct AddNewAction: View {
                                     RoundedRectangle(cornerRadius: 8)
                                         .stroke(Color.gray, lineWidth: 1)
                                 )
-                            }
+                            }//labelEnd
                         }
                         .padding(.bottom)
                         
@@ -290,7 +287,7 @@ struct AddNewAction: View {
                 .padding(.horizontal)
                 
             }
-        }
+        }.background(.backgroundTheme)
         .navigationBarBackButtonHidden()
         .onChange(of: photosPickerItems) { _, _ in
             Task{

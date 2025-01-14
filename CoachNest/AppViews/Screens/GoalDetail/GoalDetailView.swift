@@ -33,11 +33,6 @@ struct GoalDetailView: View {
     var body: some View {
         
         ZStack{
-            //Background Color
-            if colorScheme != .dark{
-                Color.lightGrey
-                    .ignoresSafeArea()
-            }
             VStack{
                 topNavView
                 pickerView
@@ -80,7 +75,8 @@ struct GoalDetailView: View {
                 }
                 .padding([.horizontal])
             }
-        }.navigationBarBackButtonHidden()
+        }.background(.backgroundTheme)
+        .navigationBarBackButtonHidden()
             .onChange(of: photosPickerItems) { _, _ in
                 Task{
                     for item in photosPickerItems{

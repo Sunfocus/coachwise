@@ -232,10 +232,13 @@ struct ScheduleView: View {
             .padding()
     }
     var scheduledEventList: some View {
-        ForEach(0..<3){_ in 
+        ForEach(0..<3){_ in
             scheduleRow
                 .padding(.bottom, 2)
                 .padding(.horizontal, 3)
+                .onTapGesture {
+                    router.navigate(to: .eventDetailsView)
+                }
         }
     }
     var scheduleRow: some View {
@@ -260,7 +263,7 @@ struct ScheduleView: View {
                 
                 Spacer()
                 
-                
+                //Completed Candidates Count View
                 RoundedRectangle(cornerRadius: 4)
                     .frame(width: 25, height: 25)
                     .foregroundStyle(.pastelGreen)
@@ -270,10 +273,11 @@ struct ScheduleView: View {
                     )
                     .overlay {
                         Text("12")
-                            .customFont(.medium, 10)
+                            .customFont(.semiBold, 13)
                             .foregroundStyle(.green)
                     }
                 
+                //Not Completed Candidates Count View
                 RoundedRectangle(cornerRadius: 4)
                     .frame(width: 25, height: 25)
                     .foregroundStyle(.pastelRed)
@@ -283,20 +287,21 @@ struct ScheduleView: View {
                     )
                     .overlay {
                         Text("3")
-                            .customFont(.medium, 10)
+                            .customFont(.semiBold, 13)
                             .foregroundStyle(.red)
                     }
                 
+                //Not Started Candidates Count View
                 RoundedRectangle(cornerRadius: 4)
                     .frame(width: 25, height: 25)
-                    .foregroundStyle(.gray.tertiary)
+                    .foregroundStyle(.lightGrey.opacity(0.8))
                     .overlay(
                         RoundedRectangle(cornerRadius: 4)
                             .stroke(Color.black, lineWidth: 1)
                     )
                     .overlay {
                         Text("9")
-                            .customFont(.medium, 10)
+                            .customFont(.semiBold, 13)
                             .foregroundStyle(.black)
                     }
 

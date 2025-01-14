@@ -16,9 +16,7 @@ struct NotificationsListView: View {
     
     var body: some View {
         ZStack{
-            if colorScheme != .dark{
-                Color.lightGrey .ignoresSafeArea()
-            }
+            
             VStack{
                 notificationTopView
                 
@@ -54,7 +52,8 @@ struct NotificationsListView: View {
                     }
                 ).padding(.horizontal)
             }
-        }.navigationBarBackButtonHidden() 
+        }.background(.backgroundTheme)
+        .navigationBarBackButtonHidden()
     }
     
     //MARK: - Subviews -

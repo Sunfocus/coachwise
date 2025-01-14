@@ -42,10 +42,7 @@ struct AddMemberView: View {
     
     var body: some View {
         ZStack{
-            if colorScheme != .dark{
-                Color.lightGrey
-                    .ignoresSafeArea()
-            }
+           
             
             VStack{
                 // Heading and dismiss button section
@@ -197,7 +194,8 @@ struct AddMemberView: View {
                         }
                     }
             }
-        }.navigationBarBackButtonHidden()
+        }.background(.backgroundTheme)
+        .navigationBarBackButtonHidden()
             .sheet(isPresented: $isFilterPresented) {
                 GoalFilterView(isComingFrom: .chat)
                     .presentationDetents([.height(500)])
