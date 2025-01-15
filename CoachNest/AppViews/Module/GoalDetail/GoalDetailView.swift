@@ -27,11 +27,8 @@ struct GoalDetailView: View {
             Constants.GoalInfoViewTitle.markAsComplete
         }
     }
-   
-
 
     var body: some View {
-        
         ZStack{
             VStack{
                 topNavView
@@ -55,7 +52,7 @@ struct GoalDetailView: View {
                     .padding()
                 .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0))
                 .scrollIndicators(.hidden)
-                // MARK: - Login Button
+                
                 VStack{
                     CustomButton(
                         title: buttonTitle ,
@@ -256,8 +253,8 @@ struct GoalDetailView: View {
                 }
             }.padding()
                 .background(.darkGreyBackground)
-                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                 .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
         }
     }
     private var emptyActionView: some View{
@@ -386,6 +383,8 @@ struct GoalDetailView: View {
                     )
                     .padding(.horizontal, 1)
                 }.shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                
+                
             }
             
             

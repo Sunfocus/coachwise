@@ -176,6 +176,7 @@ struct Constants {
         static let addEventType = "Add Event Type"
         static let eventType = "Event Type"
         static let plusEventType = "+ Event Type"
+        static let clickToUploadDoc = "Click to Upload Document"
     }
     
     
