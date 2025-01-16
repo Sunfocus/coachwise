@@ -20,12 +20,15 @@ struct ToDoCell: View {
                         .resizable()
                         .frame(width: 24, height: 24)
                         .scaledToFill()
-                       
                     Text(action.actionTitle)
                         .customFont(.semiBold, 15)
                         .lineLimit(1)
+                    Spacer()
+                    Image(.rightArrow)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .scaledToFill()
                 } .frame(maxWidth: .infinity, alignment: .leading)
-               
                 HStack{
                     Image(uiImage: action.assignedTo.profileImage ?? .sg1)
                         .resizable()
@@ -59,7 +62,7 @@ struct ToDoCell: View {
         }
         .padding()
         .background(.darkGreyBackground)
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 1, y: 1)
     }
 }

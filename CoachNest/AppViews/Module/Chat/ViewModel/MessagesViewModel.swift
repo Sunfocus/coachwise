@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 
 enum MessageType: Codable{
@@ -62,10 +63,59 @@ public struct ChatMember: Codable, Hashable, Identifiable {
 class MessagesViewModel: ObservableObject{
     
     @Published var messages: [MessageDetail] = []
+    @Published var newMessage: String = ""
+    @Published var images: [UIImage] = []
+    @Published var photosPickerItems: [PhotosPickerItem] = []
+    @Published var audioRecorderHelper = AudioRecorderHelper()
     
     func sendMessage(message: MessageDetail){
         messages.append(message)
     }
+    
+    func sendMessage(messageType: MessageType) {
+        
+        if messageType == .audio{
+            if let recordingURL = audioRecorderHelper.getRecordingURL() {
+                print("Recording URL: \(recordingURL)")
+                let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
+                let newChatMessage = MessageDetail(id: UUID(),
+                                                   time: currentTime,
+                                                   message: "",
+                                                   messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
+                                                   messageType: messageType, recordingUrl: recordingURL,
+                                                   sendImage: UIImage())
+                messages.append(newChatMessage)
+            } else {
+                print("No recording URL available.")
+            }
+        }
+        
+        if messageType == .text{
+            guard !newMessage.isEmpty else { return }
+            let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
+            let newChatMessage = MessageDetail(id: UUID(),
+                                               time: currentTime,
+                                               message: newMessage,
+                                               messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
+                                               messageType: messageType, recordingUrl: nil, sendImage: UIImage())
+            messages.append(newChatMessage)
+            newMessage = ""
+        }
+        
+        if messageType == .image{
+            for img in images{
+                let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
+                let newChatMessage = MessageDetail(id: UUID(),
+                                                   time: currentTime,
+                                                   message: "",
+                                                   messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
+                                                   messageType: messageType, recordingUrl: nil, sendImage: img)
+                messages.append(newChatMessage)
+            }
+            images = []
+            photosPickerItems = []
+        }
+    }//end
 }
 
 //Use this when you will upload data and get url from the server

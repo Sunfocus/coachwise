@@ -24,10 +24,6 @@ struct ActionDetailView: View {
     
     var body: some View {
         ZStack{
-//            if colorScheme != .dark{
-//                Color.lightGrey
-//                    .ignoresSafeArea()
-//            }
             
             VStack{
                 topNavView
@@ -329,17 +325,6 @@ struct ActionDetailView: View {
                                     .scaledToFill()
                                     .frame(width: 100, height: 100) // Adjust size as needed
                                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                                
-                                // Close button overlay
-//                                Image(.closeBtn) // Replace with your close button image name
-//                                    .resizable()
-//                                    .frame(width: 18, height: 18)
-//                                    .offset(x: 44, y: -44)
-//                                    .onTapGesture {
-//                                        // Remove the tapped image from the array
-//                                        images.remove(at: index)
-//                                        HapticFeedbackHelper.lightImpact()
-//                                    }
                             }
                             .padding(8)
                             .cornerRadius(12)

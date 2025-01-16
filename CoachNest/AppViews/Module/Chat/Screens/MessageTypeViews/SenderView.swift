@@ -40,7 +40,6 @@ struct SenderView: View {
                     Image(.checkRead)
                         .resizable()
                         .frame(width: 14, height: 14)
-                        .padding(.trailing, 42)
                 }
             }
         }.padding(.trailing)
@@ -51,7 +50,7 @@ struct SenderView: View {
 #Preview {
     let message = MessageDetail(id: UUID(),
                                 time: "10:40 PM",
-                                message: "Hey! How are you doing? I was just thinking about the trip we planned last month. Let’s finalize the dates and start booking the tickets. Let me know what works for you!",
+                                message: "Hey!",
                                 messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
                                 messageType: .text,
                                 recordingUrl: nil,

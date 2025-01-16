@@ -276,9 +276,9 @@ struct GoalDetailView: View {
         ScrollView{
             VStack{
                 //add new To do Section
-                let todoActions = addActionViewModel.getActions(by: .todo)
-                let pendingActions = addActionViewModel.getActions(by: .inProgress)
-                let completedActions = addActionViewModel.getActions(by: .completed)
+                let todoActions = addActionViewModel.sortActionByStatus(status: .todo, parentId: goal!.id)
+                let pendingActions = addActionViewModel.sortActionByStatus(status: .inProgress, parentId: goal!.id)
+                let completedActions = addActionViewModel.sortActionByStatus(status: .completed, parentId: goal!.id)
                 if !todoActions.isEmpty{
                     VStack(spacing: 7){
                         Text("To do")
@@ -286,6 +286,7 @@ struct GoalDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         ForEach(todoActions, id: \.self) { action in
                             ToDoCell(action: action)
+                                .padding(.bottom, 5)
                                 .onTapGesture {
                                     router.navigate(to: .actionDetailView(actionId: action.id))
                                 }

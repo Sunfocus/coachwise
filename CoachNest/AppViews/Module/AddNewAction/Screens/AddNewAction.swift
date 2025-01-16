@@ -39,6 +39,7 @@ struct AddNewAction: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .onTapGesture {
+                                addActionViewModel.resetTitle()
                                 router.dashboardNavigateBack()
                             }
                         Spacer()

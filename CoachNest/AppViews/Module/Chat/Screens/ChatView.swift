@@ -11,11 +11,7 @@ import PhotosUI
 struct ChatView: View {
     
     @EnvironmentObject var router: Router
-    @State private var newMessage: String = ""
-    @State private var messages: [MessageDetail] = []
-    @State private var images: [UIImage] = []
-    @State private var photosPickerItems: [PhotosPickerItem] = []
-    @StateObject private var audioRecorderHelper = AudioRecorderHelper()
+    @StateObject private var chatViewModel = MessagesViewModel()
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -24,7 +20,7 @@ struct ChatView: View {
                 topHeaderView
                     .padding()
                     .background(.darkGreyBackground)
-                if messages.isEmpty{
+                if chatViewModel.messages.isEmpty{
                     VStack(spacing: 15){
                         Spacer()
                         Image(.noMessage)
@@ -40,7 +36,7 @@ struct ChatView: View {
                 }else{
                     ScrollViewReader { scrollViewProxy in
                         ScrollView{
-                            ForEach(messages) { message in
+                            ForEach(chatViewModel.messages) { message in
                                 switch message.messageType{
                                 case .audio:
                                     SenderAudioView(chat: message)
@@ -56,8 +52,8 @@ struct ChatView: View {
                             }
                         }.safeAreaPadding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
                             .scrollIndicators(.hidden)
-                            .onChange(of: messages.count) {
-                                if let lastMessage = messages.last {
+                            .onChange(of: chatViewModel.messages.count) {
+                                if let lastMessage = chatViewModel.messages.last {
                                     withAnimation {
                                         scrollViewProxy.scrollTo(lastMessage.id, anchor: .bottom)
                                     }
@@ -68,19 +64,20 @@ struct ChatView: View {
                 
                 // User input field
                 UserInputFieldView(
-                    text: $newMessage,
-                    images: $images,
-                    photosPickerItems: $photosPickerItems,
-                    audioRecorder: audioRecorderHelper,
+                    text: $chatViewModel.newMessage,
+                    images: $chatViewModel.images,
+                    photosPickerItems: $chatViewModel.photosPickerItems,
+                    audioRecorder: chatViewModel.audioRecorderHelper,
                     placeholder: "Write a message...",
                     onSend: { messageType in
                         HapticFeedbackHelper.mediumImpact()
-                        sendMessage(messageType: messageType)
+                        chatViewModel.sendMessage(messageType: messageType)
+                        
                     }
                     )
                 .padding()
                 .background(.darkGreyBackground)
-            }
+            }//end
         }.background(
             Image(.chatBackground)
                 .resizable()
@@ -128,50 +125,7 @@ struct ChatView: View {
            
         }
     }
-    func sendMessage(messageType: MessageType) {
-        
-        if messageType == .audio{
-            if let recordingURL = audioRecorderHelper.getRecordingURL() {
-                print("Recording URL: \(recordingURL)")
-                let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
-                let newChatMessage = MessageDetail(id: UUID(),
-                                                   time: currentTime,
-                                                   message: "",
-                                                   messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
-                                                   messageType: messageType, recordingUrl: recordingURL,
-                                                   sendImage: UIImage())
-                messages.append(newChatMessage)
-            } else {
-                print("No recording URL available.")
-            }
-        }
-        
-        if messageType == .text{
-            guard !newMessage.isEmpty else { return }
-            let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
-            let newChatMessage = MessageDetail(id: UUID(),
-                                               time: currentTime,
-                                               message: newMessage,
-                                               messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
-                                               messageType: messageType, recordingUrl: nil, sendImage: UIImage())
-            messages.append(newChatMessage)
-            newMessage = ""
-        }
-        
-        if messageType == .image{
-            for img in images{
-                let currentTime = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
-                let newChatMessage = MessageDetail(id: UUID(),
-                                                   time: currentTime,
-                                                   message: "",
-                                                   messageFrom: ChatMember(id: 123, name: "Max", profileImage: .sg1, accountType: .coach),
-                                                   messageType: messageType, recordingUrl: nil, sendImage: img)
-                messages.append(newChatMessage)
-            }
-            images = []
-            photosPickerItems = []
-        }
-    }
+    
 }
 
 #Preview {

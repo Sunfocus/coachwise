@@ -26,7 +26,8 @@ struct EventNote: Identifiable, Codable, Hashable{
 
 class EventDetailViewModel: ObservableObject {
    
-    @Published var selectedSegment: SegmentType = .notes
+    var eventId: UUID = UUID()
+    @Published var selectedSegment: SegmentType = .actions
     @Published var status: StatusOption = .todo
     @Published var isMarkAllAsAttended: Bool = false
     @Published var isTextFieldFocused: Bool = false
@@ -38,7 +39,7 @@ class EventDetailViewModel: ObservableObject {
         Attendee(id: UUID(), name: "Max Walter", rating: 4, contactNumber: "7685756849", hasAttendedClass: false, profilePicture: .sg1),
         Attendee(id: UUID(), name: "Max Walter", rating: 4, contactNumber: "7685756849", hasAttendedClass: false, profilePicture: .sg1)
     ]
-    let selectedMember = [
+    @Published var selectedMember = [
         MemberDetail(id: 01, name: "Rahul", profileImage: .sg1, accountType: .coach, progress: 0.0),
         MemberDetail(id: 02, name: "Rahul", profileImage: .f1, accountType: .coach, progress: 0.0),
         MemberDetail(id: 01, name: "Rahul", profileImage: .sg1, accountType: .coach, progress: 0.0),
@@ -50,9 +51,8 @@ class EventDetailViewModel: ObservableObject {
                                                          name: "Max Collins",
                                                          accountType: .coach,
                                                          note: "Cone Weaving: Set up cones in a straight line and weave through them using both feet. Focus on close control."
-                                                        )
-        
-    ]
+                                                        )]
+    
     func markAttendance(id: UUID, hasAttended: Bool) {
         if let index = eventAttendees.firstIndex(where: { $0.id == id }) {
             eventAttendees[index].hasAttendedClass = hasAttended

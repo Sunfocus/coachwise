@@ -65,6 +65,7 @@ class AddActionViewModel: ObservableObject {
     // Add a new action
     func addAction(action: AddAction) {
         actions.append(action)
+        resetTitle()
     }
     // Delete an action by its ID
     func deleteAction(byId id: UUID) {
@@ -88,10 +89,15 @@ class AddActionViewModel: ObservableObject {
         return actions.first(where: { $0.id == id })
     }
     
-    // Get an action by its status
-    func getActions(by status: StatusOption) -> [AddAction] {
-           return actions.filter { $0.status == status }
-       }
+    // Get an action by its Parent ID
+    func getActionsByParentId(byId id: UUID) -> [AddAction]{
+        return actions.filter { $0.goalId == id }
+    }
+    
+    func sortActionByStatus(status: StatusOption, parentId: UUID) -> [AddAction]{
+        let sortedActions =  actions.filter { $0.status == status }
+        return sortedActions.filter { $0.goalId == parentId}
+    }
     
     func isValidateForm() -> Bool {
         if actionName.isEmpty {
@@ -112,5 +118,10 @@ class AddActionViewModel: ObservableObject {
             errors.append(.emptyDescription)
         }
         return errors
+    }
+    
+    func resetTitle(){
+        actionName = ""
+        taskDescription = ""
     }
 }

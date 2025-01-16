@@ -12,9 +12,10 @@ struct EventDetailView: View {
     
     //MARK: - Variables -
     @StateObject var viewModel = EventDetailViewModel()
+    @StateObject private var chatViewModel = MessagesViewModel()
+    @EnvironmentObject var addActionViewModel: AddActionViewModel
     @EnvironmentObject var router: Router
     @State var coachesViewIsPresented = false
-    
     
     var body: some View {
         ZStack{
@@ -33,10 +34,12 @@ struct EventDetailView: View {
                             eventNotesView
                         case .actions:
                             eventActionsView
+                                .padding(.horizontal)
                         case .messages:
                             eventMessagesView
                         case .memories:
                             eventMemoriesView
+                                .padding(.horizontal)
                         }
                 }
                     .animation(.easeIn(duration: 0.3), value: viewModel.selectedSegment)
@@ -45,8 +48,8 @@ struct EventDetailView: View {
             .navigationBarBackButtonHidden()
             .overlay(
                 announcementButtonView
-                .padding(.trailing, 30)
-                .padding(.bottom, 50),
+                .padding(.trailing, 20)
+                .padding(.bottom, 60),
                alignment: .bottomTrailing
             )
             
@@ -136,7 +139,6 @@ struct EventDetailView: View {
                     }
                     .frame(height: 50)
     }
-    
     
     //Event Details Subviews -
     var eventDetailView: some View{
@@ -349,29 +351,14 @@ struct EventDetailView: View {
     //Event Notes Subviews -
     var eventNotesView: some View{
         VStack{
-            if !viewModel.isTextFieldFocused{
-                onlyVisibleToCoachView
+            if !viewModel.isTextFieldFocused {
+                OnlyVisibleView(visibleType: "Notes")
                 uploadDocumentView
             }
                 documentsAndEventNotesListView
             Spacer()
             addNoteTextView
         }
-    }
-    var onlyVisibleToCoachView: some View{
-        HStack(spacing: 5){
-            Image(.lock)
-                .resizable()
-                .frame(width: 20, height: 20)
-            Text("Notes are only visible to coaches")
-                .customFont(.regular, 14)
-                .foregroundStyle(.primaryTheme)
-        }.frame(maxWidth: .infinity)
-            .padding(8)
-            .background(.primaryTheme.opacity(0.1))
-            .clipShape(.rect(cornerRadius: 5))
-            .padding(.bottom)
-            .padding(.horizontal)
     }
     var uploadDocumentView: some View{
         //Upload Docs View
@@ -446,12 +433,15 @@ struct EventDetailView: View {
                     }
                 }
                 .onChange(of: viewModel.isTextFieldFocused) { _, newValue in
-                        if let lastNote = viewModel.eventNotes.last {
-                            withAnimation {
-                                print("isTextFieldFocused scroll to last note by user")
-                                proxy.scrollTo(lastNote.id, anchor: .bottom)
-                            }
-                        }
+                   
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                            if let lastNote = viewModel.eventNotes.last {
+//                                withAnimation {
+//                                    print("isTextFieldFocused scroll to last note by user")
+//                                    proxy.scrollTo(lastNote.id, anchor: .bottom)
+//                                }
+//                            }
+//                        }
                     }
             }
         }
@@ -478,6 +468,106 @@ struct EventDetailView: View {
     }
     // -------------------------------------------
     
+    //Event Action Subviews -
+    var eventActionsView: some View{
+        VStack{
+            OnlyVisibleView(visibleType: "Action here")
+            if !addActionViewModel.getActionsByParentId(byId: viewModel.eventId).isEmpty{
+                toDoListView
+                Spacer()
+                CustomButton(title: "Add Action") {
+                    print("add action button tapped")
+                    let user = MemberDetail(id: 1, name: "Max Walter", profileImage: .sg1, accountType: .coach, progress: 0.0)
+                    router.navigate(to: .addNewAction(member: user, goalId: viewModel.eventId))
+                }
+            }else{
+                emptyActionView
+                Spacer()
+                CustomButton(title: "Add Action") {
+                    print("add action button tapped")
+                    let user = MemberDetail(id: 1, name: "Max Walter", profileImage: .sg1, accountType: .coach, progress: 0.0)
+                    router.navigate(to: .addNewAction(member: user, goalId: viewModel.eventId))
+                }
+            }
+        }
+        
+    }
+    private var emptyActionView: some View{
+        VStack{
+            Spacer()
+            Image(.doubleTick)
+                .resizable()
+                .frame(width: 64, height: 64)
+            Text("No Actions")
+                .customFont(.medium, 16)
+                .foregroundStyle(.primaryTheme)
+            Text("You have no actions in this event !")
+                .customFont(.regular, 14)
+                .foregroundStyle(.primaryTheme)
+            Spacer()
+        }
+    }
+    private var toDoListView: some View{
+        ScrollView{
+            VStack{
+                //add new To do Section
+                let eventId = viewModel.eventId
+                let todoActions = addActionViewModel.sortActionByStatus(status: .todo, parentId: eventId)
+                let pendingActions = addActionViewModel.sortActionByStatus(status: .inProgress, parentId: eventId)
+                let completedActions = addActionViewModel.sortActionByStatus(status: .completed, parentId: eventId)
+                if !todoActions.isEmpty{
+                    VStack(spacing: 7){
+                        Text("To do")
+                            .customFont(.semiBold, 18)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        ForEach(todoActions, id: \.self) { action in
+                            ToDoCell(action: action)
+                                .padding(.bottom, 3)
+                                .onTapGesture {
+                                    router.navigate(to: .actionDetailView(actionId: action.id))
+                                }
+                        }
+                    } .padding(.bottom)
+                }
+                
+               
+                //In progress Section
+                if !pendingActions.isEmpty{
+                    VStack(spacing: 7){
+                        Text("Pending")
+                            .customFont(.semiBold, 18)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        ForEach(pendingActions, id: \.self) { action in
+                            ToDoCell(action: action)
+                                .padding(.bottom, 3)
+                                .onTapGesture {
+                                    router.navigate(to: .actionDetailView(actionId: action.id))
+                                }
+                        }
+                    }
+                    .padding(.bottom)
+                }
+                //Completed Section
+                if !completedActions.isEmpty{
+                    VStack(spacing: 7){
+                        Text("Completed")
+                            .customFont(.semiBold, 18)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        ForEach(completedActions, id: \.self) { action in
+                            ToDoCell(action: action)
+                                .padding(.bottom, 3)
+                                .onTapGesture {
+                                    router.navigate(to: .actionDetailView(actionId: action.id))
+                                }
+                        }
+                    }
+                }
+            }.shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                .padding(.horizontal, 1)
+        }
+    }
+    // -------------------------------------------
+    
 
     //Event Announcement Button View
     var announcementButtonView: some View {
@@ -491,23 +581,69 @@ struct EventDetailView: View {
             
         }
     }
-    var eventActionsView: some View{
-        Text("Actions View")
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.purple)
-            .cornerRadius(10)
-            .foregroundColor(.white)
-        
-    }
+    
     var eventMessagesView: some View{
-        Text("Messages View")
-            .frame(maxWidth: .infinity)
+        VStack{
+            if chatViewModel.messages.isEmpty{
+                VStack(spacing: 15){
+                    Spacer()
+                    Image(.noMessage)
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                     Text("No Chats available, Send a message to start a chat")
+                        .customFont(.regular, 15)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                        .foregroundStyle(.cursorTint)
+                    Spacer()
+                }
+            }else{
+                ScrollViewReader { scrollViewProxy in
+                    ScrollView{
+                        ForEach(chatViewModel.messages) { message in
+                            switch message.messageType{
+                            case .audio:
+                                SenderAudioView(chat: message)
+                            case .image:
+                                SenderImageView(chat: message)
+                            case .document:
+                                SenderView(chat: message)
+                            case .text:
+                                SenderView(chat: message)
+                            case .video:
+                                SenderView(chat: message)
+                            }
+                        }
+                    }.safeAreaPadding(EdgeInsets(top: 2, leading: 0, bottom: 20, trailing: 0))
+                        .scrollIndicators(.hidden)
+                        .onChange(of: chatViewModel.messages.count) {
+                            if let lastMessage = chatViewModel.messages.last {
+                                withAnimation {
+                                    scrollViewProxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                }
+                            }
+                        }
+                }
+            }
+            
+            // User input field
+            UserInputFieldView(
+                text: $chatViewModel.newMessage,
+                images: $chatViewModel.images,
+                photosPickerItems: $chatViewModel.photosPickerItems,
+                audioRecorder: chatViewModel.audioRecorderHelper,
+                placeholder: "Write a message...",
+                onSend: { messageType in
+                    HapticFeedbackHelper.mediumImpact()
+                    chatViewModel.sendMessage(messageType: messageType)
+                }
+                )
             .padding()
-            .background(Color.red)
-            .cornerRadius(10)
-            .foregroundColor(.white)
+            .background(.darkGreyBackground)
+        }
     }
+    
+    
     var eventMemoriesView: some View{
         Text("Memories View")
             .frame(maxWidth: .infinity)
@@ -520,6 +656,8 @@ struct EventDetailView: View {
 
 #Preview {
     EventDetailView()
+        .environmentObject(AddActionViewModel())
+        .environmentObject(Router())
 }
 
 //MARK: - Reusable Views -
@@ -670,6 +808,26 @@ struct EventNoteView: View {
             }
         }
 
+    }
+}
+struct OnlyVisibleView: View {
+    
+    var visibleType: String = ""
+    var body: some View {
+      
+            HStack(spacing: 5){
+                Image(.lock)
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                Text("\(visibleType) are only visible to coaches")
+                    .customFont(.regular, 14)
+                    .foregroundStyle(.primaryTheme)
+            }.frame(maxWidth: .infinity)
+                .padding(8)
+                .background(.primaryTheme.opacity(0.1))
+                .clipShape(.rect(cornerRadius: 5))
+                .padding(.bottom)
+                .padding(.horizontal)
     }
 }
 

@@ -14,18 +14,12 @@ struct UserInputFieldView: View {
     @Binding var photosPickerItems: [PhotosPickerItem]
     @State var isRecording: Bool = false
     @ObservedObject var audioRecorder: AudioRecorderHelper
-    @Environment (\.colorScheme) var colorScheme
-    
-    
-    
+    @Environment(\.colorScheme) var colorScheme
     let placeholder: String
     let onSend: (MessageType) -> Void
     
     var body: some View {
         VStack{
-            if colorScheme == .light{
-                Divider()
-            }
             HStack{
                 Spacer()
                 Button {

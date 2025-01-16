@@ -84,7 +84,7 @@ class AudioRecorderHelper: NSObject, ObservableObject {
     }
     
     func deleteRecordingUrlString(){
-        guard let url = recordingURL else {
+        guard let _ = recordingURL else {
             print("No recording to delete")
             return
         }
