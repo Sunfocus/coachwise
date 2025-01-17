@@ -22,26 +22,46 @@ struct MemoriesView: View {
             VStack{
                 topHeaderView
                 memories
-            }.padding(.horizontal)
-        }.onChange(of: memoriesViewModel.photosPickerItems) { _, _ in
+                    .padding(.horizontal)
+            }
+        }
+        .background(.backgroundTheme)
+        .onChange(of: memoriesViewModel.photosPickerItems) { _, _ in
             Task{
-                for item in memoriesViewModel.photosPickerItems{
-                    if let data = try? await item.loadTransferable(type: Data.self){
-                        if let image = UIImage(data: data){
-                            memoriesViewModel.images.append(image)
-                        }
-                        
-                    }
-                }
-                memoriesViewModel.photosPickerItems = []
+                await memoriesViewModel.processMediaItems()
             }
         }
         .overlay(
-            addScheduleButtonView
+            addMemoryButtonView
                 .padding(.trailing, 30)
                 .padding(.bottom, 40),
                alignment: .bottomTrailing
         )
+        .sheet(isPresented: $memoriesViewModel.isImageSelected) {
+            // Show enlarged image in a new sheet
+            
+            ZStack{
+                if let item = memoriesViewModel.selectedItem{
+                    if item.isVideo{
+                        VideoPlayerView(videoURL: URL(string: item.videoUrl)!  )
+                    }else{
+                        ZStack{
+                            Color.white.ignoresSafeArea()
+                            VStack {
+                                Image(uiImage: memoriesViewModel.selectedItem?.image ?? .sg1)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .padding(20)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                            }.ignoresSafeArea()
+                        }
+                    }
+                }
+            }
+           
+        }//sheet end
     }
     
     //MARK: - Subviews -
@@ -80,21 +100,12 @@ struct MemoriesView: View {
     }
     var memories: some View{
         VStack{
-            if memoriesViewModel.images.isEmpty{
+            if memoriesViewModel.mediaItems.isEmpty{
                 Spacer()
                 noMemoriesView
                 Spacer()
             }else{
-                //SegmentControl
-                segmentView
-                switch selectedSegment{
-                case 0:
-                    ImageGridView(viewModel: memoriesViewModel)
-                case 1:
-                    ImageGridView(viewModel: memoriesViewModel)
-                default:
-                    ImageGridView(viewModel: memoriesViewModel)
-                }
+                ImageGridView(viewModel: memoriesViewModel)
             }
         }
     }
@@ -111,10 +122,13 @@ struct MemoriesView: View {
                 .customFont(.regular, 14)
                 .multilineTextAlignment(.center)
             
+
+            
             PhotosPicker(
                 selection: $memoriesViewModel.photosPickerItems,
-                maxSelectionCount: 50, // Max number of images to select
-                matching: .images // Only allow images
+                maxSelectionCount: 50,
+                matching:  .any(of: [.videos, .images]),
+                preferredItemEncoding: .current
             ) {
                 Text("+  Add Memories")
                     .customFont(.medium, 14)
@@ -126,6 +140,7 @@ struct MemoriesView: View {
                             .stroke(Color.primaryTheme, lineWidth: 1)
                     }
             }
+            .photosPickerStyle(.presentation)
             Spacer()
         }
     }
@@ -140,14 +155,13 @@ struct MemoriesView: View {
         }
         .padding([.horizontal, .top])
     }
-    var addScheduleButtonView: some View {
-        
+    var addMemoryButtonView: some View {
         Group{
-            if !memoriesViewModel.images.isEmpty{
+            if !memoriesViewModel.mediaItems.isEmpty{
                 PhotosPicker(
                     selection: $memoriesViewModel.photosPickerItems,
-                    maxSelectionCount: 50, // Max number of images to select
-                    matching: .images // Only allow images
+                    maxSelectionCount: 50,
+                    matching: .any(of: [.videos, .images])
                 ) {
                     Circle()
                         .foregroundStyle(.primaryTheme)
@@ -171,19 +185,20 @@ struct MemoriesView: View {
 
 struct ImageGridView: View {
     @ObservedObject var viewModel: MemoriesViewModel
+    
     var body: some View {
         ScrollView{
             LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
                 VStack{
-                    viewModel.createGrid(images: viewModel.imagesAtOddIndices() )
+                    viewModel.createGrid(mediaItems: viewModel.imagesAtEvenIndices())
                     Spacer()
                 }
                 VStack{
-                    viewModel.createGrid(images: viewModel.imagesAtEvenIndices   () )
-                    Spacer()
-                }
+                    viewModel.createGrid(mediaItems: viewModel.imagesAtOddIndices())
+                }.padding(.top, 40)
             }
-        }.scrollIndicators(.hidden)
+        }.safeAreaPadding(EdgeInsets(top: 10, leading: 2, bottom: 80, trailing: 2))
+                .scrollIndicators(.hidden)
     }
 }
 

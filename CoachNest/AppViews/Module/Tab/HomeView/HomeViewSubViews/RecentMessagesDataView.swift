@@ -14,13 +14,13 @@ struct RecentMessagesDataView: View {
         VStack {
             HStack {
                 ForEach(recentMessages.prefix(2), id: \.self) { recentMessage in
-                    VStack(spacing: 12) {
+                    VStack(spacing: 6) {
                         Text(recentMessage.lastMessage ?? "")
-                            .customFont(.regular, 12)
-                            .lineLimit(2)
+                            .customFont(.regular, 14)
+                            .lineLimit(1)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, 8)
-                            .padding(.top, 8)
+                            .padding(.bottom, 4)
+                            .padding(.top, 4)
                         HStack(spacing: 4) {
                             Image(recentMessage.senderImage ?? "-")
                                 .resizable()

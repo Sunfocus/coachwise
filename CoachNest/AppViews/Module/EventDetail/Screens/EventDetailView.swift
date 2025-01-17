@@ -12,6 +12,7 @@ struct EventDetailView: View {
     
     //MARK: - Variables -
     @StateObject var viewModel = EventDetailViewModel()
+    @StateObject var memoriesViewModel = MemoriesViewModel()
     @StateObject private var chatViewModel = MessagesViewModel()
     @EnvironmentObject var addActionViewModel: AddActionViewModel
     @EnvironmentObject var router: Router
@@ -21,7 +22,6 @@ struct EventDetailView: View {
         ZStack{
             VStack{
                 topHeaderView
-                
                 VStack(spacing: 15){
                         switch viewModel.selectedSegment{
                         case .details:
@@ -42,16 +42,52 @@ struct EventDetailView: View {
                                 .padding(.horizontal)
                         }
                 }
-                    .animation(.easeIn(duration: 0.3), value: viewModel.selectedSegment)
+                .animation(.easeIn(duration: 0.3), value: viewModel.selectedSegment)
             }
         }.background(.backgroundTheme)
             .navigationBarBackButtonHidden()
+            .onChange(of: memoriesViewModel.photosPickerItems) { _, _ in
+                Task{
+                    await memoriesViewModel.processMediaItems()
+                }
+            }
+            .sheet(isPresented: $memoriesViewModel.isImageSelected) {
+                // Show enlarged image in a new sheet
+                
+                ZStack{
+                    if let item = memoriesViewModel.selectedItem{
+                        if item.isVideo{
+                            VideoPlayerView(videoURL: URL(string: item.videoUrl)!  )
+                        }else{
+                            ZStack{
+                                Color.white.ignoresSafeArea()
+                                VStack {
+                                    Image(uiImage: memoriesViewModel.selectedItem?.image ?? .sg1)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .padding(20)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        .background(Color.white)
+                                        .cornerRadius(12)
+                                }.ignoresSafeArea()
+                            }
+                        }
+                    }
+                }
+               
+            }//sheet end
             .overlay(
-                announcementButtonView
-                .padding(.trailing, 20)
-                .padding(.bottom, 60),
-               alignment: .bottomTrailing
+                Group{
+                    if viewModel.selectedSegment == .memories{
+                        addMemoryButtonView
+                    }else{
+                        announcementButtonView
+                    }
+                }.padding(.trailing, 20)
+                    .padding(.bottom, 60),
+                   alignment: .bottomTrailing
             )
+            
             
     }
     
@@ -139,6 +175,7 @@ struct EventDetailView: View {
                     }
                     .frame(height: 50)
     }
+    // -------------------------------------------
     
     //Event Details Subviews -
     var eventDetailView: some View{
@@ -352,7 +389,8 @@ struct EventDetailView: View {
     var eventNotesView: some View{
         VStack{
             if !viewModel.isTextFieldFocused {
-                OnlyVisibleView(visibleType: "Notes")
+                OnlyVisibleCoachHeaderView(visibleType: "Notes")
+                    .padding(.horizontal)
                 uploadDocumentView
             }
                 documentsAndEventNotesListView
@@ -471,7 +509,7 @@ struct EventDetailView: View {
     //Event Action Subviews -
     var eventActionsView: some View{
         VStack{
-            OnlyVisibleView(visibleType: "Action here")
+            OnlyVisibleCoachHeaderView(visibleType: "Action here")
             if !addActionViewModel.getActionsByParentId(byId: viewModel.eventId).isEmpty{
                 toDoListView
                 Spacer()
@@ -568,7 +606,73 @@ struct EventDetailView: View {
     }
     // -------------------------------------------
     
-
+    //Event Memories Subviews -
+    var eventMemoriesView: some View{
+        VStack{
+            if memoriesViewModel.mediaItems.isEmpty{
+                Spacer()
+                noMemoriesView
+                Spacer()
+            }else{
+                ImageGridView(viewModel: memoriesViewModel)
+            }
+        }
+    }
+    var noMemoriesView: some View{
+        VStack{
+            Spacer()
+            Image(.memory)
+                .resizable()
+                .frame(width: 50, height: 50)
+            Text("No Memories")
+                .customFont(.medium, 16)
+                .foregroundStyle(.primaryTheme)
+            Text("There are currently no memories here")
+                .customFont(.regular, 14)
+                .multilineTextAlignment(.center)
+            
+            PhotosPicker(
+                selection: $memoriesViewModel.photosPickerItems,
+                maxSelectionCount: 50,
+                matching: .any(of: [.images, .videos])
+            ) {
+                Text("+  Add Memories")
+                    .customFont(.medium, 14)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .tint(.primaryTheme)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.primaryTheme, lineWidth: 1)
+                    }
+            }
+            Spacer()
+        }
+    }
+    var addMemoryButtonView: some View {
+        Group{
+            if !memoriesViewModel.mediaItems.isEmpty{
+                PhotosPicker(
+                    selection: $memoriesViewModel.photosPickerItems,
+                    maxSelectionCount: 50,
+                    matching: .any(of: [.images, .videos])
+                ) {
+                    Circle()
+                        .foregroundStyle(.primaryTheme)
+                        .frame(width: 50, height: 50)
+                        .overlay {
+                            Image(.memory)
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .tint(.white)
+                        }
+                }
+            }
+        }
+    }
+    // -------------------------------------------
+    
     //Event Announcement Button View
     var announcementButtonView: some View {
         Button(action: {
@@ -581,7 +685,6 @@ struct EventDetailView: View {
             
         }
     }
-    
     var eventMessagesView: some View{
         VStack{
             if chatViewModel.messages.isEmpty{
@@ -642,16 +745,8 @@ struct EventDetailView: View {
             .background(.darkGreyBackground)
         }
     }
-    
-    
-    var eventMemoriesView: some View{
-        Text("Memories View")
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.yellow)
-            .cornerRadius(10)
-            .foregroundColor(.white)
-    }
+    // -------------------------------------------
+   
 }
 
 #Preview {
@@ -700,7 +795,7 @@ struct AttendeeView: View {
                             .resizable()
                             .frame(width: 16, height: 16)
                         Text(attendee.contactNumber)
-                            .customFont(.regular, 12)
+                            .customFont(.regular, 14)
                             .foregroundStyle(.primary.opacity(0.7))
                     }
                 }
@@ -788,29 +883,29 @@ struct EventNoteView: View {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(noteDetail.name)
-                        .customFont(.semiBold, 14)
+                        .customFont(.semiBold, 16)
                     Text(noteDetail.accountType.rawValue)
-                        .customFont(.medium, 12)
+                        .customFont(.medium, 13)
                         .foregroundStyle(.primary.opacity(0.7))
                 }
                 
                 Spacer()
                 
                 Text(time.formattedAsMonthDayYear())
-                    .customFont(.regular, 11)
+                    .customFont(.regular, 13)
             }
             
             VStack(alignment: .leading) {
                 Text(noteDetail.note)
-                    .customFont(.regular, 13)
+                    .customFont(.regular, 15)
                     .padding(.leading, 45)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-        }
+        }.padding(5)
 
     }
 }
-struct OnlyVisibleView: View {
+struct OnlyVisibleCoachHeaderView: View {
     
     var visibleType: String = ""
     var body: some View {
@@ -827,7 +922,6 @@ struct OnlyVisibleView: View {
                 .background(.primaryTheme.opacity(0.1))
                 .clipShape(.rect(cornerRadius: 5))
                 .padding(.bottom)
-                .padding(.horizontal)
     }
 }
 

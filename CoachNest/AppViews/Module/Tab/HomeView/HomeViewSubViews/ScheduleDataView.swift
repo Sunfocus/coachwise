@@ -34,14 +34,15 @@ struct ScheduleRow: View {
             HStack(spacing: 5) {
                 Image(.clock)
                     .resizable()
-                    .frame(width: 12, height: 12)
+                    .frame(width: 13, height: 13)
                 Text("\(scheduleEvent.startTime ?? "-") - \(scheduleEvent.endTime ?? "-")")
-                    .customFont(.regular, 12)
+                    .customFont(.regular, 13)
                 Spacer()
             }
             
             // Event name
             Text(scheduleEvent.eventName ?? "-")
+                .customFont(.regular, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             // Members and date row
@@ -52,7 +53,7 @@ struct ScheduleRow: View {
                     .resizable()
                     .frame(width: 12, height: 12)
                 Text(scheduleEvent.eventDate ?? "-")
-                    .customFont(.regular, 12)
+                    .customFont(.regular, 14)
             }
         }.padding(.horizontal, 7)
     }
@@ -67,7 +68,7 @@ struct ScheduleMemberView: View {
             ForEach(memberImages!, id: \.self) { image in
                 Image(image)
                     .resizable()
-                    .frame(width: 20, height: 20)
+                    .frame(width: 22, height: 22)
                     .clipShape(Circle())
                     .overlay(
                         Circle()
@@ -76,8 +77,8 @@ struct ScheduleMemberView: View {
             }
             // Add the last text element
             Text("\(20)+")
-                .customFont(.regular, 8)
-                .frame(width: 20, height: 20)
+                .customFont(.regular, 10)
+                .frame(width: 22, height: 22)
                 .background(.darkGreyBackground)
                 
                 .clipShape(Circle())

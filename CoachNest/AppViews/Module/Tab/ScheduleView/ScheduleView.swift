@@ -28,7 +28,6 @@ struct ScheduleView: View {
                 }else{
                     noScheduleToView
                 }
-                
             }
         }.background(.backgroundTheme)
             .overlay(
@@ -121,7 +120,6 @@ struct ScheduleView: View {
             default:
                 dateSelectView
             }
-            
             HStack {
                 Text(selectedDate.formattedDate(customFormat:"MMM dd, yyyy"))
                     .customFont(.medium, 18)
@@ -249,16 +247,16 @@ struct ScheduleView: View {
                     .resizable()
                     .frame(width: 12, height: 12)
                 Text("6:00 PM - 6:45 PM")
-                    .customFont(.regular, 12)
+                    .customFont(.regular, 14)
                 Spacer()
                 Text("Attendance")
-                    .customFont(.regular, 12)
+                    .customFont(.regular, 14)
             }
             
             // Event name
             HStack{
                 Text("Junior Squad")
-                    .customFont(.semiBold, 14)
+                    .customFont(.medium, 16)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
@@ -318,7 +316,7 @@ struct ScheduleView: View {
                     Spacer()
                    
                 }
-            }.padding(10)
+            }.padding(15)
             .background(.darkGreyBackground)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)

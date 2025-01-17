@@ -58,7 +58,7 @@ struct ProgressGoalCell: View {
             // Task Info
                 VStack(alignment: .leading, spacing: 6) {
                     Text(goal.goalTitle)
-                        .customFont(.semiBold, 15)
+                        .customFont(.medium, 16)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(1)
                     if goal.cellType == .individual{
@@ -88,7 +88,7 @@ struct ProgressGoalCell: View {
                     .frame(width: 22, height: 22)
                     .foregroundColor(.gray)
                 Text(goal.dueOnDate.formattedDate(customFormat:"MMM dd, yyyy"))
-                    .customFont(.medium, 12)
+                    .customFont(.medium, 13)
                     .foregroundColor(.gray)
             }
         }

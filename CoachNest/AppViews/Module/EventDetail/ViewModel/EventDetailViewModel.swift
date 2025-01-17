@@ -27,7 +27,7 @@ struct EventNote: Identifiable, Codable, Hashable{
 class EventDetailViewModel: ObservableObject {
    
     var eventId: UUID = UUID()
-    @Published var selectedSegment: SegmentType = .actions
+    @Published var selectedSegment: SegmentType = .details
     @Published var status: StatusOption = .todo
     @Published var isMarkAllAsAttended: Bool = false
     @Published var isTextFieldFocused: Bool = false
