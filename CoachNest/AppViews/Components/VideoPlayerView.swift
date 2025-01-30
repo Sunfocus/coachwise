@@ -10,14 +10,21 @@ import AVKit
 
 struct VideoPlayerView: View {
     let videoURL: URL
-    
+    private var player: AVPlayer
+
+    init(videoURL: URL) {
+        self.videoURL = videoURL
+        self.player = AVPlayer(url: videoURL)
+    }
+
     var body: some View {
-        VideoPlayer(player: AVPlayer(url: videoURL))
+        VideoPlayer(player: player)
             .onAppear {
-                // Auto-play the video when the view appears
-                let player = AVPlayer(url: videoURL)
                 player.play()
             }
-            .ignoresSafeArea() // Optionally make it full screen
+            .onDisappear {
+                player.pause()
+            }
+            .ignoresSafeArea()
     }
 }

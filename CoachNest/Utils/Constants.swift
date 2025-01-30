@@ -229,6 +229,12 @@ struct Constants {
         static let status = "Status"
     }
     
+    // MARK: - ProfileViewTitle
+    struct ProfileViewTitle {
+        static let profile = "Profile"
+      
+    }
+    
     // MARK: - BusinessActivity View
     struct BusinessActivityViewTitle {
         static let businessActivity = "What activity does your business engage in?"

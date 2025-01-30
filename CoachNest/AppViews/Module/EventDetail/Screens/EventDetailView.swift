@@ -16,6 +16,7 @@ struct EventDetailView: View {
     @StateObject private var chatViewModel = MessagesViewModel()
     @EnvironmentObject var addActionViewModel: AddActionViewModel
     @EnvironmentObject var router: Router
+    @Environment(\.dismiss) var dismiss
     @State var coachesViewIsPresented = false
     
     var body: some View {
@@ -51,13 +52,22 @@ struct EventDetailView: View {
                     await memoriesViewModel.processMediaItems()
                 }
             }
+            .overlay(
+                Group{
+                    if viewModel.selectedSegment == .memories{
+                        addMemoryButtonView
+                    }else{
+                        announcementButtonView
+                    }
+                }.padding(.trailing, 20)
+                    .padding(.bottom, 60),
+                   alignment: .bottomTrailing
+            )
             .sheet(isPresented: $memoriesViewModel.isImageSelected) {
-                // Show enlarged image in a new sheet
-                
                 ZStack{
                     if let item = memoriesViewModel.selectedItem{
                         if item.isVideo{
-                            VideoPlayerView(videoURL: URL(string: item.videoUrl)!  )
+                            VideoPlayerView(videoURL: URL(string: item.videoUrl)! )
                         }else{
                             ZStack{
                                 Color.white.ignoresSafeArea()
@@ -74,21 +84,7 @@ struct EventDetailView: View {
                         }
                     }
                 }
-               
-            }//sheet end
-            .overlay(
-                Group{
-                    if viewModel.selectedSegment == .memories{
-                        addMemoryButtonView
-                    }else{
-                        announcementButtonView
-                    }
-                }.padding(.trailing, 20)
-                    .padding(.bottom, 60),
-                   alignment: .bottomTrailing
-            )
-            
-            
+            }
     }
     
     //MARK: - Subviews -
@@ -102,8 +98,6 @@ struct EventDetailView: View {
                         router.dashboardNavigateBack()
                     }
                 Spacer()
-                
-                
                 
                 Menu {
                     // Edit Action
@@ -156,6 +150,7 @@ struct EventDetailView: View {
             
         }.padding(.horizontal)
     }
+    
     var scrollableSegmentControl: some View{
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing: 16) {
@@ -437,7 +432,6 @@ struct EventDetailView: View {
                 
                 List {
                     // Documents Section
-                   
                         Section(header: Text("Documents")
                             .customFont(.regular, 15)
                             .foregroundColor(.primary)

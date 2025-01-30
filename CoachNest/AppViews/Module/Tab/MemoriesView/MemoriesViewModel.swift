@@ -53,8 +53,6 @@ class MemoriesViewModel: ObservableObject{
                         .background(Color.darkGreyBackground) // Ensure this is a defined color
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .shadow(color: Color.black.opacity(0.2), radius: 4, x: 2, y: 2)
-                        .matchedGeometryEffect(id: item.image!, in: self.namespace)
-                        .zIndex(self.selectedImage == item.image! ? 1 : 0)
                         .onTapGesture {
                             withAnimation(.spring(duration: 0.5)) {
                                 self.selectedItem = item
@@ -75,7 +73,6 @@ class MemoriesViewModel: ObservableObject{
                             }
                         }
                 }
-                .padding(.top, 20)
             }
             
         }

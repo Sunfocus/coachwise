@@ -43,7 +43,7 @@ struct MemoriesView: View {
             ZStack{
                 if let item = memoriesViewModel.selectedItem{
                     if item.isVideo{
-                        VideoPlayerView(videoURL: URL(string: item.videoUrl)!  )
+                        VideoPlayerView(videoURL: URL(string: item.videoUrl)! )
                     }else{
                         ZStack{
                             Color.white.ignoresSafeArea()
@@ -122,8 +122,6 @@ struct MemoriesView: View {
                 .customFont(.regular, 14)
                 .multilineTextAlignment(.center)
             
-
-            
             PhotosPicker(
                 selection: $memoriesViewModel.photosPickerItems,
                 maxSelectionCount: 50,
@@ -195,10 +193,12 @@ struct ImageGridView: View {
                 }
                 VStack{
                     viewModel.createGrid(mediaItems: viewModel.imagesAtOddIndices())
-                }.padding(.top, 40)
+                    Spacer()
+                }
             }
-        }.safeAreaPadding(EdgeInsets(top: 10, leading: 2, bottom: 80, trailing: 2))
-                .scrollIndicators(.hidden)
+        }
+        .safeAreaPadding(EdgeInsets(top: 10, leading: 2, bottom: 80, trailing: 2))
+        .scrollIndicators(.hidden)
     }
 }
 
