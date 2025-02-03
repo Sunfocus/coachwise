@@ -31,7 +31,7 @@ class SwitchProfileViewModel: ObservableObject{
     
     @Published var userProfiles: [SwitchProfileModel] = [
         SwitchProfileModel(clubName: "Canvas Hockey Club",
-                           clubId: "AZ212322",
+                           clubId: "AZ212312",
                            inviteAccepted: true,
                            profileType: .coach),
         
