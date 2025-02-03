@@ -7,13 +7,14 @@
 
 import SwiftUI
 
-struct GoalFilterView: View {
+struct FilterView: View {
     
     //MARK: - Variables -
     @State private var selectedOptionIndex = 0
     @EnvironmentObject private var router: Router
     @Environment(\.dismiss) var dismiss
     var isComingFrom: ComingFrom = .addNewGoal
+    var filterOptions: [RadioButtonOption] = []
     
     var body: some View {
         ZStack{
@@ -36,7 +37,7 @@ struct GoalFilterView: View {
                         .padding(.leading)
                 }
                 
-                RadioButtonListView(selectedIndex: $selectedOptionIndex, options: isComingFrom == .chat ? Constants.chatContactFilterOptions : Constants.filterOptions)
+                RadioButtonListView(selectedIndex: $selectedOptionIndex, options: filterOptions)
                     .padding(.horizontal)
                 
                 CustomButton(
@@ -52,5 +53,5 @@ struct GoalFilterView: View {
 }
 
 #Preview {
-    GoalFilterView()
+    FilterView( filterOptions: Constants.goalFilterOptions)
 }

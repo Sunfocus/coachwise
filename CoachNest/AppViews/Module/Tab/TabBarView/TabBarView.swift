@@ -62,7 +62,7 @@ struct TabBarView: View {
                 configureTabBarAppearance()
             })
             .onChange(of: tabManager.selectedTab) { (oldValue, newValue) in
-                HapticFeedbackHelper.mediumImpact()
+//                HapticFeedbackHelper.mediumImpact()
             }
             .environment(\.presentSideMenu, $presentSideMenu)
             

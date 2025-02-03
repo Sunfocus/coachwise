@@ -17,6 +17,7 @@ struct BusinessActivityView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var viewModel: BusinessActivityViewModel
     @State private var newActivity: String = ""
+    @State private var isActivityViewPresented: Bool = false
     @State private var selectedEnrollmentId: Int? = nil
     
     var body: some View {
@@ -93,7 +94,7 @@ struct BusinessActivityView: View {
         .overlay(
             Button(action: {
                 print("Add new tapped")
-                router.navigate(to: .addNewActivity, style: .present)
+                isActivityViewPresented = true
             }) {
                 Image(systemName: "plus.circle.fill")
                     .font(.system(size: 50))
@@ -104,6 +105,12 @@ struct BusinessActivityView: View {
            alignment: .bottomTrailing
         )  
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $isActivityViewPresented) {
+            AddActivityView()
+                .presentationDetents([.height(200)])
+                .presentationDragIndicator(.visible)
+                .presentationContentInteraction(.scrolls)
+        }
     }
 
     
@@ -113,7 +120,6 @@ struct BusinessActivityView: View {
             selectedEnrollmentId = id
         }
     }
-    
 }
 
 #Preview {

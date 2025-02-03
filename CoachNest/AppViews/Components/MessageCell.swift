@@ -40,8 +40,11 @@ struct MessageCell: View {
                     .background(Circle().fill(Color.primaryTheme))
             }
         }
+        .padding(.horizontal) // Keep padding horizontal only
+               .frame(maxWidth: .infinity, minHeight: 60)
+               .background(.darkGreyBackground) // Apply background directly
         Divider()
-            .padding(.bottom)
+            .padding(.leading)
         
     }
     

@@ -16,7 +16,6 @@ struct LoginView: View {
     //MARK: - View Modifiers -
     @EnvironmentObject var router: Router
     @StateObject private var loginViewModel = SignupViewModel()
-    
     @FocusState private var focusField: Field?
     
     //MARK: - Variables -

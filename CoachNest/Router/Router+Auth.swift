@@ -31,11 +31,6 @@ extension Router{
             BusinessActivityView()
         case .ageGroupView:
             AgeGroupView()
-        case .addNewActivity:
-            AddActivityView()
-                .presentationDetents([.height(200)])
-                .presentationDragIndicator(.visible)
-                .presentationContentInteraction(.scrolls)
         case .dateOfBirthView:
             DateOfBirthView()
         case .addContacts:

@@ -26,11 +26,6 @@ extension Router {
             AddNewAction(member: member, goalId: goalId)
         case .actionDetailView(let actionId):
             ActionDetailView(actionId: actionId)
-        case .goalFilterView:
-            GoalFilterView()
-                .presentationDetents([.height(300)])
-                .presentationDragIndicator(.visible)
-                .presentationContentInteraction(.scrolls)
         case .notificationView:
             NotificationsListView(notificationViewModel: NotificationsViewModel())
         case .coachSendNotificationView:
@@ -39,6 +34,8 @@ extension Router {
             ChatView()
         case .eventDetailsView:
             EventDetailView()
+        case .profileView:
+            ProfileView()
         }
     }
 }

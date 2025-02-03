@@ -8,14 +8,6 @@
 import SwiftUI
 
 struct LetsCompleteProfileView: View {
-    //MARK: - @State variables
-//    @State private var firstName = ""
-//    @State private var lastName = ""
-//    @State private var mobileNumber = ""
-//    @State private var emergencyContact = ""
-//    @State private var emergencyContactNumber = ""
-//    @State private var allergies = ""
-//    @State private var anyInjury = ""
     
     //MARK: - View Modifiers -
     @FocusState private var focusedField: Field?

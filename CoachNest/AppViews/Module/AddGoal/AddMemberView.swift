@@ -197,7 +197,7 @@ struct AddMemberView: View {
         }.background(.backgroundTheme)
         .navigationBarBackButtonHidden()
             .sheet(isPresented: $isFilterPresented) {
-                GoalFilterView(isComingFrom: .chat)
+                FilterView(isComingFrom: .chat, filterOptions: Constants.chatContactFilterOptions)
                     .presentationDetents([.height(500)])
                     .presentationDragIndicator(.visible)
                     .presentationContentInteraction(.scrolls)

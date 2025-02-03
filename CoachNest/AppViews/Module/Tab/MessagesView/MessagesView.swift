@@ -32,7 +32,8 @@ struct MessagesView: View {
                 }else{
                     messageListingView
                 }}
-        }.background(.backgroundTheme)
+        }
+        .background(.darkGreyBackground)
             .sheet(isPresented: $isContactListPresented) {
                 AddMemberView(speechManager: SpeechManager(), goalId: UUID(), isComingFrom: .chat)
                     .presentationDetents([.large])
@@ -158,8 +159,6 @@ struct MessagesView: View {
                         .onTapGesture {
                             router.navigate(to: .chatView)
                         }
-                        .padding(.horizontal)
-                       
                 }
             }.scrollIndicators(.hidden)
         }

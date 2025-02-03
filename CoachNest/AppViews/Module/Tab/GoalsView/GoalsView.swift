@@ -15,6 +15,7 @@ struct GoalsView: View {
     @State private var searchedText = ""
     @State private var isRecording: Bool = false
     @State private var addGoalViewIsPresented: Bool = false
+    @State private var isFilterViewPresented: Bool = false
     @EnvironmentObject var contactsViewModel: ContactsViewModel
     @StateObject var speechManager: SpeechManager
     @Environment(\.colorScheme) var colorScheme
@@ -40,6 +41,12 @@ struct GoalsView: View {
             .fullScreenCover(isPresented: $addGoalViewIsPresented) {
                 AddGoalView(comingFrom: .addNewGoal, goalId: UUID(), userType: .coach)
             }
+            .sheet(isPresented: $isFilterViewPresented) {
+                FilterView(isComingFrom: .addNewGoal, filterOptions: Constants.goalFilterOptions)
+                    .presentationDetents([.height(280)])
+                    .presentationDragIndicator(.visible)
+                    .presentationContentInteraction(.scrolls)
+            }
     }
     
     //MARK: - Subviews -
@@ -53,7 +60,6 @@ struct GoalsView: View {
                     .frame(width: 32, height: 32)
                     .onTapGesture {
                         presentSideMenu.wrappedValue.toggle()
-
                     }
                 Text("Goals")
                     .customFont(.semiBold, 24)
@@ -69,7 +75,7 @@ struct GoalsView: View {
                     .resizable()
                     .frame(width: 24, height: 24)
                     .onTapGesture {
-                        router.navigate(to: .goalFilterView, style: .present)
+                        isFilterViewPresented = true
                     }
             }.padding([.horizontal, .vertical], 15)
             
@@ -187,7 +193,6 @@ struct GoalsView: View {
         Button(action: {
             print("Add new tapped")
             addGoalViewIsPresented = true
-           // router.navigate(to: .addGoalView(userType: .coach, goalId: UUID(), comingFrom: .addNewGoal))
         }) {
             Circle()
                 .foregroundStyle(.primaryTheme)

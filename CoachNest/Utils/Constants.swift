@@ -9,6 +9,7 @@ import Foundation
 
 struct Constants {
     
+    //MARK: - SignUpViewTitle
     struct SignUpViewTitle {
         static let createAccount = "Create an Account"
         static let joinUs = "Join us and unlock endless possibilities."
@@ -22,6 +23,7 @@ struct Constants {
         static let logIn = "Login"
     }
     
+    //MARK: - LogInViewTitle
     struct LogInViewTitle {
         static let welcomeBack = "Hey Welcome back"
         static let logInContinue = "Log in to continue managing your tasks effortlessly."
@@ -180,9 +182,6 @@ struct Constants {
     }
     
     
-    
-    
-    
     // MARK: - No Messages Available
     struct AddYourMessageViewTitle {
         static let noMessage = "It’s quiet in here..."
@@ -215,7 +214,6 @@ struct Constants {
         
     }
     
-    
     // MARK: - AddActionViewTitle
     struct AddActionViewTitle {
         static let addNewAction = "Add new action"
@@ -232,7 +230,45 @@ struct Constants {
     // MARK: - ProfileViewTitle
     struct ProfileViewTitle {
         static let profile = "Profile"
-      
+        static let member = "Member"
+        static let personalDetails = "Personal Details"
+        static let dateOfBirth = "Date of birth"
+        static let phoneNumber = "Phone Number"
+        static let emergencyContacts = "Emergency Contacts"
+        static let name = "Name"
+        static let mobile = "Mobile"
+        static let relationship = "Relationship"
+        static let medical = "Medical"
+        static let allergies = "Allergies"
+        static let injuries = "Injuries"
+        static let parent_Guardian = "Parent / Guardian"
+        static let addParent = "+ Add Parent"
+        
+        //event
+        static let statistics = "Statistics"
+        static let attendance = "Attendance"
+        static let attended = "Attended"
+        static let missed = "Missed"
+        static let cancelled = "Cancelled"
+        static let sessions = "Sessions"
+        
+        static let invoices = "Invoices"
+        static let editProfile = "Edit Profile"
+        
+        //notes
+        static let coachingNotes = "Coaching Notes"
+        static let onlyVisibleToCoaches = "Only visible to coaches"
+        static let MemberBio = "Member Bio"
+        static let enterYourNotes = "Enter your notes"
+        static let enerYourBio = "Enter your bio"
+        
+    }
+    
+    // MARK: - Switch Profile View -
+    struct SwitchProfileViewTitle{
+        static let switchProfile = "Switch Profiles"
+        static let switchBetweenClubMember = "You can switch between different club and school memberships here!"
+        static let addNewClub = "Add new club"
     }
     
     // MARK: - BusinessActivity View
@@ -325,8 +361,9 @@ struct Constants {
     static let notifications = "Notifications"
     static let coachNotification = "Coach Notification"
     static let save = "Save"
+    static let update = "Update"
     
-    static let filterOptions = [
+    static let goalFilterOptions = [
             RadioButtonOption(title: "All (default)"),
             RadioButtonOption(title: "Goals assigned to me"),
             RadioButtonOption(title: "Goals assigned by me")
@@ -340,6 +377,15 @@ struct Constants {
         RadioButtonOption(title: "Coach"),
         RadioButtonOption(title: "Student"),
         RadioButtonOption(title: "Parent")
+    ]
+    
+    static let eventFilterOptions = [
+        RadioButtonOption(title: "All (default)"),
+        RadioButtonOption(title: "Attended"),
+        RadioButtonOption(title: "Missed"),
+        RadioButtonOption(title: "Cancelled"),
+        RadioButtonOption(title: "Scheduled (future class)")
+        
     ]
 }
 

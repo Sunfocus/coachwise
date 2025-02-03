@@ -44,7 +44,6 @@ struct AddGoalView: View {
         }
     }
     
-    
     var body: some View {
         ZStack{
                 VStack{

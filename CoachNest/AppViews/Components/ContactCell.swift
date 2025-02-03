@@ -36,6 +36,12 @@ struct ContactCell: View {
                         .frame(width: 24, height: 24)
                         .clipShape(.circle)
                 }
+            }else{
+                HStack{
+                    Image(.rightArrow)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
             }
             
         } .frame(maxWidth: .infinity, alignment: .leading)

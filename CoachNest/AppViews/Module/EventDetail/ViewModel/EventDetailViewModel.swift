@@ -7,7 +7,15 @@
 
 import SwiftUI
 
-enum SegmentType: String, CaseIterable, Identifiable {
+
+struct EventNote: Identifiable, Codable, Hashable{
+    let id: UUID
+    let name: String
+    let accountType: AccountType
+    let note: String
+}
+
+enum EventDetailsSegmentType: String, CaseIterable, Identifiable {
     case details = "Details"
     case attendance = "Attendance"
     case notes = "Notes"
@@ -17,17 +25,10 @@ enum SegmentType: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
-struct EventNote: Identifiable, Codable, Hashable{
-    let id: UUID
-    let name: String
-    let accountType: AccountType
-    let note: String
-}
-
 class EventDetailViewModel: ObservableObject {
-   
+    
     var eventId: UUID = UUID()
-    @Published var selectedSegment: SegmentType = .details
+    @Published var selectedSegment: EventDetailsSegmentType = .details
     @Published var status: StatusOption = .todo
     @Published var isMarkAllAsAttended: Bool = false
     @Published var isTextFieldFocused: Bool = false

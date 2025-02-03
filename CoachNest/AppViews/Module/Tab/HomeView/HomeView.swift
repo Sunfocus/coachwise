@@ -430,7 +430,7 @@ struct HomeView: View {
                 .background(.backgroundTheme)
         }.padding(.horizontal, 20)
         
-        //list ends
+      //  list ends
     }
 }
 

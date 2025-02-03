@@ -127,7 +127,8 @@ struct EventDetailView: View {
                             .customFont(.medium, 16)
                     }
                 }
-            segmentMenuView
+              segmentMenuView
+           // scrollableSegmentControl
             Divider()
         }
         .background(.darkGreyBackground)
@@ -137,7 +138,7 @@ struct EventDetailView: View {
         HStack {
             Spacer()
             Picker("Select Option", selection: $viewModel.selectedSegment) {
-                ForEach(SegmentType.allCases) { segment in
+                ForEach(EventDetailsSegmentType.allCases) { segment in
                     Text(segment.rawValue).tag(segment)
                 }
             }
@@ -150,11 +151,10 @@ struct EventDetailView: View {
             
         }.padding(.horizontal)
     }
-    
     var scrollableSegmentControl: some View{
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing: 16) {
-                            ForEach(SegmentType.allCases) { segment in
+                            ForEach(EventDetailsSegmentType.allCases) { segment in
                                 Text(segment.rawValue)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
@@ -167,6 +167,7 @@ struct EventDetailView: View {
                             }
                         }
                         .padding(.horizontal)
+                        .background(.backgroundTheme)
                     }
                     .frame(height: 50)
     }
@@ -372,7 +373,6 @@ struct EventDetailView: View {
                 }
             }.safeAreaPadding(EdgeInsets(top: 5, leading: 1, bottom: 100, trailing: 1))
                 .scrollIndicators(.hidden)
-            
             CustomButton(title: "Add Attendees") {
                 print("add attendees button tapped")
             }

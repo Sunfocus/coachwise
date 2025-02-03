@@ -24,7 +24,7 @@ struct RadioButtonListView: View {
                     
                     // Title
                     Text(options[index].title)
-                        .customFont(.regular, 14)
+                        .customFont(.regular, 16)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     Spacer()

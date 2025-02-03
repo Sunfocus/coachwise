@@ -42,7 +42,7 @@ struct ScheduleRow: View {
             
             // Event name
             Text(scheduleEvent.eventName ?? "-")
-                .customFont(.regular, 16)
+                .customFont(.medium, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             // Members and date row

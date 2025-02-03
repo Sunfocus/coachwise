@@ -9,12 +9,6 @@ import Foundation
 import SwiftUI
 
 final class Router: ObservableObject {
-    enum NavigationStyle {
-        case push
-        case present
-        case fullScreenCover
-    }
-    
     enum RootFlow {
         case onboarding
         case dashboard
@@ -23,16 +17,11 @@ final class Router: ObservableObject {
     @Published var authNavPath = NavigationPath()
     @Published var dashboardNavPath = NavigationPath()
     @Published var isUserLoggedIn: Bool = false
-    @Published var isModalPresented = false
-    @Published var isFullScreenPresented = false
     
     var root: RootFlow = .dashboard
-    var currentModalDestination: AnyHashable?
-    var currentFullScreenDestination: AnyHashable?
     
     private var authDestinations: [AuthFlow] = []
     private var dashboardDestinations: [DashboardFlow] = []
-    @Environment(\.dismiss) var dismiss
     
     func setRoot(to newRoot: RootFlow) {
         root = newRoot
@@ -47,30 +36,8 @@ final class Router: ObservableObject {
 }
 
 extension Router {
-
-    // Generic navigation to push or present a destination.
-    func navigate<T: Hashable>(
-        to destination: T,
-        path: inout NavigationPath,
-        destinations: inout [T],
-        style: NavigationStyle = .push
-    ) {
-        switch style {
-        case .push:
-            handlePushNavigation(to: destination, path: &path, destinations: &destinations)
-        case .present:
-            handlePresentNavigation(to: destination)
-        case .fullScreenCover:
-            handleFullScreenCoverNavigation(to: destination)
-        }
-    }
-    
-    // Handle push navigation, adding/removing destination from path and destinations.
-    private func handlePushNavigation<T: Hashable>(
-        to destination: T,
-        path: inout NavigationPath,
-        destinations: inout [T]
-    ) {
+    // Push navigation only
+    func navigate<T: Hashable>(to destination: T, path: inout NavigationPath, destinations: inout [T]) {
         if let index = destinations.firstIndex(of: destination) {
             path.removeLast(path.count - (index + 1))
             destinations.removeLast(destinations.count - (index + 1))
@@ -80,24 +47,6 @@ extension Router {
         }
     }
     
-    private func handlePresentNavigation<T: Hashable>(to destination: T) {
-        if let modalDestination = destination as? DashboardFlow {
-            currentModalDestination = modalDestination
-            isModalPresented = true
-        } else {
-            assertionFailure("Present style is not supported for this destination type.")
-        }
-    }
-    
-    private func handleFullScreenCoverNavigation<T: Hashable>(to destination: T) {
-        if let fullScreenDestination = destination as? DashboardFlow {
-            currentFullScreenDestination = fullScreenDestination
-            isFullScreenPresented = true
-        } else {
-            assertionFailure("Full-screen cover style is not supported for this destination type.")
-        }
-    }
-
     func navigateBack<T>(path: inout NavigationPath, destinations: inout [T]) {
         guard !destinations.isEmpty else { return }
         path.removeLast()
@@ -110,10 +59,10 @@ extension Router {
     }
 }
 
-//MARK: - Auth Flow -
+// MARK: - Auth Flow -
 extension Router {
-    func navigate(to destination: AuthFlow, style: NavigationStyle = .push, animated: Bool = true) {
-        navigate(to: destination, path: &authNavPath, destinations: &authDestinations, style: style)
+    func navigate(to destination: AuthFlow) {
+        navigate(to: destination, path: &authNavPath, destinations: &authDestinations)
     }
     
     func authNavigateBack() {
@@ -125,10 +74,10 @@ extension Router {
     }
 }
 
-//MARK: - Dashboard Flow -
+// MARK: - Dashboard Flow -
 extension Router {
-    func navigate(to destination: DashboardFlow, style: NavigationStyle = .push) {
-        navigate(to: destination, path: &dashboardNavPath, destinations: &dashboardDestinations, style: style)
+    func navigate(to destination: DashboardFlow) {
+        navigate(to: destination, path: &dashboardNavPath, destinations: &dashboardDestinations)
     }
     
     func dashboardNavigateBack() {

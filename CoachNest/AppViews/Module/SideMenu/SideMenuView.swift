@@ -79,6 +79,8 @@ struct SideMenuView: View {
     
     @Binding var activeTab: Tab
     @Binding var presentSideMenu: Bool
+    @EnvironmentObject var router: Router
+    @State var isSwitchProfilePresented = false
     
     var body: some View {
         HStack {
@@ -93,6 +95,31 @@ struct SideMenuView: View {
                             image: row.iconName,
                             title: row.title
                         ) {
+                            switch row{
+                                
+                            case .profile:
+                                router.navigate(to: .profileView)
+                            case .payments:
+                                router.navigate(to: .profileView)
+                            case .directory:
+                                router.navigate(to: .profileView)
+                            case .evaluations:
+                                router.navigate(to: .profileView)
+                            case .documents:
+                                router.navigate(to: .profileView)
+                            case .actions:
+                                router.navigate(to: .profileView)
+                            case .settings:
+                                router.navigate(to: .profileView)
+                            case .subscription:
+                                router.navigate(to: .profileView)
+                            case .share:
+                                router.navigate(to: .profileView)
+                            case .help:
+                                router.navigate(to: .profileView)
+                            case .logOut:
+                                router.navigate(to: .profileView)
+                            }
                             presentSideMenu.toggle()
                         }
                     }
@@ -110,6 +137,9 @@ struct SideMenuView: View {
             Spacer()
         }
         .background(.clear)
+        .fullScreenCover(isPresented: $isSwitchProfilePresented) {
+            SwitchProfileView()
+        }
     }
     
     func ProfileImageView() -> some View{
@@ -145,6 +175,7 @@ struct SideMenuView: View {
             
             Button(action: {
                 print("On Tap Switch")
+                isSwitchProfilePresented = true
             }, label: {
                 Image(.refresh)
                     .resizable()
@@ -184,7 +215,7 @@ struct SideMenuView: View {
                     }
                     .frame(width: 30, height: 30)
                     Text(title)
-                        .customFont(.medium,14)
+                        .customFont(.regular, 17)
                         .foregroundColor(isSelected ? .black : .black)
                     Spacer()
                 }
