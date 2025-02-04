@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct MenuList: Identifiable, Hashable{
     let menuName: String
     let menuImage: UIImage

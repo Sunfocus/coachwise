@@ -149,26 +149,39 @@ struct InvoiceDetailView: View {
             .padding(.horizontal)
     }
     var paymentMethods: some View{
-        VStack{
+        VStack(spacing: 5){
             Text(Constants.PaymentViewTitle.paymentMethods)
                 .customFont(.medium, 18)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
                 .padding(.top, 10)
            
-            List(viewModel.paymentType){ payment in
-                    HStack{
-                        Image(uiImage: payment.paymentImage)
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                        Text(payment.paymentName)
-                            .customFont(.medium, 15)
-                        Spacer()
-                        Image(uiImage: viewModel.selectedPaymentMethod.paymentName == payment.paymentName ? .selectedRadio : .unSelectedRadio )
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                    }.frame(maxWidth: .infinity)
-                }
+            VStack{
+                paymentMode(viewModel: viewModel, payment: viewModel.paymentType[0])
+                    .onTapGesture {
+                        viewModel.selectedPaymentMethod = viewModel.paymentType[0]
+                    }
+                Divider()
+                paymentMode(viewModel: viewModel, payment: viewModel.paymentType[1])
+                    .onTapGesture {
+                        viewModel.selectedPaymentMethod = viewModel.paymentType[1]
+                    }
+                Divider()
+                paymentMode(viewModel: viewModel, payment: viewModel.paymentType[2])
+                    .onTapGesture {
+                        viewModel.selectedPaymentMethod = viewModel.paymentType[2]
+                    }
+                Divider()
+                paymentMode(viewModel: viewModel, payment: viewModel.paymentType[3])
+                    .onTapGesture {
+                        viewModel.selectedPaymentMethod = viewModel.paymentType[3]
+                    }
+            }.padding()
+                .background(.darkGreyBackground)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                .padding(.horizontal)
+                .padding(.bottom, 5)
         }
     }
 }
@@ -202,6 +215,26 @@ struct totalAmountView: View {
             Text(amount)
                 .customFont(.semiBold, 16)
         }.frame(maxWidth: .infinity)
+    }
+}
+struct paymentMode: View {
+    @ObservedObject var viewModel: PaymentsViewModel
+    var payment: PaymentType
+    
+    var body: some View {
+        HStack{
+            Image(uiImage: payment.paymentImage)
+                .resizable()
+                .frame(width: 30, height: 39)
+            Text(payment.paymentName)
+                .customFont(.medium, 15)
+            Spacer()
+            Image(uiImage: viewModel.selectedPaymentMethod.paymentName == payment.paymentName ? .selectedRadio : .unSelectedRadio )
+                .resizable()
+                .frame(width: 24, height: 24)
+        }.frame(maxWidth: .infinity)
+            .frame(height: 34)
+            .contentShape(Rectangle())
     }
 }
 
