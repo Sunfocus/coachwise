@@ -156,6 +156,8 @@ struct InvoiceDetailView: View {
                 .padding(.horizontal)
                 .padding(.top, 10)
            
+            
+            
             VStack{
                 paymentMode(viewModel: viewModel, payment: viewModel.paymentType[0])
                     .onTapGesture {
@@ -180,8 +182,6 @@ struct InvoiceDetailView: View {
                 .background(.darkGreyBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-                
-                
                 .padding(.horizontal)
                 .padding(.bottom, 5)
         }
