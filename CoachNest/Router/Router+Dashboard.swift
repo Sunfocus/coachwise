@@ -36,6 +36,8 @@ extension Router {
             EventDetailView()
         case .profileView:
             ProfileView()
+        case .paymentView:
+            PaymentsView( speechManager: SpeechManager())
         }
     }
 }

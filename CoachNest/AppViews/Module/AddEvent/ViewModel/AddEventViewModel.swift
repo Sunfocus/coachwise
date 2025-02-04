@@ -7,32 +7,6 @@
 
 import SwiftUI
 
-
-enum RecurrenceType: String, CaseIterable {
-    case once = "One time"
-    case recurring = "Recurring"
-}
-
-struct EventDetail: Hashable, Identifiable {
-    let id: UUID
-    let eventTitle: String
-    let eventType: String
-    let eventRecurrence: RecurrenceType
-
-    init(
-        id: UUID = UUID(),
-        eventTitle: String,
-        eventType: String,
-        eventRecurrence: RecurrenceType
-    ) {
-        self.id = id
-        self.eventTitle = eventTitle
-        self.eventType = eventType
-        self.eventRecurrence = eventRecurrence
-    }
-}
-
-
 class AddEventViewModel: ObservableObject {
    
     @Published var eventName = ""
@@ -54,3 +28,4 @@ class AddEventViewModel: ObservableObject {
     }
     
 }
+

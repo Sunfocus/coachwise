@@ -271,6 +271,26 @@ struct Constants {
         static let addNewClub = "Add new club"
     }
     
+    // MARK: - Payment View -
+    struct PaymentViewTitle{
+        static let payments = "Payments"
+        static let invoice = "Invoice"
+        static let invoiceName = "Invoice Name"
+        static let invoiceNo = "Invoice No:"
+        static let invoiceFrequency = "Invoice Frequency"
+        static let description = "Description"
+        static let dummyDescription = "here is the description of invoice to tell member what they are paying for"
+        static let dateIssued = "Date issued"
+        static let dueOn = "Due on"
+        static let tax = "Tax"
+        static let discount = "Discount"
+        static let price = "Price"
+        static let amountPaid = "Amount paid"
+        static let totalDue = "Total due"
+        static let paymentMethods = "Payment methods"
+        static let payNow = "Pay now"
+    }
+    
     // MARK: - BusinessActivity View
     struct BusinessActivityViewTitle {
         static let businessActivity = "What activity does your business engage in?"

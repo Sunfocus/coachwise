@@ -131,7 +131,7 @@ struct GoalDetailView: View {
                 .overlay {
                     HStack{
                         Text(goal?.goalTitle ?? "")
-                            .customFont(.semiBold, 16)
+                            .customFont(.semiBold, 18)
                     }
                 }
             Divider()

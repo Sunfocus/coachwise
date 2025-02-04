@@ -100,7 +100,7 @@ struct SideMenuView: View {
                             case .profile:
                                 router.navigate(to: .profileView)
                             case .payments:
-                                router.navigate(to: .profileView)
+                                router.navigate(to: .paymentView)
                             case .directory:
                                 router.navigate(to: .profileView)
                             case .evaluations:

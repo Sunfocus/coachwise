@@ -22,11 +22,11 @@ struct NotificationsRowCell: View {
                 VStack {
                     HStack {
                         Text(notification.notificationText)
-                            .customFont(.regular, 13)
+                            .customFont(.regular, 16)
                             .lineLimit(2)
                         Spacer()
                         Text(time)
-                            .customFont(.medium, 12)
+                            .customFont(.medium, 14)
                             .foregroundStyle(.gray)
                             
                     }
