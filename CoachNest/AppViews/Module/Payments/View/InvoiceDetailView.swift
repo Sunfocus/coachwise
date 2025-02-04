@@ -218,6 +218,8 @@ struct totalAmountView: View {
     }
 }
 struct paymentMode: View {
+    
+    
     @ObservedObject var viewModel: PaymentsViewModel
     var payment: PaymentType
     
