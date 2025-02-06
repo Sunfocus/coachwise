@@ -13,13 +13,42 @@ enum PaymentSegmentType: String, CaseIterable, Identifiable {
     case paid = "Paid"
     var id: String { self.rawValue }
 }
+
+import SwiftUI
+
+enum PaymentType: CaseIterable, Identifiable {
+    case stripe
+    case applePay
+    case paypal
+    case bankTransfer
+
+    var id: String { name }
+
+    var name: String {
+        switch self {
+        case .stripe: return "Stripe"
+        case .applePay: return "Apple Pay"
+        case .paypal: return "PayPal"
+        case .bankTransfer: return "Bank Transfer"
+        }
+    }
+
+    var image: Image {
+        switch self {
+        case .stripe: return Image("stripe") // Use asset image
+        case .applePay: return Image("applePay")
+        case .paypal: return Image("paypal")
+        case .bankTransfer: return Image("bankTransfer")
+        }
+    }
+}
+
                              
 
 class PaymentsViewModel: ObservableObject{
     
     @Published var selectedSegment: PaymentSegmentType = .all
-    @Published var selectedPaymentMethod: PaymentType = PaymentType(paymentImage: .stripe,
-                                                paymentName: "Stripe")
+    @Published var selectedPaymentMethod: PaymentType = .stripe
     @Published var invoice: [Invoice] = [
         
         Invoice(invoiceName: "Melbourne Dance School",
@@ -72,14 +101,4 @@ class PaymentsViewModel: ObservableObject{
     var due: [Invoice] {
         return invoice.filter { $0.paymentStatus == .overdue }
     }
-    
-    let paymentType: [PaymentType] = [PaymentType(paymentImage: .stripe,
-                                                  paymentName: "Stripe"),
-                                      PaymentType(paymentImage: .applePay,
-                                                  paymentName: "Apple pay"),
-                                      PaymentType(paymentImage: .paypal,
-                                                  paymentName: "Paypal"),
-                                      PaymentType(paymentImage: .bankTransfer,
-                                                  paymentName: "Bank Transfer")
-    ]
 }

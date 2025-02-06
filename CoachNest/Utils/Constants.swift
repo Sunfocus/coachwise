@@ -289,6 +289,37 @@ struct Constants {
         static let totalDue = "Total due"
         static let paymentMethods = "Payment methods"
         static let payNow = "Pay now"
+        static let paymentSuccess = "Payment successful!"
+        static let paymentSuccessDesc = "Your payment is successfully done"
+        static let paymentFailed = "Payment failed"
+        static let paymentFailedDesc = "Your payment is failed try another payment method"
+        static let backToPayments = "Back to payments"
+        static let tryAnotherMethod = "Try another method"
+        static let bankTransfer = "Bank Transfer"
+        static let thankyou = "Thank you!"
+        static let hereIsBankDetailInfo = "Here’s the bank details for the bank transfer to the coach. Please manually transfer to the following bank account. Please include the “Invoice number” in the description of the bank transfer. Once you have transferred the payment & the coach receives it, the coach will mark the invoice as paid."
+        static let bankAccount = "Bank Account"
+        static let save = "Save"
+        static let sendInvoiceReminder = "Send invoice reminder"
+    }
+    
+    struct Directory{
+        static let directory = "Directory"
+        static let addUsers = "Add Users"
+        static let addTeamMembers = "Add Team Members..."
+        static let addCoachStudent = "Add your students and coaches to the Directory & send them an invite"
+        static let addManually = "Add manually"
+        static let inviteStudentCoach = "Invite your students and coaches to join CoachNest"
+        static let inviteWithLink = "Invite with a link"
+        static let uploadContactList = "Upload your contact list as a PDF or CSV"
+        static let importContactList = "Import contact list"
+        static let contactWillBeUpdated = "Your contacts will be updated within a few hours. You’ll get a confirmation email once the contact list has been fully imported"
+        
+        //Invite Via Link
+        static let inviteToClub = "Invite to club"
+        static let sendInviteViaEmail = "Note: this only sends invite to user via email to join CoachNest themselves, this does not add user to the directory."
+        static let sendInvite = "Send Invite"
+        
     }
     
     // MARK: - BusinessActivity View
@@ -382,6 +413,7 @@ struct Constants {
     static let coachNotification = "Coach Notification"
     static let save = "Save"
     static let update = "Update"
+    static let addUsersToDirectory = "Add Users to Directory"
     
     static let goalFilterOptions = [
             RadioButtonOption(title: "All (default)"),
@@ -406,6 +438,13 @@ struct Constants {
         RadioButtonOption(title: "Cancelled"),
         RadioButtonOption(title: "Scheduled (future class)")
         
+    ]
+    
+    static let paymenttFilterOptions = [
+        RadioButtonOption(title: "All (default)"),
+        RadioButtonOption(title: "Overdue"),
+        RadioButtonOption(title: "Paid"),
+        RadioButtonOption(title: "Not Paid")
     ]
 }
 

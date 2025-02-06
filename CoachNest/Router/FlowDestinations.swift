@@ -43,5 +43,7 @@ public enum DashboardFlow: Codable, Hashable {
     //sidemenu cases
     case profileView
     case paymentView
+    case directory
+    
 }
 

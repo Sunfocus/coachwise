@@ -61,13 +61,14 @@ struct ScheduleRow: View {
 
 // MARK: - Schedule Member Horizontal Stack View
 struct ScheduleMemberView: View {
-    let memberImages: [String]?
+    let memberImages: [String]
     var body: some View {
         HStack(spacing: -8) {
             // Dynamically generate image views
-            ForEach(memberImages!, id: \.self) { image in
+            ForEach(memberImages, id: \.self) { image in
                 Image(image)
                     .resizable()
+                    .scaledToFill()
                     .frame(width: 22, height: 22)
                     .clipShape(Circle())
                     .overlay(
@@ -75,6 +76,8 @@ struct ScheduleMemberView: View {
                             .stroke(Color.white, lineWidth: 1)
                     )
             }
+            
+            
             // Add the last text element
             Text("\(20)+")
                 .customFont(.regular, 10)

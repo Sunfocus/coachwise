@@ -1,20 +1,48 @@
 //
-//  InvoiceDetailView.swift
+//  CoachInvoiceView.swift
 //  CoachNest
 //
-//  Created by Rahul Pathania on 04/02/25.
+//  Created by Rahul Pathania on 05/02/25.
 //
 
 import SwiftUI
 
-struct InvoiceDetailView: View {
+struct CoachInvoiceView: View {
     
-    //MARK: - Variables -
-    @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = PaymentsViewModel()
-    @State var showPaymentPopup = false
-    @State var isBankTransferPopupPresented = false
+    @State var markPaid: Bool = false
+    let invoice: Invoice
+    var statusForegroundColor: Color {
+        switch invoice.paymentStatus{
+        case .overdue:
+                .red
+        case .notPaid:
+                .blueAccent
+        case .paid:
+                .greenAccent
+        }
+    }
+    var statusBackgroundColor: Color {
+        switch invoice.paymentStatus{
+        case .overdue:
+                .pastelRed
+        case .notPaid:
+                .blueAccent.opacity(0.1)
+        case .paid:
+                .pastelGreen
+        }
+    }
+    var statusImage: UIImage{
+        switch invoice.paymentStatus{
+        case .overdue:
+                .overdue
+        case .notPaid:
+                .notPaid
+        case .paid:
+                .paid
+        }
+    }
     
     var body: some View {
         ZStack{
@@ -24,37 +52,36 @@ struct InvoiceDetailView: View {
                     VStack(spacing: 5){
                         invoiceDetailView
                         taxDiscountView
-                        paymentMethods
+                        markAsPaidView
                     }
                 }.scrollIndicators(.hidden)
                 CustomButton(
-                    title: Constants.PaymentViewTitle.payNow,
+                    title: Constants.PaymentViewTitle.save,
                     action: {
-                        if viewModel.selectedPaymentMethod == .bankTransfer{
-                            isBankTransferPopupPresented = true
-                        }else{
-                            showPaymentPopup = true
-                        }
+    
                     }
-                ).padding(.bottom)
+                )
                     .padding(.horizontal)
+                
+                Button {
+                    
+                } label: {
+                    Text(Constants.PaymentViewTitle.sendInvoiceReminder)
+                        .customFont(.regular, 15)
+                        .tint(.primary)
+                        .padding(15)
+                        .frame(maxWidth: .infinity)
+                        .contentShape(Rectangle())
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.primary, lineWidth: 0.6)
+                        }
+                        .padding(.horizontal)
+                }
+
             }
             
-            if showPaymentPopup {
-                Color.black.opacity(0.2) // Dim background
-                    .edgesIgnoringSafeArea(.all)
-                
-                PaymentSuccessPopup(isSuccess: true) { success in
-                    showPaymentPopup = false
-                    if success{
-                        dismiss()
-                    }
-                }
-            }
         } .background(.backgroundTheme)
-            .fullScreenCover(isPresented: $isBankTransferPopupPresented) {
-                BankTransferView()
-            }
     }
     
     //MARK: - Subviews
@@ -90,13 +117,32 @@ struct InvoiceDetailView: View {
             VStack(spacing: 15){
                 
                 VStack{
-                    Text(Constants.PaymentViewTitle.invoiceName)
-                        .customFont(.medium, 16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("XXXXXXXX")
-                        .customFont(.regular, 15)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundStyle(.primary.opacity(0.8))
+                    HStack{
+                        VStack{
+                            Text(Constants.PaymentViewTitle.invoiceName)
+                                .customFont(.medium, 16)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text(invoice.invoiceName)
+                                .customFont(.regular, 15)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .foregroundStyle(.primary.opacity(0.8))
+                        }
+                        
+                        Spacer()
+                        
+                        HStack{
+                            Image(uiImage: statusImage)
+                                .resizable()
+                                .frame(width: 18, height: 18)
+                            Text(invoice.paymentStatus.rawValue)
+                                .customFont(.semiBold, 12)
+                                .foregroundStyle(statusForegroundColor)
+                        }.padding(.horizontal, 15)
+                            .padding(.vertical, 6)
+                            .background(statusBackgroundColor)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                   
                 }
                 
                 VStack{
@@ -169,97 +215,22 @@ struct InvoiceDetailView: View {
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
             .padding(.horizontal)
     }
-    var paymentMethods: some View{
-        VStack(spacing: 5){
-            Text(Constants.PaymentViewTitle.paymentMethods)
-                .customFont(.medium, 18)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-                .padding(.top, 10)
-           
-            
-            
-            VStack{
-                paymentMode(viewModel: viewModel, payment: .stripe)
-                    .onTapGesture {
-                        viewModel.selectedPaymentMethod = .stripe
-                    }
-                Divider()
-                paymentMode(viewModel: viewModel, payment: .applePay)
-                    .onTapGesture {
-                        viewModel.selectedPaymentMethod = .applePay
-                    }
-                Divider()
-                paymentMode(viewModel: viewModel, payment: .paypal)
-                    .onTapGesture {
-                        viewModel.selectedPaymentMethod = .paypal
-                    }
-                Divider()
-                paymentMode(viewModel: viewModel, payment: .bankTransfer)
-                    .onTapGesture {
-                        viewModel.selectedPaymentMethod = .bankTransfer
-                    }
-            }.padding()
-                .background(.darkGreyBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-                .padding(.horizontal)
-                .padding(.bottom, 5)
-        }
+    var markAsPaidView: some View{
+        HStack{
+            Button {
+                markPaid.toggle()
+            } label: {
+                Image(markPaid ? .checkboxFill : .checkboxEmpty)
+                    .resizable()
+                    .frame(width: 25 ,height: 25)
+            }
+            Text("Mark as Paid")
+        }.frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
+            .padding(.top, 10)
     }
 }
 
 #Preview {
-    InvoiceDetailView()
+    CoachInvoiceView(invoice: Invoice(invoiceName: "xxxxxxx", invoiceNumber: "", coachName: "", amount: "", dueOnDate: "", paymentStatus: .notPaid))
 }
-
-//MARK: - Reusable Views
-struct taxView: View {
-    var name: String
-    var amount: String
-    var body: some View {
-        HStack{
-            Text(name)
-                .customFont(.regular, 16)
-            Spacer()
-            Text(amount)
-                .customFont(.regular, 16)
-        }.frame(maxWidth: .infinity)
-    }
-}
-struct totalAmountView: View {
-    var name: String
-    var amount: String
-    var body: some View {
-        HStack{
-            Text(name)
-                .customFont(.semiBold, 18)
-            Spacer()
-            Text(amount)
-                .customFont(.semiBold, 18)
-        }.frame(maxWidth: .infinity)
-    }
-}
-struct paymentMode: View {
-    @ObservedObject var viewModel: PaymentsViewModel
-    var payment: PaymentType
-    
-    var body: some View {
-        HStack{
-            payment.image
-                .resizable()
-                .scaledToFill()
-                .frame(width: 30, height: 39)
-                .padding(.trailing, 5)
-            Text(payment.name)
-                .customFont(.medium, 15)
-            Spacer()
-            Image(uiImage: viewModel.selectedPaymentMethod == payment ? .selectedRadio : .unSelectedRadio )
-                .resizable()
-                .frame(width: 24, height: 24)
-        }.frame(maxWidth: .infinity)
-            .frame(height: 34)
-            .contentShape(Rectangle())
-    }
-}
-

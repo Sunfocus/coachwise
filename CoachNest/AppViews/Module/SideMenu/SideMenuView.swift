@@ -96,13 +96,12 @@ struct SideMenuView: View {
                             title: row.title
                         ) {
                             switch row{
-                                
                             case .profile:
                                 router.navigate(to: .profileView)
                             case .payments:
                                 router.navigate(to: .paymentView)
                             case .directory:
-                                router.navigate(to: .profileView)
+                                router.navigate(to: .directory)
                             case .evaluations:
                                 router.navigate(to: .profileView)
                             case .documents:
@@ -123,7 +122,6 @@ struct SideMenuView: View {
                             presentSideMenu.toggle()
                         }
                     }
-                    
                     Spacer()
                 }
                 .padding(.top, 60)
@@ -132,8 +130,6 @@ struct SideMenuView: View {
                     Color.white
                 )
             }
-            
-            
             Spacer()
         }
         .background(.clear)

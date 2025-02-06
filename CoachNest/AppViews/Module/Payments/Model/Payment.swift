@@ -21,10 +21,3 @@ enum PaymentStatus: String {
     case notPaid = "Not Paid"
     case paid = "Paid"
 }
-
-struct PaymentType: Hashable, Identifiable{
-    let id = UUID()
-    let paymentImage: UIImage
-    let paymentName: String
-}
-

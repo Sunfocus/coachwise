@@ -38,6 +38,8 @@ extension Router {
             ProfileView()
         case .paymentView:
             PaymentsView( speechManager: SpeechManager())
+        case .directory:
+            DirectoryView()
         }
     }
 }

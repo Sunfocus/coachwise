@@ -28,7 +28,7 @@ struct ScheduleEvent: Identifiable, Hashable {
     let startTime: String?
     let endTime: String?
     let eventDate: String?
-    let images: [String] = ["placeholder", "placeholder", "placeholder"]
+    let images: [String] = ["sg1", "f1", "f2"]
 }
 
 struct Messages: Identifiable, Hashable {

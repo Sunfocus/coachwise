@@ -7,10 +7,12 @@
 
 import SwiftUI
 
-public enum AccountType: String, Codable {
+public enum AccountType: String, CaseIterable,Codable, Identifiable {
     case coach = "Coach"
     case parent = "Parent"
     case member = "Member"
+    public var id: String { self.rawValue }
+    
 }
 
 class SelectionTypeViewModel: ObservableObject {

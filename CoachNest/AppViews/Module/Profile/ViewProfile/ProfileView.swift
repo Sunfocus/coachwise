@@ -30,9 +30,15 @@ struct ProfileView: View {
         }
         .background(.backgroundTheme)
         .navigationBarBackButtonHidden(true)
-        .sheet(isPresented: $isPaymentFilterViewPresented) {
+        .sheet(isPresented: $isEventFilterViewPresented) {
             FilterView(isComingFrom: .addNewGoal, filterOptions: Constants.eventFilterOptions)
                 .presentationDetents([.height(370)])
+                .presentationDragIndicator(.visible)
+                .presentationContentInteraction(.scrolls)
+        }
+        .sheet(isPresented: $isPaymentFilterViewPresented) {
+            FilterView(isComingFrom: .addNewGoal, filterOptions: Constants.paymenttFilterOptions)
+                .presentationDetents([.height(330)])
                 .presentationDragIndicator(.visible)
                 .presentationContentInteraction(.scrolls)
         }
@@ -524,7 +530,6 @@ struct ProfileView: View {
                 memberBioView
             }.padding()
             Spacer()
-            
             CustomButton(
                 title: Constants.save,
                 action: {
