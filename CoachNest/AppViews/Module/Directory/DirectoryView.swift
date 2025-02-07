@@ -87,7 +87,6 @@ struct DirectoryView: View {
                 .customFont(.regular, 15)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
-            
             Button {
                 isAddManuallyPresented = true
             } label: {

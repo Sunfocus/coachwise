@@ -16,6 +16,13 @@ struct InvoiceDetailView: View {
     @State var showPaymentPopup = false
     @State var isBankTransferPopupPresented = false
     
+    var paymentSuccess = Constants.PaymentViewTitle.paymentSuccess
+    var paymentSuccessDesc = Constants.PaymentViewTitle.paymentSuccessDesc
+    var paymentFailed = Constants.PaymentViewTitle.paymentFailed
+    var paymentFailedDesc = Constants.PaymentViewTitle.paymentFailedDesc
+    var backToPayments = Constants.PaymentViewTitle.backToPayments
+    var tryAnotherMethod = Constants.PaymentViewTitle.tryAnotherMethod
+    
     var body: some View {
         ZStack{
             VStack(){
@@ -44,12 +51,10 @@ struct InvoiceDetailView: View {
                 Color.black.opacity(0.2) // Dim background
                     .edgesIgnoringSafeArea(.all)
                 
-                PaymentSuccessPopup(isSuccess: true) { success in
-                    showPaymentPopup = false
-                    if success{
-                        dismiss()
-                    }
-                }
+                UploadStatusPopupView(isSuccess: true, title: paymentSuccess , message: paymentSuccessDesc, primaryButtonTitle: "Back to payments",primaryAction: {
+                    dismiss()
+                }, secondaryButtonTitle: nil, secondaryAction: nil)
+                
             }
         } .background(.backgroundTheme)
             .fullScreenCover(isPresented: $isBankTransferPopupPresented) {

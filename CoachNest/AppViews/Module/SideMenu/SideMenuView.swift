@@ -103,17 +103,17 @@ struct SideMenuView: View {
                             case .directory:
                                 router.navigate(to: .directory)
                             case .evaluations:
-                                router.navigate(to: .profileView)
+                                router.navigate(to: .evaluations)
                             case .documents:
-                                router.navigate(to: .profileView)
+                                router.navigate(to: .documents)
                             case .actions:
                                 router.navigate(to: .profileView)
                             case .settings:
-                                router.navigate(to: .profileView)
+                                router.navigate(to: .settingsView)
                             case .subscription:
-                                router.navigate(to: .profileView)
+                                router.navigate(to: .settingsView)
                             case .share:
-                                router.navigate(to: .profileView)
+                                router.navigate(to: .subscription)
                             case .help:
                                 router.navigate(to: .profileView)
                             case .logOut:

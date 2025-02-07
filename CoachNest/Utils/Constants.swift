@@ -320,6 +320,26 @@ struct Constants {
         static let sendInviteViaEmail = "Note: this only sends invite to user via email to join CoachNest themselves, this does not add user to the directory."
         static let sendInvite = "Send Invite"
         
+        //Import Contacts
+        static let import_ = "Import"
+        static let uploadContact = "Upload Contact"
+        static let selectDocument = "Select document(s) from local files to upload"
+        static let maxFileSize = " (Max. File size: 25 MB)"
+        static let coachnestTeamImportContacts = "After document has been uploaded, our CoachNest  support team will import the contact details for you within 1 day"
+        static let uploadDocument = "Upload Document"
+        static let thankyou = "Thankyou!"
+        static let oops = "Oops!"
+        static let yourUploadWasSuccess = "Your upload was successful :)"
+        static let uploadFailed = "Your upload didn't worked :("
+        static let backToDirectory = "Back to directory"
+        static let tryAgain = "Try Again"
+        static let contactUs = "Contact Us"
+    }
+    
+    // MARK: - SettingsViewTitle
+    struct SettingsViewTitle{
+        static let settings = "Settings"
+        static let notificationPreferences = "Notification Preferences"
     }
     
     // MARK: - BusinessActivity View

@@ -40,6 +40,16 @@ extension Router {
             PaymentsView( speechManager: SpeechManager())
         case .directory:
             DirectoryView()
+        case .evaluations:
+            DirectoryView()
+        case .documents:
+            DirectoryView()
+        case .settingsView:
+            SettingsView()
+        case .subscription:
+            DirectoryView()
+        case .notificationPreferences:
+            NotificationPreferences()
         }
     }
 }
